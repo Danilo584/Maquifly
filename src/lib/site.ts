@@ -1,0 +1,54 @@
+/**
+ * Configuración global de la plataforma.
+ * Un único lugar para datos de marca, contacto y SEO.
+ */
+
+export const siteConfig = {
+  name: "MaquiFly",
+  legalName: "MaquiFly",
+  domain: "maquifly.pe",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://maquifly.pe",
+  tagline: "Conectamos maquinaria con proyectos.",
+  taglineSecondary: "Encuentra. Alquila. Trabaja.",
+  description:
+    "MaquiFly conecta a propietarios de maquinaria con personas y empresas que la necesitan. Busca equipos disponibles para alquiler cerca de tu proyecto y contacta directamente con el propietario.",
+  locale: "es_PE",
+  lang: "es-PE",
+  contact: {
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "nonad7940@gmail.com",
+    /**
+     * Formato internacional sin "+" ni espacios.
+     * 51 = Perú. Se deja como valor por defecto en el código (y no solo en
+     * .env) para que el sitio funcione aunque el despliegue se haga sin
+     * configurar variables de entorno.
+     */
+    whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? "51992012836",
+    city: "Piura",
+    region: "Piura",
+    country: "PE",
+  },
+  /**
+   * Redes sociales. Se dejan vacías a propósito: no se muestran perfiles
+   * que todavía no existen (ver sección "no inventar confianza").
+   */
+  social: {
+    instagram: "",
+    facebook: "",
+    tiktok: "",
+    linkedin: "",
+  },
+  /** Ciudad activa hoy. La arquitectura soporta varias (ver data/locations). */
+  launchCity: "piura",
+} as const;
+
+/** ¿Estamos mostrando el catálogo de demostración? */
+export const DATA_SOURCE =
+  (process.env.NEXT_PUBLIC_DATA_SOURCE as "demo" | "supabase" | undefined) ??
+  "demo";
+
+export const IS_DEMO_CATALOG = DATA_SOURCE === "demo";
+
+export function absoluteUrl(path = "/"): string {
+  const base = siteConfig.url.replace(/\/$/, "");
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+}

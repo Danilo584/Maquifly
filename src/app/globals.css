@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   MAQUIFLY — DESIGN TOKENS
+   ---------------------------------------------------------------------------
+   Dirección visual: startup tecnológica aplicada al sector maquinaria.
+   - Azul profundo (ink)  → superficies oscuras, autoridad, confianza
+   - Azul eléctrico (brand) → acciones primarias sobre fondo claro
+   - Lima eléctrico (volt) → acento; SOLO sobre superficies oscuras
+                             (lima sobre blanco no cumple contraste AA)
+   - Acero (steel)         → texto, bordes, superficies neutras
+   =========================================================================== */
+@theme {
+  /* --- Azul profundo / superficies oscuras -------------------------------- */
+  --color-ink-50: #eef3fa;
+  --color-ink-100: #d7e3f2;
+  --color-ink-200: #aec6e3;
+  --color-ink-300: #7ba0cd;
+  --color-ink-400: #4a73a6;
+  --color-ink-500: #2b4f7d;
+  --color-ink-600: #1c3a61;
+  --color-ink-700: #132c4b;
+  --color-ink-800: #0c1f38;
+  --color-ink-900: #071628;
+  --color-ink-950: #040e1b;
+
+  /* --- Azul eléctrico / acción -------------------------------------------- */
+  --color-brand-50: #eff5ff;
+  --color-brand-100: #dbe8fe;
+  --color-brand-200: #bfd7fe;
+  --color-brand-300: #93bcfd;
+  --color-brand-400: #6098fa;
+  --color-brand-500: #3b76f6;
+  --color-brand-600: #2557eb;
+  --color-brand-700: #1d44d8;
+  --color-brand-800: #1e39af;
+  --color-brand-900: #1e348a;
+  --color-brand-950: #172154;
+
+  /* --- Lima eléctrico / acento (solo sobre oscuro) ------------------------ */
+  --color-volt-200: #ecffb3;
+  --color-volt-300: #dcff70;
+  --color-volt-400: #c8f83c;
+  --color-volt-500: #aee218;
+  --color-volt-600: #88b40e;
+  --color-volt-700: #668710;
+  --color-volt-900: #384a0d;
+
+  /* --- Acero / neutros ---------------------------------------------------- */
+  --color-steel-50: #f7f9fb;
+  --color-steel-100: #eef1f6;
+  --color-steel-200: #dfe4ec;
+  --color-steel-300: #c6cedb;
+  --color-steel-400: #98a3b6;
+  --color-steel-500: #6c7890;
+  --color-steel-600: #505b71;
+  --color-steel-700: #3d475a;
+  --color-steel-800: #2a3244;
+  --color-steel-900: #1b2231;
+
+  /* --- Semánticos --------------------------------------------------------- */
+  --color-ok-50: #ecfdf5;
+  --color-ok-500: #10b981;
+  --color-ok-700: #047857;
+  --color-warn-50: #fffbeb;
+  --color-warn-500: #f59e0b;
+  --color-warn-700: #b45309;
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-700: #b91c1c;
+
+  /* --- Tipografía --------------------------------------------------------- */
+  --font-display:
+    "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans:
+    "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+
+  /* --- Radios y sombras --------------------------------------------------- */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-card: 0 1px 2px 0 rgb(7 22 40 / 0.06), 0 1px 3px 0 rgb(7 22 40 / 0.05);
+  --shadow-card-hover:
+    0 10px 15px -3px rgb(7 22 40 / 0.08), 0 4px 6px -4px rgb(7 22 40 / 0.06);
+  --shadow-pop:
+    0 20px 25px -5px rgb(7 22 40 / 0.12), 0 8px 10px -6px rgb(7 22 40 / 0.08);
+}
+
+/* ===========================================================================
+   BASE
+   =========================================================================== */
+@layer base {
+  * {
+    border-color: var(--color-steel-200);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: #ffffff;
+    color: var(--color-steel-800);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visible y consistente en toda la plataforma (accesibilidad) */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--color-volt-300);
+    color: var(--color-ink-950);
+  }
+}
+
+/* ===========================================================================
+   UTILIDADES DE PROYECTO
+   =========================================================================== */
+@utility container-mf {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem; /* 1280px */
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Malla técnica sutil para superficies oscuras (lenguaje "industrial") */
+@utility grid-blueprint {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility text-balance-tight {
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+}
+
+/* Oculta la barra de scroll en carruseles horizontales */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Salto al contenido para navegación por teclado */
+@utility skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  &:focus {
+    left: 1rem;
+    top: 1rem;
+  }
+}
