@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0 L0 0 L0 56" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1.2"/>
+    </pattern>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071628"/>
+      <stop offset="1" stop-color="#040e1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <g transform="translate(96 150)">
+    <g transform="scale(2.2)">
+      <rect width="40" height="40" rx="11" fill="#0c1f38"/>
+      <path d="M8 30.5V14L16 22.5L24 14V30.5" fill="none" stroke="#c8f83c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M27.5 18.5L33.5 12.5M33.5 12.5H28.6M33.5 12.5V17.4" fill="none" stroke="#eef3fa" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="110" y="62" font-family="Verdana, DejaVu Sans, sans-serif" font-size="54" font-weight="bold" fill="#ffffff" letter-spacing="-2">MaquiFly</text>
+  </g>
+  <text x="96" y="360" font-family="Verdana, DejaVu Sans, sans-serif" font-size="58" font-weight="bold" fill="#ffffff" letter-spacing="-2">Conectamos maquinaria</text>
+  <text x="96" y="428" font-family="Verdana, DejaVu Sans, sans-serif" font-size="58" font-weight="bold" fill="#c8f83c" letter-spacing="-2">con proyectos.</text>
+  <text x="96" y="500" font-family="Verdana, DejaVu Sans, sans-serif" font-size="27" fill="#aec6e3">Alquiler de maquinaria y equipos · Piura, Perú</text>
+  <rect x="96" y="540" width="180" height="5" rx="2.5" fill="#c8f83c"/>
+</svg>

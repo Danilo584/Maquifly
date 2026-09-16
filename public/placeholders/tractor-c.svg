@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="800" height="600" role="img" aria-label="Ilustración referencial de equipo">
+  <defs>
+    <pattern id="g" width="12.5" height="12.5" patternUnits="userSpaceOnUse">
+      <path d="M12.5 0 L0 0 L0 12.5" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="0.6"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="#040e1b"/>
+  <rect width="200" height="150" fill="url(#g)"/>
+  <rect width="200" height="150" fill="url(#fade)"/>
+  <path d="M0 126 L200 126" stroke="#c8f83c" stroke-width="0.8" stroke-opacity="0.55"/>
+  <g transform="translate(10 6) scale(0.9) translate(0 0)" transform-origin="100 85">
+    <g>
+      <path d="M46 84 L46 118 L146 118 L152 84 Z" fill="#040e1b" stroke="#eef3fa" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="66" cy="108" r="8" fill="none" stroke="#7ba0cd" stroke-width="2.5"/>
+      <circle cx="128" cy="108" r="8" fill="none" stroke="#7ba0cd" stroke-width="2.5"/>
+      <rect x="72" y="58" width="60" height="28" rx="5" fill="#7ba0cd" opacity="0.35" stroke="#eef3fa" stroke-width="2.5"/>
+      <path d="M84 58 L86 40 L118 40 L120 58 Z" fill="#040e1b" stroke="#eef3fa" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M36 76 L36 120 L26 120 L26 76 Z" fill="#c8f83c"/>
+      <path d="M46 96 L36 96" stroke="#eef3fa" stroke-width="3"/>
+    </g></g>
+  <g opacity="0.75">
+    <rect x="8" y="132" width="86" height="11" rx="2.5" fill="#040e1b" fill-opacity="0.75"/>
+    <text x="13" y="140" font-family="Verdana, DejaVu Sans, sans-serif" font-size="5.6" fill="#eef3fa" letter-spacing="0.5">ILUSTRACIÓN REFERENCIAL</text>
+  </g>
+</svg>

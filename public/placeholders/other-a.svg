@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="800" height="600" role="img" aria-label="Ilustración referencial de equipo">
+  <defs>
+    <pattern id="g" width="12.5" height="12.5" patternUnits="userSpaceOnUse">
+      <path d="M12.5 0 L0 0 L0 12.5" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="0.6"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="#071628"/>
+  <rect width="200" height="150" fill="url(#g)"/>
+  <rect width="200" height="150" fill="url(#fade)"/>
+  <path d="M0 126 L200 126" stroke="#c8f83c" stroke-width="0.8" stroke-opacity="0.55"/>
+  <g transform="translate(0 0) scale(1) translate(0 0)" transform-origin="100 85">
+    <g>
+      <rect x="58" y="54" width="84" height="56" rx="8" fill="#7ba0cd" opacity="0.3" stroke="#eef3fa" stroke-width="2.5"/>
+      <circle cx="100" cy="82" r="18" fill="none" stroke="#c8f83c" stroke-width="4"/>
+      <circle cx="100" cy="82" r="6" fill="#eef3fa"/>
+      <path d="M100 56 L100 64 M100 100 L100 108 M74 82 L82 82 M118 82 L126 82" stroke="#eef3fa" stroke-width="3" stroke-linecap="round"/>
+    </g></g>
+  <g opacity="0.75">
+    <rect x="8" y="132" width="86" height="11" rx="2.5" fill="#040e1b" fill-opacity="0.75"/>
+    <text x="13" y="140" font-family="Verdana, DejaVu Sans, sans-serif" font-size="5.6" fill="#eef3fa" letter-spacing="0.5">ILUSTRACIÓN REFERENCIAL</text>
+  </g>
+</svg>
