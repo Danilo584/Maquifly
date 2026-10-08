@@ -33,7 +33,7 @@ export const siteConfig = {
    */
   social: {
     instagram: "",
-    facebook: "",
+    facebook: "https://www.facebook.com/profile.php?id=61594906361946",
     tiktok: "",
     linkedin: "",
   },
