@@ -99,7 +99,8 @@ export function organizationJsonLd() {
       addressRegion: siteConfig.contact.region,
       addressCountry: siteConfig.contact.country,
     },
-    // `sameAs` se omite mientras no existan perfiles reales en redes sociales.
+    // Solo se listan las redes que existen de verdad (las vacías se filtran).
+    sameAs: Object.values(siteConfig.social).filter(Boolean),
   };
 }
 
