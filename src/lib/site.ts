@@ -22,7 +22,7 @@ export const siteConfig = {
      * .env) para que el sitio funcione aunque el despliegue se haga sin
      * configurar variables de entorno.
      */
-    whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? "51992012836",
+    whatsapp: process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? "51933407807",
     city: "Piura",
     region: "Piura",
     country: "PE",

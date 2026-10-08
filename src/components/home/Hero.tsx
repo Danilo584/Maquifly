@@ -4,6 +4,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
 import { activeLocations } from "@/lib/data/locations";
 import { categories } from "@/lib/data/categories";
+import { HeroIllustration } from "@/components/home/HeroIllustration";
 
 const quickLinks = [
   { slug: "minicargadores", label: "Minicargadores" },
@@ -33,6 +34,7 @@ export function Hero() {
       />
 
       <div className="container-mf relative py-14 sm:py-20 lg:py-24">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]">
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-volt-300">
             <span className="size-1.5 rounded-full bg-volt-400" aria-hidden="true" />
@@ -60,6 +62,9 @@ export function Hero() {
               Publicar mi maquinaria
             </LinkButton>
           </div>
+        </div>
+
+        <HeroIllustration className="hidden lg:block" />
         </div>
 
         <div className="mt-10 lg:mt-12">
