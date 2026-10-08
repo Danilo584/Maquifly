@@ -1,10 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SearchBar } from "@/components/search/SearchBar";
 import { LinkButton } from "@/components/ui/Button";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
 import { activeLocations } from "@/lib/data/locations";
 import { categories } from "@/lib/data/categories";
-import { HeroIllustration } from "@/components/home/HeroIllustration";
 
 const quickLinks = [
   { slug: "minicargadores", label: "Minicargadores" },
@@ -19,22 +19,30 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-ink-950">
-      <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
+      {/* Foto de fondo: el lado izquierdo es oscuro para que el texto se lea */}
+      <Image
+        src="/hero-maquinaria.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[70%_center] opacity-60 sm:opacity-75 lg:opacity-100"
+      />
+      {/* Degradados para asegurar contraste del texto y del buscador */}
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/80 to-ink-950/10"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink-950 via-ink-950/60 to-transparent"
+        aria-hidden="true"
+      />
       <div
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-volt-400/60 to-transparent"
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute -right-40 -top-40 size-[34rem] rounded-full bg-brand-700/25 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-52 -left-32 size-[30rem] rounded-full bg-volt-500/10 blur-3xl"
-        aria-hidden="true"
-      />
 
-      <div className="container-mf relative py-14 sm:py-20 lg:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]">
+      <div className="container-mf relative py-14 sm:py-20 lg:py-28">
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-volt-300">
             <span className="size-1.5 rounded-full bg-volt-400" aria-hidden="true" />
@@ -62,9 +70,6 @@ export function Hero() {
               Publicar mi maquinaria
             </LinkButton>
           </div>
-        </div>
-
-        <HeroIllustration className="hidden lg:block" />
         </div>
 
         <div className="mt-10 lg:mt-12">
