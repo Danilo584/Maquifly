@@ -4,7 +4,7 @@ Tus datos ya están configurados en el código. **No necesitas editar ningún
 archivo.** Solo seguir estos pasos.
 
 - WhatsApp de contacto: **+51 992 012 836**
-- Correo de contacto: **nonad7940@gmail.com**
+- Correo de contacto: **maquifly.servicios@gmail.com**
 
 ---
 

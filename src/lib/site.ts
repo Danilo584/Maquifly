@@ -15,7 +15,7 @@ export const siteConfig = {
   locale: "es_PE",
   lang: "es-PE",
   contact: {
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "nonad7940@gmail.com",
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "maquifly.servicios@gmail.com",
     /**
      * Formato internacional sin "+" ni espacios.
      * 51 = Perú. Se deja como valor por defecto en el código (y no solo en
