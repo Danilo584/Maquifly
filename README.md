@@ -234,7 +234,7 @@ caso**. No hay ninguna pantalla que simule haber enviado algo que no envió.
 
 Toda la lógica comercial vive en `src/lib/plans.ts`: precios, límites de
 máquinas, beneficios, Programa Socio Fundador (10 cupos), Destacados Express
-y datos de Yape/Plin/cuenta. Cambiar un precio es editar ese archivo.
+y datos de Yape y cuenta. Cambiar un precio es editar ese archivo.
 
 | Regla | Dónde se aplica |
 | --- | --- |
@@ -246,11 +246,11 @@ y datos de Yape/Plin/cuenta. Cambiar un precio es editar ese archivo.
 | Insignias «Destacado» y «Socio Fundador» | `components/owner/PlanBadges.tsx` |
 
 Flujo de cobro: `/planes` → `/pagar/fly-plus` (o `fly-pro`, `destacado-7`)
-→ el propietario paga por Yape/Plin/transferencia → envía la constancia por
+→ el propietario paga por Yape o transferencia → envía la constancia por
 WhatsApp → el admin registra el pago en `payments` y ejecuta
 `approve_payment`. Nada se activa sin esa verificación.
 
-Pendiente de datos reales: nombre del titular de Yape/Plin, cuenta bancaria
+Pendiente de datos reales: número de cuenta BCP (14 dígitos)
 y CCI, e imagen del QR (`payment` en `src/lib/plans.ts`). Mientras estén
 vacíos, la web no los muestra y ofrece pedirlos por WhatsApp.
 

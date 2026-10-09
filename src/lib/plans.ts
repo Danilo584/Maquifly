@@ -6,7 +6,7 @@
  * buscador y las reglas de contacto leen de aquí: cambiar un precio o un
  * beneficio es editar este archivo y nada más.
  *
- * Cobro MANUAL: el propietario paga por Yape, Plin o transferencia, envía la
+ * Cobro MANUAL: el propietario paga por Yape o transferencia, envía la
  * constancia por WhatsApp y la administración activa el plan a mano (en el
  * panel, columna `plan` de `owner_profiles`; ver supabase/schema.sql). No hay
  * pasarela automática: nada en la web "confirma" un pago que no se verificó.
@@ -152,28 +152,28 @@ export const boostPackages: BoostPackage[] = [
 // ---------------------------------------------------------------------------
 
 export const payment = {
-  /** Número que recibe Yape y Plin. */
+  /** Número que recibe Yape. (Plin no está habilitado.) */
   yape: "933 407 807",
-  plin: "933 407 807",
   /**
-   * Nombre del titular tal como aparece en Yape/Plin. Mostrarlo evita que el
+   * Nombre del titular tal como aparece en Yape. Mostrarlo evita que el
    * cliente dude al ver otro nombre. Vacío = no se muestra.
    */
-  holder: "",
+  holder: "Daniel Nonajulca Berrú",
   /**
    * Cuenta bancaria. Mientras esté vacía, la página de pago ofrece pedir los
    * datos por WhatsApp en lugar de mostrar una cuenta inventada.
    */
   bank: {
-    name: "",
+    name: "BCP",
     account: "",
     cci: "",
-    holder: "",
+    holder: "Daniel Nonajulca Berrú",
   },
   /** Ruta pública de la imagen del QR de Yape (en /public). Vacío = sin QR. */
   yapeQr: "",
 } as const;
 
+// Se muestra solo con número de cuenta real (14 dígitos BCP), nunca con una tarjeta.
 export const hasBankAccount = Boolean(payment.bank.name && payment.bank.account);
 
 // ---------------------------------------------------------------------------

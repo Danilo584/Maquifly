@@ -54,7 +54,7 @@ export async function generateMetadata({
   return {
     ...pageMetadata({
       title: item ? `Pagar ${itemName(item)}` : "Pagar",
-      description: "Paga por Yape, Plin o transferencia y envía tu constancia por WhatsApp.",
+      description: "Paga por Yape o transferencia y envía tu constancia por WhatsApp.",
       path: `/pagar/${producto}`,
     }),
     robots: { index: false, follow: false },
@@ -92,7 +92,7 @@ export default async function PayPage({
   const steps = [
     {
       title: "Paga el monto",
-      text: `Yapea o plinea ${formatPEN(amountPEN)} al ${payment.yape}${hasBankAccount ? ", o haz una transferencia" : ""}.`,
+      text: `Yapea ${formatPEN(amountPEN)} al ${payment.yape}${hasBankAccount ? ", o haz una transferencia" : ""}.`,
     },
     {
       title: "Toma captura",
@@ -165,7 +165,7 @@ export default async function PayPage({
           {/* Medios de pago --------------------------------------------- */}
           <section className="flex flex-col gap-4">
             <div className="rounded-2xl border border-steel-200 bg-white p-6">
-              <h2 className="text-lg font-extrabold text-ink-900">Yape o Plin</h2>
+              <h2 className="text-lg font-extrabold text-ink-900">Yape</h2>
               <p className="mt-3 text-sm text-steel-500">Número</p>
               <p className="text-3xl font-extrabold tracking-wide text-ink-900">{payment.yape}</p>
               {payment.holder && (

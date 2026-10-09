@@ -36,7 +36,7 @@ const plansFaq = [
   {
     question: "¿Cómo pago un plan?",
     answer:
-      "Eliges el plan, pagas por Yape, Plin o transferencia y nos envías la captura de la constancia por WhatsApp. Verificamos el abono y activamos tu plan, normalmente el mismo día hábil.",
+      "Eliges el plan, pagas por Yape o transferencia y nos envías la captura de la constancia por WhatsApp. Verificamos el abono y activamos tu plan, normalmente el mismo día hábil.",
   },
   {
     question: "¿Quiénes son Socios Fundadores?",

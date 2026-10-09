@@ -207,7 +207,7 @@ export function AdminPanel({
         {tab === "payments" && (
           <div className="flex flex-col gap-4">
             <Callout tone="info" title="Cómo se activa un plan (cobro manual)">
-              1) El propietario paga por Yape/Plin al {payment.yape} o por
+              1) El propietario paga por Yape al {payment.yape} o por
               transferencia y envía la captura por WhatsApp. 2) Revisas el
               abono en tu app del banco. 3) Registras el pago y lo apruebas: el
               sistema activa el plan por 1 mes (o el destacado por 7 días) y, si
