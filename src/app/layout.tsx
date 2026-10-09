@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { PublicOnly } from "@/components/layout/PublicOnly";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { absoluteUrl, siteConfig } from "@/lib/site";
@@ -52,11 +53,15 @@ export default function RootLayout({
         <a href="#contenido" className="skip-link rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white">
           Saltar al contenido principal
         </a>
-        <Navbar />
+        <PublicOnly>
+          <Navbar />
+        </PublicOnly>
         <main id="contenido" className="flex-1">
           {children}
         </main>
-        <Footer />
+        <PublicOnly>
+          <Footer />
+        </PublicOnly>
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
       </body>

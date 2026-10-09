@@ -17,6 +17,7 @@ import { machineJsonLd, pageMetadata } from "@/lib/seo";
 
 import { MachineGallery } from "@/components/machine/MachineGallery";
 import { WhatsAppCta } from "@/components/machine/WhatsAppCta";
+import { MachineViewTracker } from "@/components/machine/MachineViewTracker";
 import { InfoRequestForm } from "@/components/machine/InfoRequestForm";
 import { ReportListing } from "@/components/machine/ReportListing";
 import { ReviewsSection } from "@/components/reviews/ReviewsSection";
@@ -143,6 +144,7 @@ export default async function MachinePage({
       </div>
 
       <div className="container-mf py-6 sm:py-8">
+        <MachineViewTracker machineId={machine.id} isDemo={machine.isDemo} />
         {machine.isDemo && <DemoNotice variant="listing" className="mb-6" />}
 
         <div className="lg:grid lg:grid-cols-[1fr_22rem] lg:gap-8 xl:gap-12">

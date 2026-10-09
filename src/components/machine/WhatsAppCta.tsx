@@ -6,6 +6,7 @@ import { buildBrokeredMessage, buildMachineMessage, whatsappUrl } from "@/lib/wh
 import { plans } from "@/lib/plans";
 import { siteConfig } from "@/lib/site";
 import { track } from "@/lib/analytics";
+import { trackMachineEvent } from "@/lib/machine-events";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { IconClose, IconWhatsApp } from "@/components/ui/Icon";
 import { Callout } from "@/components/ui/Callout";
@@ -42,6 +43,7 @@ export function WhatsAppCta({
   const href = whatsappUrl(phone, message);
 
   function handleReal() {
+    trackMachineEvent(machine.id, "whatsapp");
     track({
       name: "whatsapp_click",
       machineId: machine.id,

@@ -27,6 +27,20 @@ import {
   piuraDistricts,
 } from "@/components/admin/admin-shared";
 import { fetchOwners, OwnerEditor, planIsActive, type OwnerRow } from "@/components/admin/tabs/OwnersTab";
+import { AIconChat, AIconEye } from "@/components/admin/admin-icons";
+
+export type MachineStats = Record<string, { views: number; whatsapp: number }>;
+
+/** Vistas y clics en WhatsApp por máquina (últimos N días). Vacío si aún no existe la tabla. */
+export async function fetchMachineStats(days = 30): Promise<MachineStats> {
+  const { data, error } = await db().rpc("machine_stats", { days });
+  if (error || !data) return {};
+  const out: MachineStats = {};
+  for (const row of data as Array<{ machine_id: string; views: number; whatsapp: number }>) {
+    out[row.machine_id] = { views: Number(row.views), whatsapp: Number(row.whatsapp) };
+  }
+  return out;
+}
 
 export type MachineRow = {
   id: string;
@@ -73,15 +87,18 @@ export function MachinesTab({ onChange }: TabProps) {
   const [owners, setOwners] = useState<OwnerRow[]>([]);
   const [editing, setEditing] = useState<MachineRow | "new" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<MachineStats>({});
 
   const load = useCallback(async () => {
-    const [{ data, error: err }, ownerList] = await Promise.all([
+    const [{ data, error: err }, ownerList, statMap] = await Promise.all([
       db().from("machines").select("*").order("created_at", { ascending: false }),
       fetchOwners(),
+      fetchMachineStats(30),
     ]);
     if (err) setError(err.message);
     setItems((data as MachineRow[]) ?? []);
     setOwners(ownerList);
+    setStats(statMap);
   }, []);
 
   useEffect(() => {
@@ -148,6 +165,17 @@ export function MachinesTab({ onChange }: TabProps) {
                     <p className="text-sm font-semibold text-ink-900">
                       {m.price ? `S/ ${m.price} ${pricingUnitLabel[m.pricing_unit]}` : "Consultar precio"}
                     </p>
+                    {m.status === "published" && (
+                      <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-steel-600" title="Últimos 30 días">
+                        <span className="inline-flex items-center gap-1">
+                          <AIconEye size={14} /> {stats[m.id]?.views ?? 0} vistas
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <AIconChat size={14} /> {stats[m.id]?.whatsapp ?? 0} clics en WhatsApp
+                        </span>
+                        <span className="font-normal text-steel-400">· 30 días</span>
+                      </p>
+                    )}
                     <div className="mt-3 flex flex-wrap gap-2 text-sm">
                       <button type="button" onClick={() => setEditing(m)} className="rounded-lg bg-brand-600 px-3 py-1.5 font-semibold text-white hover:bg-brand-700">
                         Editar
