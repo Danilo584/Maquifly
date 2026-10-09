@@ -48,8 +48,11 @@ export const siteConfig = {
  * «service_role key».
  */
 export const supabaseConfig = {
-  url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-  anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+  url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://kmhlffnsermghtrtwvaz.supabase.co",
+  anonKey:
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    "sb_publishable_AIB0RDlG6OPJ1-lFJGl8oQ_pkmxWhiX",
 };
 
 export const SUPABASE_READY = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
