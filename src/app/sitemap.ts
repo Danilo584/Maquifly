@@ -6,6 +6,9 @@ import { blogPosts } from "@/lib/data/blog";
 import { repository } from "@/lib/repository";
 import { catalogMachines as demoMachines, catalogOwners as demoOwners } from "@/lib/data/catalog";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 /**
  * Sitemap generado desde los mismos datos que alimentan las páginas: no puede
  * quedar desactualizado al añadir una categoría o una landing.

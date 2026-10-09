@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 import type { Machine } from "@/lib/types";
-import { appendLocal, localId } from "@/lib/local-store";
+import { sendContactMessage } from "@/lib/submissions";
 import { track } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -11,8 +11,8 @@ import { IconCheck, IconMail } from "@/components/ui/Icon";
 
 /**
  * Alternativa a WhatsApp para quien prefiere dejar sus datos.
- * Valida en cliente y guarda la solicitud localmente. El envío real (correo
- * al propietario + registro en base de datos) requiere backend.
+ * La solicitud llega al panel de MaquiFly (Mensajes), que la pasa al
+ * propietario.
  */
 export function InfoRequestForm({ machine }: { machine: Machine }) {
   const id = useId();
@@ -24,8 +24,10 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
     const next: Record<string, string> = {};
     if (name.trim().length < 2) next.name = "Escribe tu nombre.";
@@ -36,15 +38,24 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
-    appendLocal("info-requests", {
-      id: localId("req"),
-      machineId: machine.id,
-      reference: machine.reference,
+    setSending(true);
+    const res = await sendContactMessage({
       name: name.trim(),
       contact: contact.trim(),
+      topic: `Solicitud de información · ${machine.reference} · ${machine.name}`,
       message: message.trim(),
-      createdAt: new Date().toISOString(),
+      machineId: machine.isDemo ? null : machine.id,
+      kind: "info_request",
     });
+    setSending(false);
+    if (!res.ok) {
+      setFailure(
+        res.reason === "not_configured"
+          ? "Este formulario aún no está conectado. Usa el botón de WhatsApp."
+          : "No pudimos enviar la solicitud. Inténtalo de nuevo o usa WhatsApp.",
+      );
+      return;
+    }
     track({ name: "contact_form_submit", context: `machine:${machine.reference}` });
     setSent(true);
   }
@@ -66,12 +77,10 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
             <IconCheck size={17} />
           </span>
           <div>
-            <p className="text-sm font-bold text-ink-900">Solicitud registrada</p>
+            <p className="text-sm font-bold text-ink-900">Solicitud enviada</p>
             <p className="mt-1 text-sm leading-relaxed text-steel-700">
-              Quedó guardada en este navegador. El envío al propietario
-              necesita backend (correo transaccional + tabla de solicitudes).
-              Mientras tanto, WhatsApp es el canal que sí funciona de extremo a
-              extremo.
+              MaquiFly la recibió y te contactará con la disponibilidad y el
+              precio. Si es urgente, escribe también por WhatsApp.
             </p>
           </div>
         </div>
@@ -131,9 +140,11 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
         publicación para que pueda responderte.
       </Callout>
 
+      {failure && <Callout tone="warn">{failure}</Callout>}
+
       <div className="flex flex-col gap-2 sm:flex-row-reverse">
-        <Button type="submit" variant="primary" fullWidth>
-          Enviar solicitud
+        <Button type="submit" variant="primary" fullWidth disabled={sending}>
+          {sending ? "Enviando…" : "Enviar solicitud"}
         </Button>
         <Button
           type="button"

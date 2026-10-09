@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 import type { ReportReason } from "@/lib/types";
-import { appendLocal, localId } from "@/lib/local-store";
+import { sendReport } from "@/lib/submissions";
 import { track } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
 import { Field, RadioCard, Textarea, Input } from "@/components/ui/Field";
@@ -53,7 +53,7 @@ export function ReportListing({
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!reason) {
       setError("Selecciona un motivo para continuar.");
@@ -65,16 +65,20 @@ export function ReportListing({
     }
     setError(null);
 
-    appendLocal("reports", {
-      id: localId("rep"),
+    const res = await sendReport({
       machineId,
-      reference,
       reason,
       comment: comment.trim(),
-      reporterContact: contact.trim() || null,
-      createdAt: new Date().toISOString(),
-      status: "open",
+      contact: contact.trim() || null,
     });
+    if (!res.ok) {
+      setError(
+        res.reason === "not_configured"
+          ? `Los reportes aún no están conectados. Escríbenos por WhatsApp indicando el código ${reference}.`
+          : "No pudimos enviar el reporte. Inténtalo de nuevo en un momento.",
+      );
+      return;
+    }
 
     track({ name: "report_submit", machineId, reason });
     setSent(true);
@@ -115,7 +119,7 @@ export function ReportListing({
           >
             <div className="flex items-start justify-between gap-4">
               <h2 id={`${id}-title`} className="text-lg font-bold text-ink-900">
-                {sent ? "Reporte registrado" : "Reportar publicación"}
+                {sent ? "Reporte enviado" : "Reportar publicación"}
               </h2>
               <Button
                 variant="ghost"
@@ -139,12 +143,6 @@ export function ReportListing({
                     un lugar confiable.
                   </p>
                 </div>
-                <Callout tone="warn" className="mt-4">
-                  <strong>Estado real de esta función:</strong> tu reporte quedó
-                  guardado únicamente en este navegador. El envío al equipo de
-                  MaquiFly requiere backend (tabla <code>reports</code> y panel
-                  de moderación), que todavía no está conectado.
-                </Callout>
                 <Button variant="primary" fullWidth className="mt-4" onClick={close}>
                   Cerrar
                 </Button>

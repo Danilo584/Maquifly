@@ -1,44 +1,24 @@
 import type { Metadata } from "next";
-import { AdminPanel } from "@/components/admin/AdminPanel";
-import { repository } from "@/lib/repository";
-import { catalogMachines } from "@/lib/data/catalog";
+import { AdminApp } from "@/components/admin/AdminApp";
 import { pageMetadata } from "@/lib/seo";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Panel de administración",
-  description: "Esqueleto del panel de moderación de MaquiFly.",
+  title: "Panel de control",
+  description: "Panel de administración de MaquiFly.",
   path: "/admin",
   noIndex: true,
 });
 
-export default async function AdminPage() {
-  const owners = await repository.listOwners();
-
+export default function AdminPage() {
   return (
-    <>
-      <div className="border-b border-steel-200 bg-steel-50">
-        <div className="container-mf py-3">
-          <Breadcrumbs
-            items={[{ label: "Inicio", href: "/" }, { label: "Administración" }]}
-          />
-        </div>
-      </div>
-
+    <div className="min-h-[70vh] bg-steel-50">
       <div className="container-mf py-8 sm:py-10">
-        <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">
-          Panel de administración
-        </h1>
-        <p className="mt-2 max-w-2xl text-[0.95rem] leading-relaxed text-steel-600">
-          Desde aquí se moderarán publicaciones, propietarios, reseñas y
-          reportes. Esta versión muestra la estructura y los datos disponibles
-          hoy.
-        </p>
-
-        <div className="mt-8">
-          <AdminPanel machines={catalogMachines} owners={owners} />
+        <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">Panel de control</h1>
+        <p className="mt-1 text-sm text-steel-600">Mensajes, publicaciones, propietarios, pagos y reportes de MaquiFly.</p>
+        <div className="mt-6">
+          <AdminApp />
         </div>
       </div>
-    </>
+    </div>
   );
 }

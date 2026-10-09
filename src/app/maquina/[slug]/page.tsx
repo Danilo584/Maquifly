@@ -38,6 +38,9 @@ import {
   IconTruck,
 } from "@/components/ui/Icon";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {

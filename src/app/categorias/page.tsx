@@ -9,6 +9,9 @@ import { LinkButton } from "@/components/ui/Button";
 import { IconPlus } from "@/components/ui/Icon";
 import type { MachineFamily } from "@/lib/types";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: "Categorías de maquinaria y equipos en alquiler",
   description:

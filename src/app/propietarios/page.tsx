@@ -10,6 +10,9 @@ import { Callout } from "@/components/ui/Callout";
 import { Faq } from "@/components/common/Faq";
 import { IconCheck, IconPlus, IconSearch, IconStar, IconTag } from "@/components/ui/Icon";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: "Para propietarios — publica tu maquinaria gratis",
   description:

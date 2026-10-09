@@ -33,7 +33,7 @@ create type report_status       as enum ('open', 'reviewing', 'resolved', 'dismi
 -- Catálogos
 -- --------------------------------------------------------------------------
 create table locations (
-  id          uuid primary key default uuid_generate_v4(),
+  id          text primary key,
   name        text not null,
   slug        text not null unique,
   region      text not null,
@@ -44,7 +44,7 @@ create table locations (
 );
 
 create table categories (
-  id                uuid primary key default uuid_generate_v4(),
+  id                text primary key,
   name              text not null,
   singular          text not null,
   slug              text not null unique,
@@ -66,18 +66,19 @@ create table profiles (
   email               text,
   phone               text,
   role                user_role not null default 'client',
-  location_id         uuid references locations(id),
+  location_id         text references locations(id),
   verification_status verification_status not null default 'registered',
   created_at          timestamptz not null default now()
 );
 
 create table owner_profiles (
   id                  uuid primary key default uuid_generate_v4(),
-  user_id             uuid not null references profiles(id) on delete cascade,
+  -- null = propietario gestionado por la administración (aún sin cuenta).
+  user_id             uuid references profiles(id) on delete set null,
   slug                text not null unique,
   business_name       text not null,
   description         text not null default '',
-  location_id         uuid not null references locations(id),
+  location_id         text not null references locations(id),
   area                text,
   logo_url            text,
   whatsapp            text not null,
@@ -97,12 +98,18 @@ create index owner_profiles_location_idx on owner_profiles(location_id);
 -- --------------------------------------------------------------------------
 -- Maquinaria
 -- --------------------------------------------------------------------------
+create sequence machine_reference_seq;
+create or replace function next_machine_reference() returns text
+language sql volatile as $$
+  select 'MF-PIU-' || lpad(nextval('machine_reference_seq')::text, 4, '0')
+$$;
+
 create table machines (
   id                          uuid primary key default uuid_generate_v4(),
-  reference                   text not null unique,
+  reference                   text not null unique default next_machine_reference(),
   slug                        text not null unique,
   owner_id                    uuid not null references owner_profiles(id) on delete cascade,
-  category_id                 uuid not null references categories(id),
+  category_id                 text not null references categories(id),
 
   name                        text not null,
   brand                       text not null,
@@ -110,7 +117,7 @@ create table machines (
   year                        integer,
   description                 text not null default '',
 
-  location_id                 uuid not null references locations(id),
+  location_id                 text not null references locations(id),
   area                        text not null,
   area_reference              text,
 
@@ -208,7 +215,11 @@ create table contact_messages (
   contact     text not null,
   topic       text,
   message     text not null,
-  created_at  timestamptz not null default now()
+  -- contact = formulario de contacto · info_request = «Solicitar información» de una máquina
+  kind        text not null default 'contact' check (kind in ('contact', 'info_request')),
+  status      text not null default 'new' check (status in ('new', 'read', 'archived')),
+  created_at  timestamptz not null default now(),
+  constraint contact_lengths check (length(name) <= 120 and length(contact) <= 160 and length(message) <= 4000)
 );
 
 -- --------------------------------------------------------------------------
@@ -604,3 +615,96 @@ grant select on owners_public, machines_public to anon, authenticated;
 drop policy "propietarios visibles" on owner_profiles;
 create policy "propietario ve lo suyo" on owner_profiles
   for select using (user_id = auth.uid() or is_admin());
+
+
+-- ==========================================================================
+-- PANEL DE ADMINISTRACIÓN
+-- ==========================================================================
+
+-- Catálogos (mismos ids que src/lib/data/categories.ts y locations.ts)
+insert into categories (id, name, singular, slug, family) values
+  ('cat-minicargadores', 'Minicargadores', 'Minicargador', 'minicargadores', 'heavy'),
+  ('cat-excavadoras', 'Excavadoras', 'Excavadora', 'excavadoras', 'heavy'),
+  ('cat-retroexcavadoras', 'Retroexcavadoras', 'Retroexcavadora', 'retroexcavadoras', 'heavy'),
+  ('cat-cargadores-frontales', 'Cargadores frontales', 'Cargador frontal', 'cargadores-frontales', 'heavy'),
+  ('cat-volquetes', 'Volquetes', 'Volquete', 'volquetes', 'heavy'),
+  ('cat-rodillos', 'Rodillos compactadores', 'Rodillo compactador', 'rodillos', 'heavy'),
+  ('cat-motoniveladoras', 'Motoniveladoras', 'Motoniveladora', 'motoniveladoras', 'heavy'),
+  ('cat-tractores-oruga', 'Tractores sobre oruga', 'Tractor sobre oruga', 'tractores-oruga', 'heavy'),
+  ('cat-gruas', 'Grúas', 'Grúa', 'gruas', 'heavy'),
+  ('cat-plataformas-elevadoras', 'Plataformas elevadoras', 'Plataforma elevadora', 'plataformas-elevadoras', 'support'),
+  ('cat-manipuladores-telescopicos', 'Manipuladores telescópicos', 'Manipulador telescópico', 'manipuladores-telescopicos', 'support'),
+  ('cat-generadores', 'Generadores eléctricos', 'Generador eléctrico', 'generadores', 'support'),
+  ('cat-mezcladoras', 'Mezcladoras y equipos de concreto', 'Mezcladora', 'mezcladoras', 'light'),
+  ('cat-compactadoras', 'Compactadoras ligeras', 'Compactadora', 'compactadoras', 'light'),
+  ('cat-equipos-agricolas', 'Equipos agrícolas', 'Equipo agrícola', 'equipos-agricolas', 'agricultural'),
+  ('cat-herramientas', 'Herramientas y equipos menores', 'Herramienta', 'herramientas', 'light')
+on conflict (id) do nothing;
+
+insert into locations (id, name, slug, region, active) values
+  ('loc-piura', 'Piura', 'piura', 'Piura', true),
+  ('loc-chiclayo', 'Chiclayo', 'chiclayo', 'Lambayeque', false),
+  ('loc-trujillo', 'Trujillo', 'trujillo', 'La Libertad', false),
+  ('loc-tumbes', 'Tumbes', 'tumbes', 'Tumbes', false),
+  ('loc-cajamarca', 'Cajamarca', 'cajamarca', 'Cajamarca', false),
+  ('loc-lima', 'Lima', 'lima', 'Lima', false)
+on conflict (id) do nothing;
+
+-- Cada usuario nuevo de Supabase Auth recibe su perfil (rol cliente).
+-- El admin se nombra a mano: update profiles set role = 'admin' where email = '…';
+create or replace function handle_new_user() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  insert into profiles (id, name, email)
+  values (new.id, coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)), new.email)
+  on conflict (id) do nothing;
+  return new;
+end $$;
+
+create trigger on_auth_user_created after insert on auth.users
+  for each row execute function handle_new_user();
+
+-- Solicitudes de publicación enviadas desde /publicar (sin cuenta).
+-- El admin las revisa y crea el propietario y la máquina desde el panel.
+create table listing_submissions (
+  id          uuid primary key default uuid_generate_v4(),
+  contact_name text not null,
+  whatsapp    text not null,
+  data        jsonb not null,
+  photos      text[] not null default '{}',
+  status      text not null default 'new' check (status in ('new', 'approved', 'rejected')),
+  admin_note  text,
+  created_at  timestamptz not null default now(),
+  constraint submission_size check (pg_column_size(data) < 20000 and coalesce(array_length(photos, 1), 0) <= 8)
+);
+alter table listing_submissions enable row level security;
+create policy "cualquiera envia solicitud" on listing_submissions
+  for insert with check (status = 'new');
+create policy "admin gestiona solicitudes" on listing_submissions
+  for all using (is_admin()) with check (is_admin());
+
+-- Mensajes y reportes: el admin los marca como leídos o archivados.
+create policy "admin gestiona mensajes" on contact_messages
+  for update using (is_admin()) with check (is_admin());
+create policy "admin borra mensajes" on contact_messages for delete using (is_admin());
+create policy "admin lee perfiles" on profiles for select using (is_admin());
+
+-- Fotos: bucket público de lectura. Cualquiera sube SOLO a submissions/
+-- (fotos de /publicar); el resto de carpetas solo el admin.
+do $do$
+begin
+  if exists (select 1 from pg_namespace where nspname = 'storage') then
+    insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+    values ('machine-photos', 'machine-photos', true, 5242880,
+            array['image/jpeg', 'image/png', 'image/webp', 'image/avif'])
+    on conflict (id) do nothing;
+
+    execute $p$create policy "fotos visibles" on storage.objects
+      for select using (bucket_id = 'machine-photos')$p$;
+    execute $p$create policy "subir fotos de solicitud" on storage.objects
+      for insert with check (bucket_id = 'machine-photos' and (storage.foldername(name))[1] = 'submissions')$p$;
+    execute $p$create policy "admin gestiona fotos" on storage.objects
+      for all using (bucket_id = 'machine-photos' and public.is_admin())
+      with check (bucket_id = 'machine-photos' and public.is_admin())$p$;
+  end if;
+end $do$;

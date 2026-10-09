@@ -41,10 +41,21 @@ export const siteConfig = {
   launchCity: "piura",
 } as const;
 
-/** ¿Estamos mostrando el catálogo de demostración? */
-export const DATA_SOURCE =
-  (process.env.NEXT_PUBLIC_DATA_SOURCE as "demo" | "supabase" | undefined) ??
-  "demo";
+/**
+ * Conexión a Supabase. La URL y la clave «anon» son PÚBLICAS por diseño
+ * (la seguridad la ponen las políticas RLS de supabase/schema.sql), así que
+ * pueden ir como valor por defecto en el código. Nunca poner aquí la
+ * «service_role key».
+ */
+export const supabaseConfig = {
+  url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+};
+
+export const SUPABASE_READY = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
+
+/** De dónde lee la web el catálogo: Supabase si está configurado. */
+export const DATA_SOURCE: "demo" | "supabase" = SUPABASE_READY ? "supabase" : "demo";
 
 export const IS_DEMO_CATALOG = DATA_SOURCE === "demo";
 

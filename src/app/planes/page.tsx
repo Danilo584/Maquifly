@@ -24,6 +24,9 @@ import { Faq } from "@/components/common/Faq";
 import { FeaturedBadge, FounderBadge } from "@/components/owner/PlanBadges";
 import { IconAward, IconBolt, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: "Planes para propietarios — Fly Start, Fly Plus y Fly Pro",
   description:

@@ -46,8 +46,8 @@ export default function ContactPage() {
                 El canal más rápido
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-steel-600">
-                WhatsApp es el canal que funciona de extremo a extremo hoy. Si tu
-                consulta es urgente, escríbenos por ahí.
+                Si tu consulta es urgente, escríbenos por WhatsApp y te
+                respondemos al toque.
               </p>
               <LinkButton
                 href={platformWhatsappUrl("Consulta desde la web")}
@@ -82,11 +82,15 @@ export default function ContactPage() {
                   </span>
                 </li>
               </ul>
-              <p className="mt-4 border-t border-steel-200 pt-4 text-xs leading-relaxed text-steel-500">
-                MaquiFly no tiene todavía perfiles en redes sociales. Cuando
-                existan, se enlazarán desde el pie de página; no publicamos
-                enlaces a cuentas que no son nuestras.
-              </p>
+              {siteConfig.social.facebook && (
+                <p className="mt-4 border-t border-steel-200 pt-4 text-sm text-steel-600">
+                  Síguenos en{" "}
+                  <a href={siteConfig.social.facebook} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-700 hover:underline">
+                    Facebook
+                  </a>
+                  .
+                </p>
+              )}
             </div>
           </aside>
         </div>

@@ -31,6 +31,9 @@ import { plans } from "@/lib/plans";
 import { FounderBadge } from "@/components/owner/PlanBadges";
 import { locationsById } from "@/lib/data/locations";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: `Alquiler de maquinaria en Piura — ${siteConfig.name}`,
   description:

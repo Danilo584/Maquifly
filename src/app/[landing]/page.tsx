@@ -16,6 +16,9 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Section } from "@/components/ui/Section";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 type Params = { landing: string };
 
 /**

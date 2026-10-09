@@ -24,6 +24,9 @@ import { LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { IconWhatsApp } from "@/components/ui/Icon";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 /**
  * PAGO MANUAL
  * ---------------------------------------------------------------------------

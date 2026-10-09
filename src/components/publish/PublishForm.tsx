@@ -15,10 +15,12 @@ import {
 import { categories, getCategory } from "@/lib/data/categories";
 import { activeLocations, getLocation, locations } from "@/lib/data/locations";
 import { readLocal, writeLocal, removeLocal, localId } from "@/lib/local-store";
+import { sendListingSubmission } from "@/lib/submissions";
+import { platformWhatsappUrl } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
 import type { Machine } from "@/lib/types";
 
-import { Button } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
 import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { Callout } from "@/components/ui/Callout";
 import { MachineCard } from "@/components/machine/MachineCard";
@@ -41,7 +43,7 @@ const steps = [
 
 const DRAFT_KEY = "listing-draft";
 
-type Photo = { id: string; name: string; size: number; url: string };
+type Photo = { id: string; name: string; size: number; url: string; file: File };
 
 export function PublishForm() {
   const id = useId();
@@ -51,6 +53,8 @@ export function PublishForm() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const [draftRestored, setDraftRestored] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -137,6 +141,7 @@ export function PublishForm() {
         name: file.name,
         size: file.size,
         url: URL.createObjectURL(file),
+        file,
       });
     }
     setPhotos((prev) => [...prev, ...accepted]);
@@ -151,7 +156,7 @@ export function PublishForm() {
     });
   }
 
-  function publish() {
+  async function publish() {
     const result = listingSchema.safeParse(values);
     if (!result.success) {
       const found: Record<string, string> = {};
@@ -171,11 +176,23 @@ export function PublishForm() {
       return;
     }
 
-    writeLocal(`listing-submitted-${localId("l")}`, {
-      ...result.data,
-      photoCount: photos.length,
-      createdAt: new Date().toISOString(),
+    setSending(true);
+    setSendError(null);
+    const res = await sendListingSubmission({
+      contactName: result.data.ownerName,
+      whatsapp: result.data.whatsapp,
+      data: result.data as unknown as Record<string, unknown>,
+      photos: photos.map((p) => p.file),
     });
+    setSending(false);
+    if (!res.ok) {
+      setSendError(
+        res.reason === "not_configured"
+          ? "El envío de publicaciones aún no está conectado. Mándanos los datos y fotos por WhatsApp y la publicamos por ti."
+          : `No pudimos enviar tu publicación (${res.message ?? "error"}). Inténtalo de nuevo o escríbenos por WhatsApp.`,
+      );
+      return;
+    }
     track({ name: "listing_draft_saved", categorySlug: String(values.categorySlug) });
     removeLocal(DRAFT_KEY);
     setPublished(true);
@@ -731,17 +748,31 @@ export function PublishForm() {
 
               <PreviewSummary values={values} photoCount={photos.length} />
 
-              <Callout tone="warn" title="Qué ocurre al pulsar «Publicar»">
-                Tu publicación queda guardada en este navegador para que puedas
-                revisarla, pero todavía no se hace pública: falta conectar la
-                base de datos y la moderación. Cuando MaquiFly tenga backend,
-                este mismo formulario creará la publicación real y te avisará
-                por WhatsApp cuando esté aprobada.
+              <Callout tone="info" title="Qué ocurre al pulsar «Enviar»">
+                Tu publicación y tus fotos llegan a MaquiFly. La revisamos y la
+                publicamos, normalmente en menos de 24 horas, y te avisamos por
+                WhatsApp.
               </Callout>
 
-              <Button variant="primary" size="lg" onClick={publish}>
+              {sendError && (
+                <Callout tone="warn">
+                  {sendError}
+                  <div className="mt-3">
+                    <LinkButton
+                      href={platformWhatsappUrl("Quiero publicar mi maquinaria")}
+                      external
+                      variant="whatsapp"
+                      size="sm"
+                    >
+                      Escribir por WhatsApp
+                    </LinkButton>
+                  </div>
+                </Callout>
+              )}
+
+              <Button variant="primary" size="lg" onClick={publish} disabled={sending}>
                 <IconCheck size={19} />
-                Publicar maquinaria
+                {sending ? "Enviando fotos y datos…" : "Enviar publicación"}
               </Button>
             </div>
           )}
@@ -797,9 +828,9 @@ export function PublishForm() {
             Publicar es gratis
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-steel-600">
-            En esta etapa no hay costo de publicación ni comisión sobre el
-            alquiler. Si en el futuro aparecen opciones de pago, serán
-            opcionales y para dar más visibilidad.
+            Con Fly Start publicas hasta 2 máquinas sin costo y sin comisión
+            sobre el alquiler. Si quieres más visibilidad, mira los planes
+            Fly Plus y Fly Pro.
           </p>
         </div>
       </aside>
@@ -916,11 +947,11 @@ function PublishedState({
           <IconCheck size={28} />
         </span>
         <h2 className="mt-4 text-2xl font-extrabold text-ink-900">
-          Publicación completada
+          ¡Recibimos tu publicación!
         </h2>
         <p className="mt-2 max-w-lg text-[0.95rem] leading-relaxed text-steel-700">
-          Registramos tu publicación y ya no necesitas volver a llenar el
-          formulario: quedó guardada en este navegador con todos sus datos.
+          El equipo de MaquiFly la revisa y la publica, normalmente en menos de
+          24 horas. Te escribiremos por WhatsApp si necesitamos algún dato.
         </p>
       </div>
 
@@ -932,13 +963,6 @@ function PublishedState({
           <MachineCard machine={machine} />
         </div>
       </div>
-
-      <Callout tone="warn" className="mt-6" title="Siguiente paso real">
-        Para que esta publicación sea visible para todo el mundo falta conectar
-        el backend: base de datos, subida de fotos y revisión previa. Está todo
-        preparado en el código (modelo de datos, validación y panel de
-        administración); solo falta enchufarlo.
-      </Callout>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <Button variant="primary" onClick={onRestart}>

@@ -16,6 +16,9 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { DemoNotice } from "@/components/common/Demo";
 import { Section, SectionHeading } from "@/components/ui/Section";
 
+/** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
+export const revalidate = 60;
+
 type Params = { categoria: string };
 
 /** Cada categoría se pre-genera: es una página indexable con contenido propio. */

@@ -2,7 +2,10 @@
 
 import { useId, useState } from "react";
 import { z } from "zod";
-import { appendLocal, localId } from "@/lib/local-store";
+import { sendContactMessage } from "@/lib/submissions";
+import { platformWhatsappUrl } from "@/lib/whatsapp";
+import { LinkButton } from "@/components/ui/Button";
+import { IconWhatsApp } from "@/components/ui/Icon";
 import { track } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
@@ -46,8 +49,10 @@ export function ContactForm() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
     const result = contactSchema.safeParse(values);
     if (!result.success) {
@@ -60,11 +65,19 @@ export function ContactForm() {
       return;
     }
     setErrors({});
-    appendLocal("contact-messages", {
-      id: localId("msg"),
-      ...result.data,
-      createdAt: new Date().toISOString(),
-    });
+    setSending(true);
+    setFailure(null);
+    const topicLabel = topics.find((t) => t.value === result.data.topic)?.label ?? result.data.topic;
+    const res = await sendContactMessage({ ...result.data, topic: topicLabel });
+    setSending(false);
+    if (!res.ok) {
+      setFailure(
+        res.reason === "not_configured"
+          ? "El formulario aún no está conectado. Escríbenos por WhatsApp y te respondemos al toque."
+          : "No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos por WhatsApp.",
+      );
+      return;
+    }
     track({ name: "contact_form_submit", context: `contacto:${values.topic}` });
     setSent(true);
   }
@@ -77,17 +90,13 @@ export function ContactForm() {
             <IconCheck size={20} />
           </span>
           <div>
-            <h2 className="text-lg font-bold text-ink-900">Mensaje registrado</h2>
+            <h2 className="text-lg font-bold text-ink-900">¡Mensaje enviado!</h2>
             <p className="mt-2 text-sm leading-relaxed text-steel-700">
-              Gracias por escribir. Tu mensaje quedó guardado en este navegador.
+              Gracias por escribir. Lo recibimos y te responderemos al contacto
+              que dejaste. Si es urgente, escríbenos también por WhatsApp.
             </p>
           </div>
         </div>
-        <Callout tone="warn" className="mt-4">
-          <strong>Estado real de esta función:</strong> el envío por correo
-          necesita un servicio de correo transaccional conectado al backend.
-          Mientras tanto, escríbenos por WhatsApp: ese canal sí funciona.
-        </Callout>
       </div>
     );
   }
@@ -151,8 +160,25 @@ export function ContactForm() {
         />
       </Field>
 
-      <Button type="submit" variant="primary" size="lg" className="sm:self-start">
-        Enviar mensaje
+      {failure && (
+        <Callout tone="warn">
+          {failure}
+          <div className="mt-3">
+            <LinkButton
+              href={platformWhatsappUrl(values.topic)}
+              external
+              variant="whatsapp"
+              size="sm"
+            >
+              <IconWhatsApp size={16} />
+              Escribir por WhatsApp
+            </LinkButton>
+          </div>
+        </Callout>
+      )}
+
+      <Button type="submit" variant="primary" size="lg" className="sm:self-start" disabled={sending}>
+        {sending ? "Enviando…" : "Enviar mensaje"}
       </Button>
     </form>
   );

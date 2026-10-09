@@ -10,7 +10,10 @@ import {
   paginate,
   sortMachines,
 } from "@/lib/repository/demo-repository";
-import { catalogMachines as demoMachines } from "@/lib/data/catalog";
+import { catalogMachines } from "@/lib/data/catalog";
+import { fetchPublishedMachines } from "@/lib/repository/supabase-repository";
+import { SUPABASE_READY } from "@/lib/site";
+import type { Machine } from "@/lib/types";
 import { categoriesBySlug } from "@/lib/data/categories";
 import { locationsBySlug } from "@/lib/data/locations";
 import {
@@ -65,10 +68,26 @@ export function SearchResults() {
     [searchParams],
   );
 
+  // Catálogo: desde Supabase si está conectado; si no, el catálogo local.
+  const [demoMachines, setMachines] = useState<Machine[]>(catalogMachines);
+  const [loading, setLoading] = useState(SUPABASE_READY);
+  useEffect(() => {
+    if (!SUPABASE_READY) return;
+    let alive = true;
+    fetchPublishedMachines().then((list) => {
+      if (!alive) return;
+      setMachines(list);
+      setLoading(false);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   const result = useMemo(() => {
     const filtered = applyFilters(demoMachines, filters);
     return paginate(sortMachines(filtered, filters), filters.page ?? 1);
-  }, [filters]);
+  }, [filters, demoMachines]);
 
   // Conteo por categoría respetando el resto de filtros, para que los números
   // del panel lateral coincidan con lo que el usuario obtendrá al hacer clic.
@@ -83,7 +102,7 @@ export function SearchResults() {
       }
     }
     return map;
-  }, [filters]);
+  }, [filters, demoMachines]);
 
   const push = useCallback(
     (next: SearchFilters) => {
@@ -181,6 +200,8 @@ export function SearchResults() {
                   filters={filters}
                 />
               </>
+            ) : loading ? (
+              <p className="py-16 text-center text-sm text-steel-500">Cargando maquinaria…</p>
             ) : (
               <EmptyState
                 tone="dashed"
