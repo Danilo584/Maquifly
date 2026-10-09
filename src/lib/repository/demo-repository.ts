@@ -5,6 +5,7 @@ import { demoOwners } from "@/lib/data/demo-owners";
 import { reviews } from "@/lib/data/reviews";
 import { categoriesById, categoriesBySlug } from "@/lib/data/categories";
 import { locationsBySlug } from "@/lib/data/locations";
+import { visibilityRank } from "@/lib/plans";
 
 export const PAGE_SIZE = 12;
 
@@ -139,6 +140,10 @@ export function sortMachines(
     case "relevance":
     default:
       sorted.sort((a, b) => {
+        // Visibilidad comprada primero (Destacado Express, Fly Pro, Fly Plus),
+        // pero solo entre resultados que sí coinciden con la búsqueda.
+        const vis = visibilityRank(b) - visibilityRank(a);
+        if (vis !== 0) return vis;
         if (filters.q) {
           const diff = relevanceScore(b, filters.q) - relevanceScore(a, filters.q);
           if (diff !== 0) return diff;

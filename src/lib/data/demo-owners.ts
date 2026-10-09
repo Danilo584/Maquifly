@@ -33,6 +33,11 @@ export const demoOwners: OwnerProfile[] = [
     machineCount: 5,
     verificationStatus: "registered",
     memberSince: "2026-01-12T00:00:00.000Z",
+    // Los registros DEMO no ocupan cupos de fundador ni simulan planes pagados.
+    plan: "start",
+    planExpiresAt: null,
+    founderNumber: null,
+    ruc: null,
     isDemo: true,
   },
   {
@@ -52,6 +57,11 @@ export const demoOwners: OwnerProfile[] = [
     machineCount: 4,
     verificationStatus: "registered",
     memberSince: "2026-02-03T00:00:00.000Z",
+    // Los registros DEMO no ocupan cupos de fundador ni simulan planes pagados.
+    plan: "start",
+    planExpiresAt: null,
+    founderNumber: null,
+    ruc: null,
     isDemo: true,
   },
   {
@@ -71,6 +81,11 @@ export const demoOwners: OwnerProfile[] = [
     machineCount: 3,
     verificationStatus: "registered",
     memberSince: "2026-03-18T00:00:00.000Z",
+    // Los registros DEMO no ocupan cupos de fundador ni simulan planes pagados.
+    plan: "start",
+    planExpiresAt: null,
+    founderNumber: null,
+    ruc: null,
     isDemo: true,
   },
   {
@@ -90,6 +105,11 @@ export const demoOwners: OwnerProfile[] = [
     machineCount: 3,
     verificationStatus: "registered",
     memberSince: "2026-04-02T00:00:00.000Z",
+    // Los registros DEMO no ocupan cupos de fundador ni simulan planes pagados.
+    plan: "start",
+    planExpiresAt: null,
+    founderNumber: null,
+    ruc: null,
     isDemo: true,
   },
 ];

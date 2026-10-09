@@ -26,12 +26,12 @@ const ownerFaq = [
   {
     question: "¿Cuánto cuesta publicar en MaquiFly?",
     answer:
-      "Nada. Publicar es gratuito y no cobramos comisión sobre los alquileres. Si en el futuro existen opciones de pago —publicaciones destacadas o planes para empresas con muchas máquinas—, serán opcionales y nunca se aplicarán de forma retroactiva a lo que ya publicaste gratis.",
+      "Publicar es gratis con Fly Start (hasta 2 máquinas). Si quieres más visibilidad existen Fly Plus y Fly Pro, y los Destacados Express para una sola máquina; todo es opcional y se detalla en la página de planes. No cobramos comisión sobre tus alquileres.",
   },
   {
     question: "¿MaquiFly se queda con mis clientes?",
     answer:
-      "No. El contacto es directo por WhatsApp entre el cliente y tú. MaquiFly no intermedia la conversación, no cobra el alquiler y no participa en el acuerdo.",
+      "No. En Fly Start el cliente escribe primero a MaquiFly y nosotros te lo pasamos; en Fly Plus y Fly Pro te escribe directo a tu WhatsApp. En ningún caso cobramos el alquiler ni comisión: el precio y el acuerdo son tuyos.",
   },
   {
     question: "¿Puedo publicar varias máquinas?",
@@ -98,8 +98,8 @@ export default async function OwnersPage() {
           {[
             {
               Icon: IconTag,
-              title: "Gratis y sin comisión",
-              text: "No pagas por publicar ni por los contactos que recibes. En esta etapa MaquiFly no monetiza: prioriza construir catálogo real.",
+              title: "Gratis para empezar",
+              text: "Con Fly Start publicas hasta 2 máquinas sin pagar. Sin comisión sobre tus alquileres, en ningún plan.",
             },
             {
               Icon: IconSearch,

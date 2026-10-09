@@ -25,6 +25,7 @@ import { MachineCard } from "@/components/machine/MachineCard";
 import { DemoNotice } from "@/components/common/Demo";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Badge } from "@/components/ui/Badge";
+import { FeaturedBadge, FounderBadge, machineIsFeatured } from "@/components/owner/PlanBadges";
 import { Callout } from "@/components/ui/Callout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -174,6 +175,8 @@ export default async function MachinePage({
                 <Badge tone="neutral" size="sm">
                   Código {machine.reference}
                 </Badge>
+                {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge size="md" />}
+                {!machine.isDemo && machine.ownerIsFounder && <FounderBadge size="md" />}
               </div>
 
               <h1 className="mt-2.5 text-2xl font-extrabold leading-tight text-ink-900 sm:text-3xl lg:text-4xl">
@@ -330,7 +333,7 @@ export default async function MachinePage({
                 <ul className="mt-5 flex flex-col gap-2 border-t border-steel-100 pt-4">
                   {[
                     "El precio final lo acuerdas directamente con el propietario.",
-                    "MaquiFly no cobra comisión por este contacto.",
+                    "MaquiFly no cobra comisión sobre el alquiler.",
                     "Confirma siempre disponibilidad y condiciones antes de trasladar la máquina.",
                   ].map((text) => (
                     <li key={text} className="flex items-start gap-2 text-xs text-steel-600">

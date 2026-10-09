@@ -359,3 +359,248 @@ create policy "admin lee mensajes" on contact_messages for select using (is_admi
 -- En el panel de Supabase: crear el bucket público `machine-photos` y
 -- restringir la subida a usuarios autenticados, con límite de 5 MB por
 -- archivo y tipos image/jpeg, image/png, image/webp, image/avif.
+
+-- ==========================================================================
+-- PLANES, SOCIO FUNDADOR, DESTACADOS EXPRESS Y PAGOS MANUALES
+-- ==========================================================================
+-- Reglas comerciales (fuente: src/lib/plans.ts):
+--   · Fly Start (gratis): 2 máquinas, contacto vía MaquiFly.
+--   · Fly Plus:          5 máquinas, WhatsApp directo, prioridad, «Destacado».
+--   · Fly Pro:           ilimitadas, WhatsApp directo, perfil de empresa, portada.
+--   · Socio Fundador:    los 10 primeros con un pago de plan APROBADO.
+--   · Destacado Express: una máquina, 7 días arriba en el buscador.
+-- El cobro es manual: el admin aprueba el pago y la función approve_payment
+-- activa el plan. Nadie más puede tocar plan, vencimiento, fundador ni
+-- destacados (trigger protect_commercial_fields).
+
+create type plan_id        as enum ('start', 'plus', 'pro');
+create type payment_status as enum ('pending', 'approved', 'rejected');
+create type payment_method as enum ('yape', 'plin', 'transfer');
+
+alter table owner_profiles
+  add column plan            plan_id not null default 'start',
+  add column plan_expires_at timestamptz,
+  add column founder_number  smallint unique
+    constraint founder_number_range check (founder_number between 1 and 10),
+  add column ruc             text
+    constraint ruc_format check (ruc is null or ruc ~ '^(10|15|17|20)[0-9]{9}$');
+
+alter table machines add column featured_until timestamptz;
+
+-- Plan efectivo: un plan pagado vencido vuelve a comportarse como Fly Start.
+create or replace function effective_plan(p plan_id, expires timestamptz)
+returns plan_id language sql stable as $$
+  select case when p <> 'start' and expires is not null and expires > now() then p
+              else 'start'::plan_id end
+$$;
+
+create or replace function plan_machine_limit(p plan_id) returns integer
+language sql immutable as $$
+  select case p when 'start' then 2 when 'plus' then 5 else null end
+$$;
+
+-- --------------------------------------------------------------------------
+-- Pagos
+-- --------------------------------------------------------------------------
+create table payments (
+  id                uuid primary key default uuid_generate_v4(),
+  owner_id          uuid not null references owner_profiles(id) on delete cascade,
+  product           text not null
+    constraint payment_product check (product in ('fly-plus', 'fly-pro', 'destacado-7')),
+  machine_id        uuid references machines(id) on delete set null,
+  amount_pen        numeric(8,2) not null check (amount_pen > 0),
+  method            payment_method not null,
+  operation_number  text,
+  proof_url         text,
+  founder_requested boolean not null default false,
+  status            payment_status not null default 'pending',
+  note              text,
+  created_at        timestamptz not null default now(),
+  reviewed_at       timestamptz,
+  reviewed_by       uuid references profiles(id),
+  constraint boost_needs_machine check (product <> 'destacado-7' or machine_id is not null)
+);
+
+create index payments_owner_idx  on payments(owner_id);
+create index payments_status_idx on payments(status);
+
+alter table payments enable row level security;
+create policy "propietario ve sus pagos" on payments
+  for select using (
+    is_admin() or owner_id in (select id from owner_profiles where user_id = auth.uid())
+  );
+create policy "propietario registra su pago" on payments
+  for insert with check (
+    status = 'pending'
+    and owner_id in (select id from owner_profiles where user_id = auth.uid())
+  );
+create policy "admin gestiona pagos" on payments
+  for all using (is_admin()) with check (is_admin());
+
+-- --------------------------------------------------------------------------
+-- Campos comerciales protegidos
+-- --------------------------------------------------------------------------
+create or replace function protect_owner_commercial_fields() returns trigger
+language plpgsql as $$
+begin
+  if is_admin() or current_setting('maquifly.approving', true) = 'on' then
+    return new;
+  end if;
+  if new.plan                is distinct from old.plan
+  or new.plan_expires_at     is distinct from old.plan_expires_at
+  or new.founder_number      is distinct from old.founder_number
+  or new.verification_status is distinct from old.verification_status then
+    raise exception 'Solo la administración puede cambiar el plan, el fundador o la verificación';
+  end if;
+  return new;
+end $$;
+
+create or replace function protect_machine_commercial_fields() returns trigger
+language plpgsql as $$
+begin
+  if is_admin() or current_setting('maquifly.approving', true) = 'on' then
+    return new;
+  end if;
+  if new.featured_until is distinct from old.featured_until then
+    raise exception 'Solo la administración puede activar un Destacado Express';
+  end if;
+  return new;
+end $$;
+
+create trigger owner_profiles_protect before update on owner_profiles
+  for each row execute function protect_owner_commercial_fields();
+create trigger machines_protect before update on machines
+  for each row execute function protect_machine_commercial_fields();
+
+-- Un propietario nuevo no puede nacer con plan pagado ni como fundador.
+create or replace function protect_owner_insert() returns trigger
+language plpgsql as $$
+begin
+  if not is_admin() then
+    new.plan := 'start';
+    new.plan_expires_at := null;
+    new.founder_number := null;
+    new.verification_status := 'registered';
+  end if;
+  return new;
+end $$;
+
+create trigger owner_profiles_protect_insert before insert on owner_profiles
+  for each row execute function protect_owner_insert();
+
+-- --------------------------------------------------------------------------
+-- Límite de máquinas publicadas según el plan
+-- --------------------------------------------------------------------------
+create or replace function enforce_plan_machine_limit() returns trigger
+language plpgsql as $$
+declare
+  lim integer;
+  used integer;
+begin
+  if new.status <> 'published' or (tg_op = 'UPDATE' and old.status = 'published') then
+    return new;
+  end if;
+
+  select plan_machine_limit(effective_plan(plan, plan_expires_at)) into lim
+    from owner_profiles where id = new.owner_id;
+  if lim is null then return new; end if;
+
+  select count(*) into used from machines
+    where owner_id = new.owner_id and status = 'published' and id <> new.id;
+
+  if used >= lim then
+    raise exception 'Tu plan permite % máquinas publicadas. Mejora tu plan para publicar más.', lim;
+  end if;
+  return new;
+end $$;
+
+create trigger machines_plan_limit before insert or update of status on machines
+  for each row execute function enforce_plan_machine_limit();
+
+-- --------------------------------------------------------------------------
+-- Aprobación de pagos (solo admin)
+-- --------------------------------------------------------------------------
+-- Activa el plan por 1 mes (acumulable si ya estaba activo) o el destacado
+-- por 7 días, y asigna el siguiente número de Socio Fundador si quedan cupos
+-- y es el primer pago de plan aprobado de ese propietario.
+create or replace function approve_payment(p_payment_id uuid) returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  pay payments%rowtype;
+  next_founder smallint;
+begin
+  if not is_admin() then
+    raise exception 'Solo la administración aprueba pagos';
+  end if;
+
+  select * into pay from payments where id = p_payment_id for update;
+  if not found or pay.status <> 'pending' then
+    raise exception 'Pago inexistente o ya revisado';
+  end if;
+
+  perform set_config('maquifly.approving', 'on', true);
+
+  if pay.product in ('fly-plus', 'fly-pro') then
+    update owner_profiles set
+      plan = case pay.product when 'fly-plus' then 'plus'::plan_id else 'pro'::plan_id end,
+      plan_expires_at = greatest(now(), coalesce(plan_expires_at, now())) + interval '1 month'
+    where id = pay.owner_id;
+
+    -- Socio Fundador: orden de aprobación, máximo 10, permanente.
+    perform pg_advisory_xact_lock(hashtext('maquifly_founders'));
+    if (select founder_number from owner_profiles where id = pay.owner_id) is null then
+      select coalesce(max(founder_number), 0) + 1 into next_founder from owner_profiles;
+      if next_founder <= 10 then
+        update owner_profiles set founder_number = next_founder where id = pay.owner_id;
+      end if;
+    end if;
+  else
+    update machines set
+      featured_until = greatest(now(), coalesce(featured_until, now())) + interval '7 days'
+    where id = pay.machine_id and owner_id = pay.owner_id;
+  end if;
+
+  update payments set status = 'approved', reviewed_at = now(), reviewed_by = auth.uid()
+    where id = p_payment_id;
+end $$;
+
+revoke all on function approve_payment(uuid) from public;
+grant execute on function approve_payment(uuid) to authenticated;
+
+-- --------------------------------------------------------------------------
+-- Vistas públicas (lo que lee la web)
+-- --------------------------------------------------------------------------
+-- El WhatsApp del propietario solo es público con Fly Plus/Pro vigente; en
+-- Fly Start el contacto pasa por MaquiFly. El RUC solo se ve en Fly Pro.
+create view owners_public as
+select
+  o.id, o.user_id, o.slug, o.business_name, o.description, o.location_id,
+  o.area, o.logo_url, o.rating, o.review_count, o.machine_count,
+  o.verification_status, o.member_since, o.founder_number, o.plan_expires_at,
+  effective_plan(o.plan, o.plan_expires_at) as plan,
+  case when effective_plan(o.plan, o.plan_expires_at) in ('plus', 'pro')
+       then o.whatsapp end as whatsapp,
+  null::text as phone,
+  case when effective_plan(o.plan, o.plan_expires_at) = 'pro'
+       then o.ruc end as ruc
+from owner_profiles o;
+
+create view machines_public as
+select
+  m.*,
+  effective_plan(o.plan, o.plan_expires_at) as owner_plan,
+  (o.founder_number is not null) as owner_is_founder,
+  (case when m.featured_until > now() then 10 else 0 end)
+  + (case effective_plan(o.plan, o.plan_expires_at) when 'pro' then 2 when 'plus' then 1 else 0 end)
+    as visibility_rank
+from machines m
+join owner_profiles o on o.id = m.owner_id
+where m.status = 'published';
+
+grant select on owners_public, machines_public to anon, authenticated;
+
+-- La tabla de propietarios deja de ser legible directamente por visitantes:
+-- así nadie lee el WhatsApp de un perfil Fly Start consultando la API.
+drop policy "propietarios visibles" on owner_profiles;
+create policy "propietario ve lo suyo" on owner_profiles
+  for select using (user_id = auth.uid() or is_admin());

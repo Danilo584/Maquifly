@@ -21,6 +21,7 @@ const columns = [
       { href: "/como-funciona", label: "Cómo funciona" },
       { href: "/nosotros", label: "Sobre MaquiFly" },
       { href: "/propietarios", label: "Para propietarios" },
+      { href: "/planes", label: "Planes y precios" },
       { href: "/empresas", label: "Para empresas" },
       { href: "/blog", label: "Blog" },
       { href: "/contacto", label: "Contacto" },

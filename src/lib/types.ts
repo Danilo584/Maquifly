@@ -13,6 +13,8 @@
 // Enumeraciones
 // ---------------------------------------------------------------------------
 
+import type { PlanId } from "@/lib/plans";
+
 export type UserRole = "client" | "owner" | "admin";
 
 /**
@@ -86,6 +88,19 @@ export interface OwnerProfile {
   machineCount: number;
   verificationStatus: VerificationStatus;
   memberSince: string; // ISO 8601
+
+  /** Plan comercial vigente (ver src/lib/plans.ts). Lo activa la administración. */
+  plan: PlanId;
+  /** Fin del periodo pagado. null en Fly Start. */
+  planExpiresAt: string | null;
+  /**
+   * Puesto en el Programa Socio Fundador (1–10). null = no es fundador.
+   * Se asigna al aprobar el PRIMER pago de plan, en orden, y es permanente.
+   */
+  founderNumber: number | null;
+  /** RUC. Solo se muestra en perfiles Fly Pro (perfil de empresa). */
+  ruc: string | null;
+
   /** true = registro de demostración, se etiqueta visiblemente en la interfaz. */
   isDemo: boolean;
 }
@@ -192,6 +207,17 @@ export interface Machine {
 
   createdAt: string;
   updatedAt: string;
+
+  /**
+   * Datos del propietario copiados en la máquina para ordenar y etiquetar sin
+   * cargar el perfil en cada tarjeta. En Supabase los da la vista
+   * `machines_public` (ver supabase/schema.sql); nunca se editan a mano.
+   */
+  ownerPlan: PlanId;
+  ownerIsFounder: boolean;
+  /** Destacado Express vigente hasta esta fecha. null = sin destacado. */
+  featuredUntil: string | null;
+
   /** true = publicación de demostración. Se etiqueta como DEMO en la interfaz. */
   isDemo: boolean;
 }

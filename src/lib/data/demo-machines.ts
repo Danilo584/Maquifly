@@ -33,7 +33,17 @@ function placeholderImages(icon: MachineIconName, label: string) {
 
 type DemoInput = Omit<
   Machine,
-  "images" | "rating" | "reviewCount" | "isDemo" | "status" | "createdAt" | "updatedAt" | "currency"
+  | "images"
+  | "rating"
+  | "reviewCount"
+  | "isDemo"
+  | "status"
+  | "createdAt"
+  | "updatedAt"
+  | "currency"
+  | "ownerPlan"
+  | "ownerIsFounder"
+  | "featuredUntil"
 > & { currency?: Machine["currency"]; createdAt?: string };
 
 function demo(input: DemoInput): Machine {
@@ -47,6 +57,10 @@ function demo(input: DemoInput): Machine {
     reviewCount: 0,
     createdAt: input.createdAt ?? NOW,
     updatedAt: NOW,
+    // DEMO: sin plan pagado, sin fundador y sin destacado (no se simula visibilidad comprada).
+    ownerPlan: "start",
+    ownerIsFounder: false,
+    featuredUntil: null,
     isDemo: true,
   };
 }

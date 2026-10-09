@@ -85,7 +85,7 @@ export default function CompaniesPage() {
               {[
                 "Filtros por categoría, zona, operador, transporte y disponibilidad.",
                 "Información estructurada para comparar cotizaciones equivalentes.",
-                "Contacto directo por WhatsApp, sin intermediarios ni comisión.",
+                "Contacto por WhatsApp con el mensaje ya armado, sin comisión.",
                 "Perfiles de propietario para saber con quién estás tratando.",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5">
@@ -104,76 +104,14 @@ export default function CompaniesPage() {
       <Section tone="muted">
         <SectionHeading
           eyebrow="Planes"
-          title="Qué cuesta hoy y qué podría costar mañana"
-          description="Preferimos ser explícitos con el modelo de negocio antes de que inviertas tiempo en publicar."
+          title="Publicar es gratis. Más visibilidad, si la necesitas."
+          description="Fly Start es gratuito. Fly Plus y Fly Pro suman prioridad en el buscador, contacto directo por WhatsApp, perfil de empresa y difusión en redes. No cobramos comisión sobre tus alquileres."
         />
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          <div className="rounded-2xl border-2 border-brand-500 bg-white p-6">
-            <p className="text-xs font-bold uppercase tracking-wider text-brand-700">
-              Disponible hoy
-            </p>
-            <h3 className="mt-2 text-xl font-extrabold text-ink-900">
-              Publicación gratuita
-            </h3>
-            <p className="mt-1 text-3xl font-extrabold text-ink-900">
-              S/ 0
-              <span className="text-base font-semibold text-steel-500">
-                {" "}
-                / sin comisión
-              </span>
-            </p>
-            <ul className="mt-5 flex flex-col gap-2.5 text-sm text-steel-700">
-              {[
-                "Publicaciones ilimitadas",
-                "Perfil público de empresa",
-                "Contacto directo por WhatsApp",
-                "Sin comisión sobre el alquiler",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <IconCheck size={16} className="mt-0.5 shrink-0 text-ok-500" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <LinkButton href="/publicar" variant="primary" fullWidth className="mt-6">
-              Empezar ahora
-            </LinkButton>
-          </div>
-
-          {[
-            {
-              title: "Publicaciones destacadas",
-              text: "Aparecer primero dentro de una categoría o una ciudad. Será opcional y solo tendrá sentido cuando haya suficiente competencia por la misma búsqueda.",
-            },
-            {
-              title: "Plan profesional",
-              text: "Pensado para empresas con muchas máquinas: gestión de flota, estadísticas de contacto por equipo y mayor visibilidad dentro de la plataforma.",
-            },
-          ].map((plan) => (
-            <div
-              key={plan.title}
-              className="rounded-2xl border border-dashed border-steel-300 bg-steel-50 p-6"
-            >
-              <p className="text-xs font-bold uppercase tracking-wider text-steel-500">
-                Más adelante
-              </p>
-              <h3 className="mt-2 text-xl font-extrabold text-ink-900">
-                {plan.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-steel-600">{plan.text}</p>
-              <p className="mt-5 text-sm font-semibold text-steel-500">
-                Todavía no existe. No hay fecha ni precio anunciado.
-              </p>
-            </div>
-          ))}
+        <div className="mt-6">
+          <LinkButton href="/planes" variant="primary">
+            Ver planes y Programa Socio Fundador
+          </LinkButton>
         </div>
-
-        <Callout tone="info" className="mt-6">
-          Nada de lo que publiques gratis hoy pasará a ser de pago
-          retroactivamente. Si algún día MaquiFly cobra comisión por alquileres
-          concretados dentro de la plataforma, será sobre operaciones nuevas y
-          se avisará con antelación.
-        </Callout>
       </Section>
 
       <section className="bg-ink-950 py-14">

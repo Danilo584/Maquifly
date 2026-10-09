@@ -55,10 +55,12 @@ export default function TermsPage() {
           otros usuarios.
         </p>
         <p>
-          Publicar es gratuito en la etapa actual. Si en el futuro se
-          introducen servicios de pago, serán opcionales, se anunciarán con
-          antelación y no se aplicarán de forma retroactiva a publicaciones
-          creadas sin costo.
+          Publicar es gratuito con el plan Fly Start. Los planes Fly Plus y
+          Fly Pro y los Destacados Express son servicios de pago opcionales
+          (ver /planes): se pagan por adelantado, se activan cuando MaquiFly
+          verifica el pago y no se aplican de forma retroactiva a
+          publicaciones creadas sin costo. En el plan Fly Start, los clientes
+          contactan a través de MaquiFly, que pone en contacto a las partes.
         </p>
       </LegalSection>
 

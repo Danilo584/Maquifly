@@ -66,6 +66,10 @@ function toMachine(row: any): Machine {
     reviewCount: row.review_count ?? 0,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    // Vienen de la vista machines_public (join con owner_profiles).
+    ownerPlan: row.owner_plan ?? "start",
+    ownerIsFounder: row.owner_is_founder ?? false,
+    featuredUntil: row.featured_until,
     isDemo: false,
   };
 }
@@ -80,13 +84,18 @@ function toOwner(row: any): OwnerProfile {
     locationId: row.location_id,
     area: row.area,
     logoUrl: row.logo_url,
-    whatsapp: row.whatsapp,
+    // null en Fly Start: el contacto pasa por MaquiFly.
+    whatsapp: row.whatsapp ?? "",
     phone: row.phone,
     rating: row.rating === null ? null : Number(row.rating),
     reviewCount: row.review_count ?? 0,
     machineCount: row.machine_count ?? 0,
     verificationStatus: row.verification_status,
     memberSince: row.member_since,
+    plan: row.plan,
+    planExpiresAt: row.plan_expires_at,
+    founderNumber: row.founder_number,
+    ruc: row.ruc,
     isDemo: false,
   };
 }
@@ -113,7 +122,7 @@ export const supabaseRepository: MaquiflyRepository = {
     const from = (page - 1) * PAGE_SIZE;
 
     let query = supabase
-      .from("machines")
+      .from("machines_public")
       .select("*", { count: "exact" })
       .eq("status", "published");
 
@@ -154,7 +163,10 @@ export const supabaseRepository: MaquiflyRepository = {
         query = query.order("rating", { ascending: false, nullsFirst: false });
         break;
       default:
+        // Reglas de visibilidad (src/lib/plans.ts): Destacado Express
+        // vigente → Fly Pro → Fly Plus → Fly Start; luego disponibilidad.
         query = query
+          .order("visibility_rank", { ascending: false })
           .order("availability", { ascending: true })
           .order("created_at", { ascending: false });
     }
@@ -174,7 +186,7 @@ export const supabaseRepository: MaquiflyRepository = {
 
   async getMachineBySlug(slug) {
     const { data } = await supabase
-      .from("machines")
+      .from("machines_public")
       .select("*")
       .eq("slug", slug)
       .eq("status", "published")
@@ -183,18 +195,18 @@ export const supabaseRepository: MaquiflyRepository = {
   },
 
   async getMachineById(id) {
-    const { data } = await supabase.from("machines").select("*").eq("id", id).maybeSingle();
+    const { data } = await supabase.from("machines_public").select("*").eq("id", id).maybeSingle();
     return data ? toMachine(data) : null;
   },
 
   async listMachineSlugs() {
-    const { data } = await supabase.from("machines").select("slug").eq("status", "published");
+    const { data } = await supabase.from("machines_public").select("slug").eq("status", "published");
     return (data ?? []).map((row: any) => row.slug);
   },
 
   async getMachinesByOwner(ownerId) {
     const { data } = await supabase
-      .from("machines")
+      .from("machines_public")
       .select("*")
       .eq("owner_id", ownerId)
       .eq("status", "published")
@@ -204,7 +216,7 @@ export const supabaseRepository: MaquiflyRepository = {
 
   async getRelatedMachines(machine, limit = 4) {
     const { data } = await supabase
-      .from("machines")
+      .from("machines_public")
       .select("*")
       .eq("status", "published")
       .neq("id", machine.id)
@@ -223,7 +235,7 @@ export const supabaseRepository: MaquiflyRepository = {
 
   async getOwnerBySlug(slug) {
     const { data } = await supabase
-      .from("owner_profiles")
+      .from("owners_public")
       .select("*")
       .eq("slug", slug)
       .maybeSingle();
@@ -232,7 +244,7 @@ export const supabaseRepository: MaquiflyRepository = {
 
   async getOwnerById(id) {
     const { data } = await supabase
-      .from("owner_profiles")
+      .from("owners_public")
       .select("*")
       .eq("id", id)
       .maybeSingle();
@@ -240,12 +252,12 @@ export const supabaseRepository: MaquiflyRepository = {
   },
 
   async listOwnerSlugs() {
-    const { data } = await supabase.from("owner_profiles").select("slug");
+    const { data } = await supabase.from("owners_public").select("slug");
     return (data ?? []).map((row: any) => row.slug);
   },
 
   async listOwners() {
-    const { data } = await supabase.from("owner_profiles").select("*");
+    const { data } = await supabase.from("owners_public").select("*");
     return (data ?? []).map(toOwner);
   },
 
@@ -269,8 +281,8 @@ export const supabaseRepository: MaquiflyRepository = {
 
   async getStats() {
     const [machines, owners, reviews] = await Promise.all([
-      supabase.from("machines").select("id", { count: "exact", head: true }).eq("status", "published"),
-      supabase.from("owner_profiles").select("id", { count: "exact", head: true }),
+      supabase.from("machines_public").select("id", { count: "exact", head: true }).eq("status", "published"),
+      supabase.from("owners_public").select("id", { count: "exact", head: true }),
       supabase.from("reviews").select("id", { count: "exact", head: true }),
     ]);
     return {

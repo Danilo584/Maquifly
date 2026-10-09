@@ -170,6 +170,27 @@ export const IconMail = (p: IconProps) => (
   </Svg>
 );
 
+export const IconBolt = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+  </Svg>
+);
+
+export const IconAward = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="12" cy="9" r="6" />
+    <path d="m8.5 14.2-1.5 7.3 5-3 5 3-1.5-7.3" />
+  </Svg>
+);
+
+export const IconBuilding = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16" />
+    <path d="M15 9h4a1 1 0 0 1 1 1v11" />
+    <path d="M3 21h18M8 8h3M8 12h3M8 16h3" />
+  </Svg>
+);
+
 export const IconWhatsApp = ({ size = 20, ...rest }: IconProps) => (
   <svg
     width={size}

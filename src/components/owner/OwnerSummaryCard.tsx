@@ -5,6 +5,8 @@ import { formatMonthYear, pluralize } from "@/lib/format";
 import { RatingStars } from "@/components/reviews/RatingStars";
 import { VerificationBadge } from "@/components/owner/VerificationBadge";
 import { DemoBadge } from "@/components/common/Demo";
+import { FounderBadge } from "@/components/owner/PlanBadges";
+import { plans } from "@/lib/plans";
 import { IconArrowRight, IconPin } from "@/components/ui/Icon";
 
 export function OwnerSummaryCard({ owner }: { owner: OwnerProfile }) {
@@ -39,7 +41,13 @@ export function OwnerSummaryCard({ owner }: { owner: OwnerProfile }) {
               {owner.businessName}
             </Link>
             {owner.isDemo && <DemoBadge size="sm" />}
+            {!owner.isDemo && owner.founderNumber !== null && (
+              <FounderBadge number={owner.founderNumber} />
+            )}
           </div>
+          {plans[owner.plan].companyProfile && owner.ruc && (
+            <p className="mt-0.5 text-xs text-steel-500">RUC {owner.ruc}</p>
+          )}
           <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-steel-600">
             <IconPin size={14} className="text-steel-400" />
             {owner.area ? `${owner.area}, ` : ""}

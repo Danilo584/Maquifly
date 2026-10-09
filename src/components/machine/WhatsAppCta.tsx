@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import type { Machine, OwnerProfile } from "@/lib/types";
-import { buildMachineMessage, whatsappUrl } from "@/lib/whatsapp";
+import { buildBrokeredMessage, buildMachineMessage, whatsappUrl } from "@/lib/whatsapp";
+import { plans } from "@/lib/plans";
+import { siteConfig } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { IconClose, IconWhatsApp } from "@/components/ui/Icon";
@@ -32,9 +34,12 @@ export function WhatsAppCta({
   fullWidth?: boolean;
 }) {
   const [showPreview, setShowPreview] = useState(false);
-  const message = buildMachineMessage(machine);
-  const phone = owner?.whatsapp ?? "";
-  const href = phone ? whatsappUrl(phone, message) : "";
+  // Regla comercial: solo Fly Plus/Pro muestran el WhatsApp del propietario.
+  // En Fly Start el cliente escribe a MaquiFly, que intermedia el contacto.
+  const direct = Boolean(owner && plans[owner.plan].directWhatsapp && owner.whatsapp);
+  const message = direct ? buildMachineMessage(machine) : buildBrokeredMessage(machine);
+  const phone = direct ? owner!.whatsapp : siteConfig.contact.whatsapp;
+  const href = whatsappUrl(phone, message);
 
   function handleReal() {
     track({
@@ -42,6 +47,7 @@ export function WhatsAppCta({
       machineId: machine.id,
       reference: machine.reference,
       ownerId: machine.ownerId,
+      brokered: !direct,
     });
   }
 
@@ -119,15 +125,6 @@ export function WhatsAppCta({
     );
   }
 
-  if (!phone) {
-    return (
-      <Callout tone="warn">
-        Esta publicación no tiene un número de WhatsApp registrado. Usa el
-        formulario «Solicitar información» para contactar al propietario.
-      </Callout>
-    );
-  }
-
   return (
     <>
       <LinkButton
@@ -139,11 +136,12 @@ export function WhatsAppCta({
         onClick={handleReal}
       >
         <IconWhatsApp size={20} />
-        Contactar por WhatsApp
+        {direct ? "Contactar por WhatsApp" : "Consultar por WhatsApp"}
       </LinkButton>
       <p className="mt-2 text-center text-xs text-steel-500">
-        Se abre el chat con el mensaje ya escrito, incluyendo el código{" "}
-        {machine.reference}.
+        {direct
+          ? `Se abre el chat con el propietario, con el mensaje ya escrito y el código ${machine.reference}.`
+          : `Te atiende MaquiFly y te pone en contacto con el propietario. Indica el código ${machine.reference}.`}
       </p>
     </>
   );

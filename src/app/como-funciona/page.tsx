@@ -63,7 +63,7 @@ export default function HowItWorksPage() {
       <Section tone="light">
         <SectionHeading
           eyebrow="Si buscas maquinaria"
-          title="Cuatro pasos, sin intermediarios"
+          title="De la búsqueda al alquiler en cuatro pasos"
           description="Todo el proceso está pensado para que llegues al propietario correcto con la información necesaria desde el primer mensaje."
         />
         <div className="mt-8">

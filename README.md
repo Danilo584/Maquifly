@@ -230,6 +230,32 @@ caso**. No hay ninguna pantalla que simule haber enviado algo que no envió.
 
 ---
 
+## 6.1 Planes, Socio Fundador y cobro manual
+
+Toda la lógica comercial vive en `src/lib/plans.ts`: precios, límites de
+máquinas, beneficios, Programa Socio Fundador (10 cupos), Destacados Express
+y datos de Yape/Plin/cuenta. Cambiar un precio es editar ese archivo.
+
+| Regla | Dónde se aplica |
+| --- | --- |
+| Fly Start: contacto vía MaquiFly; Plus/Pro: WhatsApp directo | `WhatsAppCta`, perfil de propietario y vista `owners_public` (oculta el número en Start) |
+| Orden del buscador: Destacado Express → Pro → Plus → Start | `visibilityRank` y columna `visibility_rank` de `machines_public` |
+| Límite de máquinas (2 / 5 / ilimitadas) | trigger `enforce_plan_machine_limit` |
+| Solo el admin cambia plan, fundador, verificación y destacados | triggers `protect_*_commercial_fields` |
+| Activar un plan tras verificar el pago | función `approve_payment(id)` |
+| Insignias «Destacado» y «Socio Fundador» | `components/owner/PlanBadges.tsx` |
+
+Flujo de cobro: `/planes` → `/pagar/fly-plus` (o `fly-pro`, `destacado-7`)
+→ el propietario paga por Yape/Plin/transferencia → envía la constancia por
+WhatsApp → el admin registra el pago en `payments` y ejecuta
+`approve_payment`. Nada se activa sin esa verificación.
+
+Pendiente de datos reales: nombre del titular de Yape/Plin, cuenta bancaria
+y CCI, e imagen del QR (`payment` en `src/lib/plans.ts`). Mientras estén
+vacíos, la web no los muestra y ofrece pedirlos por WhatsApp.
+
+---
+
 ## 7. Conectar Supabase
 
 1. Crear el proyecto en Supabase y ejecutar `supabase/schema.sql`.

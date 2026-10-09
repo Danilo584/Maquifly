@@ -27,6 +27,9 @@ import { homeFaq } from "@/lib/data/faq";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { pluralize } from "@/lib/format";
+import { plans } from "@/lib/plans";
+import { FounderBadge } from "@/components/owner/PlanBadges";
+import { locationsById } from "@/lib/data/locations";
 
 export const metadata: Metadata = pageMetadata({
   title: `Alquiler de maquinaria en Piura — ${siteConfig.name}`,
@@ -66,11 +69,15 @@ const ownerBenefits = [
 ];
 
 export default async function HomePage() {
-  const [counts, recent, stats] = await Promise.all([
+  const [counts, recent, stats, owners] = await Promise.all([
     repository.countMachinesByCategory(),
     repository.searchMachines({ sort: "recent", page: 1 }),
     repository.getStats(),
+    repository.listOwners(),
   ]);
+
+  // Vitrina de portada: solo empresas reales con Fly Pro activo.
+  const showcase = owners.filter((o) => !o.isDemo && plans[o.plan].homepageShowcase);
 
   const featured = featuredCategorySlugs
     .map((slug) => categories.find((c) => c.slug === slug))
@@ -144,6 +151,41 @@ export default async function HomePage() {
         </div>
       </Section>
 
+      {showcase.length > 0 && (
+        <Section tone="light">
+          <SectionHeading
+            eyebrow="Empresas Fly Pro"
+            title="Empresas de alquiler en MaquiFly"
+            description="Propietarios con flota que trabajan con MaquiFly. Revisa su perfil y sus equipos disponibles."
+          />
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {showcase.map((owner) => (
+              <li key={owner.id}>
+                <Link
+                  href={`/propietario/${owner.slug}`}
+                  className="flex h-full flex-col gap-3 rounded-2xl border border-steel-200 bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover"
+                >
+                  <span className="flex size-12 items-center justify-center rounded-xl bg-ink-900 text-base font-extrabold text-volt-400">
+                    {owner.businessName.slice(0, 2).toUpperCase()}
+                  </span>
+                  <span className="text-base font-bold text-ink-900">{owner.businessName}</span>
+                  <span className="text-sm text-steel-600">
+                    {owner.area ? `${owner.area}, ` : ""}
+                    {locationsById.get(owner.locationId)?.name ?? "Perú"} ·{" "}
+                    {pluralize(owner.machineCount, "máquina", "máquinas", "Sin máquinas")}
+                  </span>
+                  {owner.founderNumber !== null && (
+                    <span>
+                      <FounderBadge number={owner.founderNumber} />
+                    </span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
       {/* ------------------------------------------------------------------ */}
       <Section tone="light">
         <SectionHeading
@@ -178,8 +220,8 @@ export default async function HomePage() {
                   <IconPlus size={18} />
                   Publicar mi maquinaria
                 </LinkButton>
-                <LinkButton href="/propietarios" variant="outline" size="md">
-                  Cómo funciona para propietarios
+                <LinkButton href="/planes" variant="outline" size="md">
+                  Ver planes y Programa Fundador
                 </LinkButton>
               </div>
             </div>

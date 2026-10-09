@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { DemoBadge } from "@/components/common/Demo";
 import { IconOperator, IconPin, IconTruck } from "@/components/ui/Icon";
 import { RatingStars } from "@/components/reviews/RatingStars";
+import { FeaturedBadge, FounderBadge, machineIsFeatured } from "@/components/owner/PlanBadges";
 
 const availabilityTone = {
   available: "ok",
@@ -50,6 +51,8 @@ export function MachineCard({
 
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {machine.isDemo && <DemoBadge size="sm" />}
+          {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge />}
+          {!machine.isDemo && machine.ownerIsFounder && <FounderBadge />}
           {/* En una publicación DEMO la etiqueta DEMO ya lo dice todo:
               no se apilan dos avisos sobre la misma imagen. */}
           {!machine.isDemo && cover?.isPlaceholder && (

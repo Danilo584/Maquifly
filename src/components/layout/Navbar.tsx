@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/categorias", label: "Categorías" },
   { href: "/como-funciona", label: "Cómo funciona" },
   { href: "/propietarios", label: "Para propietarios" },
+  { href: "/planes", label: "Planes" },
   { href: "/blog", label: "Blog" },
 ];
 

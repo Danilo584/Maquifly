@@ -55,7 +55,7 @@ export function Hero() {
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-200 sm:text-lg">
             Encuentra maquinaria y equipos disponibles para alquiler y conecta
-            directamente con propietarios. Sin intermediarios y sin llamadas a
+            directamente con propietarios. Sin comisiones y sin llamadas a
             ciegas: ves las características, la ubicación y las condiciones
             antes de escribir.
           </p>

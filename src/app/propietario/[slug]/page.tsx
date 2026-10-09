@@ -6,6 +6,9 @@ import { locationsById } from "@/lib/data/locations";
 import { formatMonthYear, pluralize } from "@/lib/format";
 import { ownerJsonLd, pageMetadata } from "@/lib/seo";
 import { buildOwnerMessage, whatsappUrl } from "@/lib/whatsapp";
+import { plans } from "@/lib/plans";
+import { siteConfig } from "@/lib/site";
+import { FounderBadge } from "@/components/owner/PlanBadges";
 
 import { MachineCard } from "@/components/machine/MachineCard";
 import { RatingStars } from "@/components/reviews/RatingStars";
@@ -91,7 +94,13 @@ export default async function OwnerPage({ params }: { params: Promise<Params> })
                     {owner.businessName}
                   </h1>
                   {owner.isDemo && <DemoBadge />}
+                  {!owner.isDemo && owner.founderNumber !== null && (
+                    <FounderBadge size="md" number={owner.founderNumber} />
+                  )}
                 </div>
+                {plans[owner.plan].companyProfile && owner.ruc && (
+                  <p className="mt-1 text-sm text-ink-300">RUC {owner.ruc}</p>
+                )}
                 <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-ink-200">
                   <IconPin size={16} className="text-volt-400" />
                   {owner.area ? `${owner.area}, ` : ""}
@@ -119,7 +128,14 @@ export default async function OwnerPage({ params }: { params: Promise<Params> })
 
             {!owner.isDemo && (
               <LinkButton
-                href={whatsappUrl(owner.whatsapp, buildOwnerMessage(owner))}
+                href={
+                  plans[owner.plan].directWhatsapp
+                    ? whatsappUrl(owner.whatsapp, buildOwnerMessage(owner))
+                    : whatsappUrl(
+                        siteConfig.contact.whatsapp,
+                        `Hola MaquiFly, quisiera contactar a ${owner.businessName} por un alquiler de maquinaria.`,
+                      )
+                }
                 external
                 variant="whatsapp"
                 size="md"

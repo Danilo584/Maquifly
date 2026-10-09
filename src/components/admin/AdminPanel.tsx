@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { IconAlert, IconCheck, IconMail } from "@/components/ui/Icon";
+import { FOUNDER_SLOTS, founderSlotsLeft, plans, payment } from "@/lib/plans";
 
 type LocalReport = {
   id: string;
@@ -42,6 +43,7 @@ type LocalRequest = {
 const tabs = [
   { key: "listings", label: "Publicaciones" },
   { key: "owners", label: "Propietarios" },
+  { key: "payments", label: "Pagos y planes" },
   { key: "reports", label: "Reportes" },
   { key: "messages", label: "Mensajes" },
 ] as const;
@@ -176,13 +178,18 @@ export function AdminPanel({
 
         {tab === "owners" && (
           <Table
-            head={["Propietario", "Zona", "Máquinas", "Verificación", ""]}
+            head={["Propietario", "Zona", "Máquinas", "Plan", "Vence", "Fundador", "Verificación", ""]}
             rows={owners.map((owner) => [
               <span key="n" className="font-semibold text-ink-900">
                 {owner.businessName}
               </span>,
               owner.area ?? "—",
-              String(owner.machineCount),
+              `${owner.machineCount} / ${plans[owner.plan].maxMachines ?? "∞"}`,
+              <Badge key="p" tone={owner.plan === "start" ? "neutral" : "brand"} size="sm">
+                {plans[owner.plan].name}
+              </Badge>,
+              owner.planExpiresAt ? formatDate(owner.planExpiresAt) : "—",
+              owner.founderNumber !== null ? `#${owner.founderNumber}` : "—",
               <Badge key="v" tone="neutral" size="sm">
                 Registrado
               </Badge>,
@@ -195,6 +202,24 @@ export function AdminPanel({
               </Link>,
             ])}
           />
+        )}
+
+        {tab === "payments" && (
+          <div className="flex flex-col gap-4">
+            <Callout tone="info" title="Cómo se activa un plan (cobro manual)">
+              1) El propietario paga por Yape/Plin al {payment.yape} o por
+              transferencia y envía la captura por WhatsApp. 2) Revisas el
+              abono en tu app del banco. 3) Registras el pago y lo apruebas: el
+              sistema activa el plan por 1 mes (o el destacado por 7 días) y, si
+              quedan cupos, le asigna su número de Socio Fundador.
+            </Callout>
+            <Callout tone="warn">
+              Este paso necesita la base de datos (Supabase). Mientras no esté
+              conectada, los pagos se registran a mano y los planes se activan
+              editando el perfil del propietario. Cupos de Socio Fundador libres:{" "}
+              {founderSlotsLeft(owners)} de {FOUNDER_SLOTS}.
+            </Callout>
+          </div>
         )}
 
         {tab === "reports" && (

@@ -62,7 +62,7 @@ export const seoLandings: SeoLanding[] = [
       {
         heading: "Cómo funciona alquilar por MaquiFly",
         paragraphs: [
-          "Buscas el equipo por categoría o por nombre, filtras por zona y por condiciones (con operador, con transporte, disponible), entras a la publicación y contactas al propietario por WhatsApp con un mensaje que ya incluye la máquina y el código de la publicación. El precio, las fechas y las condiciones las acuerdas directamente con él: MaquiFly no cobra comisión ni interviene en el acuerdo.",
+          "Buscas el equipo por categoría o por nombre, filtras por zona y por condiciones (con operador, con transporte, disponible), entras a la publicación y contactas al propietario por WhatsApp con un mensaje que ya incluye la máquina y el código de la publicación. El precio, las fechas y las condiciones las acuerdas directamente con él: MaquiFly no cobra comisión sobre el alquiler.",
         ],
       },
     ],

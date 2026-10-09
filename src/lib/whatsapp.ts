@@ -31,6 +31,23 @@ export function buildMachineMessage(
   ].join("\n");
 }
 
+/**
+ * Fly Start: el cliente escribe a MaquiFly, que lo pone en contacto con el
+ * propietario. Así MaquiFly acompaña el trato y el flete desde el inicio.
+ */
+export function buildBrokeredMessage(
+  machine: Pick<Machine, "name" | "area" | "locationId" | "reference" | "slug">,
+): string {
+  const city = locationName(machine.locationId);
+  return [
+    `Hola MaquiFly, me interesa alquilar el ${machine.name} (${machine.area}, ${city}).`,
+    `Código: ${machine.reference}.`,
+    `¿Me ponen en contacto con el propietario para ver disponibilidad y precio?`,
+    ``,
+    absoluteUrl(`/maquina/${machine.slug}`),
+  ].join("\n");
+}
+
 export function buildOwnerMessage(owner: Pick<OwnerProfile, "businessName">): string {
   return [
     `Hola ${owner.businessName}, te escribo desde MaquiFly.`,

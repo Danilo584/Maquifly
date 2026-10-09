@@ -15,7 +15,7 @@ export type AnalyticsEvent =
   | { name: "search_submit"; query: string; category?: string; location?: string }
   | { name: "filter_apply"; filter: string; value: string }
   | { name: "machine_view"; machineId: string; reference: string }
-  | { name: "whatsapp_click"; machineId: string; reference: string; ownerId: string }
+  | { name: "whatsapp_click"; machineId: string; reference: string; ownerId: string; brokered: boolean }
   | { name: "contact_form_submit"; context: string }
   | { name: "listing_draft_saved"; categorySlug: string }
   | { name: "listing_preview"; categorySlug: string }

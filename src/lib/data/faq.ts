@@ -29,7 +29,7 @@ export const faq: FaqItem[] = [
   {
     question: "¿Cuánto cuesta publicar?",
     answer:
-      "Publicar es gratuito. En esta primera etapa la prioridad es construir un catálogo real de maquinaria en Piura. Más adelante existirán opciones de pago opcionales, como publicaciones destacadas o planes para empresas con varias máquinas; nunca se cobrará de forma retroactiva por una publicación que se hizo gratis.",
+      "Publicar es gratuito con el plan Fly Start (hasta 2 máquinas). Quien quiera más alcance puede elegir Fly Plus o Fly Pro, o un Destacado Express para una sola máquina. Son opcionales y nunca se cobra de forma retroactiva por una publicación que se hizo gratis.",
   },
   {
     question: "¿Quién establece el precio?",
