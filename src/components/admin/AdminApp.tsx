@@ -120,7 +120,16 @@ function LoginForm() {
     setError(null);
     const { error: err } = await db().auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
-    if (err) setError("Correo o contraseña incorrectos.");
+    if (err) {
+      const msg = err.message.toLowerCase();
+      setError(
+        msg.includes("not confirmed")
+          ? "Este usuario no está confirmado. En Supabase → Authentication → Users, confírmalo o créalo de nuevo con «Auto Confirm User»."
+          : msg.includes("invalid login")
+            ? "Correo o contraseña incorrectos."
+            : `No se pudo ingresar: ${err.message}`,
+      );
+    }
   }
 
   return (
