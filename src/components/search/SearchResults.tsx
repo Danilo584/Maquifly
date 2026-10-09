@@ -10,7 +10,7 @@ import {
   paginate,
   sortMachines,
 } from "@/lib/repository/demo-repository";
-import { demoMachines } from "@/lib/data/demo-machines";
+import { catalogMachines as demoMachines } from "@/lib/data/catalog";
 import { categoriesBySlug } from "@/lib/data/categories";
 import { locationsBySlug } from "@/lib/data/locations";
 import {

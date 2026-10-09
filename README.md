@@ -267,7 +267,7 @@ Mientras esté vacía, la página de pago muestra solo el número.
    anónima.
 6. Crear el bucket `machine-photos` (público en lectura, subida solo para
    usuarios autenticados, 5 MB por archivo).
-7. Borrar `src/lib/data/demo-machines.ts` y `demo-owners.ts`.
+7. Cargar en Supabase lo que haya en `src/lib/data/catalog.ts` y dejarlo vacío.
 
 ---
 

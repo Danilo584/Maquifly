@@ -1,7 +1,6 @@
 import type { MaquiflyRepository } from "@/lib/repository/types";
 import type { Machine, SearchFilters, SearchResult } from "@/lib/types";
-import { demoMachines } from "@/lib/data/demo-machines";
-import { demoOwners } from "@/lib/data/demo-owners";
+import { catalogMachines as demoMachines, catalogOwners as demoOwners } from "@/lib/data/catalog";
 import { reviews } from "@/lib/data/reviews";
 import { categoriesById, categoriesBySlug } from "@/lib/data/categories";
 import { locationsBySlug } from "@/lib/data/locations";
@@ -260,7 +259,7 @@ export const demoRepository: MaquiflyRepository = {
       owners: demoOwners.length,
       reviews: reviews.length,
       cities: cities.size,
-      isDemo: true,
+      isDemo: published.some((m) => m.isDemo),
     };
   },
 };

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AdminPanel } from "@/components/admin/AdminPanel";
 import { repository } from "@/lib/repository";
-import { demoMachines } from "@/lib/data/demo-machines";
+import { catalogMachines } from "@/lib/data/catalog";
 import { pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
@@ -36,7 +36,7 @@ export default async function AdminPage() {
         </p>
 
         <div className="mt-8">
-          <AdminPanel machines={demoMachines} owners={owners} />
+          <AdminPanel machines={catalogMachines} owners={owners} />
         </div>
       </div>
     </>

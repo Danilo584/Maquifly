@@ -10,7 +10,7 @@ import type {
  * CONTRATO DE DATOS
  * ---------------------------------------------------------------------------
  * Toda la aplicación consume datos exclusivamente a través de esta interfaz.
- * Ningún componente importa `demo-machines.ts` directamente.
+ * Ningún componente lee los datos del catálogo directamente.
  *
  * Consecuencia: migrar de catálogo DEMO a Supabase es escribir una segunda
  * implementación de `MaquiflyRepository` y cambiar una variable de entorno.

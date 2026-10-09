@@ -379,7 +379,7 @@ export default async function HomePage() {
                 Encuentra. Alquila. Trabaja.
               </h2>
               <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-200">
-                {stats.isDemo
+                {stats.isDemo || stats.machines === 0
                   ? `MaquiFly está incorporando a sus primeros propietarios en ${siteConfig.contact.city}. Si tienes maquinaria disponible, tu publicación puede ser una de las primeras reales.`
                   : `${pluralize(stats.machines, "máquina publicada", "máquinas publicadas")} en ${siteConfig.contact.city}.`}
               </p>

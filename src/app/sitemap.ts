@@ -4,8 +4,7 @@ import { categories } from "@/lib/data/categories";
 import { seoLandings } from "@/lib/data/seo-landings";
 import { blogPosts } from "@/lib/data/blog";
 import { repository } from "@/lib/repository";
-import { demoMachines } from "@/lib/data/demo-machines";
-import { demoOwners } from "@/lib/data/demo-owners";
+import { catalogMachines as demoMachines, catalogOwners as demoOwners } from "@/lib/data/catalog";
 
 /**
  * Sitemap generado desde los mismos datos que alimentan las páginas: no puede
