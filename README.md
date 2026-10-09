@@ -250,9 +250,8 @@ Flujo de cobro: `/planes` → `/pagar/fly-plus` (o `fly-pro`, `destacado-7`)
 WhatsApp → el admin registra el pago en `payments` y ejecuta
 `approve_payment`. Nada se activa sin esa verificación.
 
-Pendiente de datos reales: número de cuenta BCP (14 dígitos)
-y CCI, e imagen del QR (`payment` en `src/lib/plans.ts`). Mientras estén
-vacíos, la web no los muestra y ofrece pedirlos por WhatsApp.
+Pendiente: imagen del QR de Yape (`payment.yapeQr` en `src/lib/plans.ts`).
+Mientras esté vacía, la página de pago muestra solo el número.
 
 ---
 

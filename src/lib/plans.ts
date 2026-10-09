@@ -165,8 +165,8 @@ export const payment = {
    */
   bank: {
     name: "BCP",
-    account: "",
-    cci: "",
+    account: "475-14638376-0-95",
+    cci: "002-475-114638376095-26",
     holder: "Daniel Nonajulca Berrú",
   },
   /** Ruta pública de la imagen del QR de Yape (en /public). Vacío = sin QR. */
