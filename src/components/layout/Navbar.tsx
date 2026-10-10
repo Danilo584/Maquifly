@@ -114,20 +114,6 @@ export function Navbar() {
             id="menu-movil"
             className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-steel-200 bg-white p-4 shadow-pop"
           >
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-widest text-steel-500">
-                Menú
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="px-2"
-                aria-label="Cerrar menú"
-                onClick={() => setOpen(false)}
-              >
-                <IconClose size={20} />
-              </Button>
-            </div>
             <nav aria-label="Navegación principal móvil">
               <ul className="flex flex-col gap-1">
                 {navLinks.map((link) => (

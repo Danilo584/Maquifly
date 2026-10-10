@@ -42,25 +42,27 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <div className="container-mf relative py-14 sm:py-20 lg:py-28">
+      <div className="container-mf relative pb-10 pt-8 sm:py-20 lg:py-28">
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-volt-300">
             <span className="size-1.5 rounded-full bg-volt-400" aria-hidden="true" />
             Iniciando en {city}, Perú
           </p>
 
-          <h1 className="mt-5 text-[2.1rem] font-extrabold leading-[1.08] text-white text-balance-tight sm:text-5xl lg:text-[3.6rem]">
+          <h1 className="mt-4 text-[1.9rem] font-extrabold leading-[1.08] sm:mt-5 text-white text-balance-tight sm:text-5xl lg:text-[3.6rem]">
             Encuentra la maquinaria que tu proyecto necesita
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-200 sm:text-lg">
+          <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed sm:mt-5 sm:text-base text-ink-200 sm:text-lg">
             Encuentra maquinaria y equipos disponibles para alquiler y conecta
-            directamente con propietarios. Sin comisiones y sin llamadas a
-            ciegas: ves las características, la ubicación y las condiciones
-            antes de escribir.
+            directamente con propietarios.
+            <span className="hidden sm:inline">
+              {" "}Sin comisiones y sin llamadas a ciegas: ves las características,
+              la ubicación y las condiciones antes de escribir.
+            </span>
           </p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-7 hidden gap-3 sm:flex sm:flex-row">
             <LinkButton href="/maquinaria" variant="volt" size="lg">
               <IconSearch size={19} />
               Buscar maquinaria
@@ -72,26 +74,26 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="mt-10 lg:mt-12">
+        <div className="mt-6 sm:mt-10 lg:mt-12">
           <SearchBar variant="hero" />
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="text-sm font-medium text-ink-300">Búsquedas frecuentes:</span>
+        <div className="-mx-4 mt-5 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-6 sm:flex-wrap sm:gap-x-3 sm:gap-y-2 sm:overflow-visible sm:px-0 [scrollbar-width:none]">
+          <span className="hidden text-sm font-medium text-ink-300 sm:inline">Búsquedas frecuentes:</span>
           {quickLinks
             .filter((q) => categories.some((c) => c.slug === q.slug))
             .map((q) => (
               <Link
                 key={q.slug}
                 href={`/maquinaria/${q.slug}`}
-                className="rounded-full border border-white/15 px-3 py-1 text-sm text-ink-200 transition-colors hover:border-volt-400/50 hover:text-volt-300"
+                className="shrink-0 rounded-full border border-white/15 px-3 py-1 text-sm text-ink-200 transition-colors hover:border-volt-400/50 hover:text-volt-300"
               >
                 {q.label}
               </Link>
             ))}
           <Link
             href="/categorias"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-volt-400 hover:text-volt-300"
+            className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-volt-400 hover:text-volt-300"
           >
             Ver todas <IconArrowRight size={15} />
           </Link>

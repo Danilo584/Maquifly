@@ -164,8 +164,8 @@ export default async function OwnersPage() {
                 </div>
               </dl>
               <p className="mt-4 border-t border-steel-100 pt-4 text-sm leading-relaxed text-steel-600">
-                El catálogo que ves hoy en la web es de demostración y está
-                marcado como tal. La meta inmediata es incorporar entre 10 y 20
+                MaquiFly recién arranca y solo muestra publicaciones reales:
+                nada de catálogos de relleno. La meta inmediata es incorporar entre 10 y 20
                 propietarios reales en {siteConfig.contact.city} y llegar a 20–50
                 máquinas publicadas. Después, las primeras reseñas reales. Y
                 después, otras ciudades.

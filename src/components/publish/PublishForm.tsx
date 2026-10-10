@@ -870,7 +870,7 @@ function Stepper({
                   }`}
                 />
                 <span
-                  className={`truncate text-xs font-semibold ${
+                  className={`hidden truncate text-xs font-semibold sm:block ${
                     active ? "text-ink-900" : done ? "text-brand-700" : "text-steel-400"
                   }`}
                 >
@@ -881,6 +881,10 @@ function Stepper({
           );
         })}
       </ol>
+      <p className="mt-1.5 px-1 text-xs font-semibold text-steel-500 sm:hidden">
+        Paso {current + 1} de {steps.length} ·{" "}
+        <span className="text-ink-900">{steps[current]?.short}</span>
+      </p>
     </nav>
   );
 }

@@ -208,7 +208,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      <section className="grid-blueprint relative overflow-hidden bg-ink-900 py-14 sm:py-20">
+      <section className="grid-blueprint relative overflow-hidden bg-ink-900 py-10 sm:py-20">
         <div className="container-mf relative">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
@@ -233,17 +233,19 @@ export default async function HomePage() {
               {ownerBenefits.map((benefit) => (
                 <li
                   key={benefit.title}
-                  className="rounded-xl border border-white/10 bg-white/5 p-4"
+                  className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4 sm:block"
                 >
-                  <span className="flex size-10 items-center justify-center rounded-lg bg-volt-400 text-ink-950">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-volt-400 text-ink-950">
                     <benefit.Icon size={20} />
                   </span>
-                  <h3 className="mt-3 text-base font-bold text-white">
+                  <div>
+                  <h3 className="text-base font-bold text-white sm:mt-3">
                     {benefit.title}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-ink-200">
                     {benefit.text}
                   </p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -304,7 +306,7 @@ export default async function HomePage() {
                   <dd className="text-2xl font-extrabold text-ink-900">1</dd>
                 </div>
               </dl>
-              <p className="mt-4 border-t border-steel-100 pt-4 text-xs leading-relaxed text-steel-500">
+              <p className="mt-4 hidden border-t border-steel-100 pt-4 text-xs leading-relaxed text-steel-500 sm:block">
                 Estas cifras son las reales del catálogo actual. MaquiFly no
                 publica «miles de máquinas» ni «más de 10 000 usuarios»: cuando
                 esos números existan, saldrán de la base de datos, no del
@@ -334,10 +336,10 @@ export default async function HomePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-xl border border-steel-200 bg-white p-5"
+                className="rounded-xl border border-steel-200 bg-white p-4 sm:p-5"
               >
                 <h3 className="text-base font-bold text-ink-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel-600">
+                <p className="mt-1.5 text-sm sm:mt-2 leading-relaxed text-steel-600">
                   {item.text}
                 </p>
               </div>
@@ -374,9 +376,9 @@ export default async function HomePage() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      <section className="bg-ink-950 py-14 sm:py-16">
+      <section className="bg-ink-950 py-10 sm:py-16">
         <div className="container-mf">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-white/10 bg-white/5 p-7 sm:p-9 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-9 lg:flex-row lg:items-center">
             <div className="max-w-xl">
               <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
                 Encuentra. Alquila. Trabaja.

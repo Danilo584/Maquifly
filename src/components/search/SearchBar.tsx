@@ -64,8 +64,8 @@ export function SearchBar({
           : "rounded-xl border border-steel-200 bg-white p-3"
       }
     >
-      <div className="grid gap-2.5 sm:gap-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
-        <div className="flex flex-col gap-1.5">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
+        <div className="col-span-2 flex flex-col gap-1.5 lg:col-span-1">
           <label
             htmlFor={`${id}-q`}
             className="px-1 text-xs font-bold uppercase tracking-wider text-steel-500"
@@ -90,7 +90,7 @@ export function SearchBar({
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           <label
             htmlFor={`${id}-cat`}
             className="px-1 text-xs font-bold uppercase tracking-wider text-steel-500"
@@ -113,7 +113,7 @@ export function SearchBar({
           </select>
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           <label
             htmlFor={`${id}-loc`}
             className="px-1 text-xs font-bold uppercase tracking-wider text-steel-500"
@@ -143,7 +143,7 @@ export function SearchBar({
           </select>
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="col-span-2 flex flex-col gap-1.5 lg:col-span-1">
           <span
             aria-hidden="true"
             className="hidden px-1 text-xs font-bold uppercase tracking-wider text-transparent lg:block"

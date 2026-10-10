@@ -35,7 +35,7 @@ export function SectionHeading({
           </p>
         )}
         <h2
-          className={`text-2xl font-extrabold sm:text-3xl ${dark ? "text-white" : ""}`}
+          className={`text-[1.6rem] font-extrabold leading-tight sm:text-3xl ${dark ? "text-white" : ""}`}
         >
           {title}
         </h2>
@@ -71,7 +71,7 @@ export function Section({
     dark: "bg-ink-900 text-ink-100",
   };
   return (
-    <section id={id} className={`${tones[tone]} py-14 sm:py-20 ${className}`}>
+    <section id={id} className={`${tones[tone]} py-10 sm:py-20 ${className}`}>
       <div className="container-mf">{children}</div>
     </section>
   );

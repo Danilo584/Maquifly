@@ -50,9 +50,9 @@ export function Footer() {
 
   return (
     <footer className="grid-blueprint border-t border-white/10 bg-ink-950 text-ink-200">
-      <div className="container-mf py-14 sm:py-16">
-        <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-4">
+      <div className="container-mf py-10 sm:py-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-12 md:gap-10">
+          <div className="col-span-2 md:col-span-4">
             <Logo tone="dark" size="md" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-300">
               {siteConfig.tagline} Plataforma que conecta propietarios de
@@ -93,7 +93,7 @@ export function Footer() {
             </div>
           ))}
 
-          <div className="md:col-span-2">
+          <div className="hidden md:col-span-2 md:block">
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">
               Categorías
             </h2>
@@ -112,7 +112,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-8">
+        <div className="mt-8 border-t border-white/10 pt-6 sm:mt-12 sm:pt-8">
           <div className="flex flex-col gap-2">
             <p className="text-xs font-bold uppercase tracking-wider text-ink-400">
               Cobertura
@@ -130,7 +130,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-5 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:gap-5 sm:pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs leading-relaxed text-ink-400">
             © {year} {siteConfig.legalName}. MaquiFly es una plataforma de
             conexión: no es propietaria de las máquinas publicadas ni participa
