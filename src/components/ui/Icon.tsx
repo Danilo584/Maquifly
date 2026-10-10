@@ -382,3 +382,17 @@ export const IconFacebook = ({ size = 20, ...rest }: IconProps) => (
     <path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21h3Z" />
   </svg>
 );
+
+export const IconInstagram = ({ size = 20, ...rest }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...rest}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" />
+  </svg>
+);
+
+export const IconTikTok = ({ size = 20, ...rest }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...rest}>
+    <path d="M16.6 3c.3 2.2 1.6 3.6 3.7 3.8v3c-1.3.1-2.5-.3-3.6-1v6.3c0 3.9-3.3 6.4-6.9 5.6-3.6-.8-4.9-5.4-2.4-8 1.3-1.4 3.1-1.9 5-1.6v3.2c-.4-.1-.8-.2-1.2-.2-1.6 0-2.7 1.4-2.3 3 .5 1.8 3 2.2 4 .7.3-.4.4-.9.4-1.4V3h3.3Z" />
+  </svg>
+);

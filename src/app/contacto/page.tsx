@@ -82,15 +82,28 @@ export default function ContactPage() {
                   </span>
                 </li>
               </ul>
-              {siteConfig.social.facebook && (
-                <p className="mt-4 border-t border-steel-200 pt-4 text-sm text-steel-600">
-                  Síguenos en{" "}
-                  <a href={siteConfig.social.facebook} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-700 hover:underline">
-                    Facebook
-                  </a>
-                  .
-                </p>
-              )}
+              {(() => {
+                const nets = [
+                  { label: "Facebook", href: siteConfig.social.facebook },
+                  { label: "Instagram", href: siteConfig.social.instagram },
+                  { label: "TikTok", href: siteConfig.social.tiktok },
+                ].filter((n) => n.href);
+                if (nets.length === 0) return null;
+                return (
+                  <p className="mt-4 border-t border-steel-200 pt-4 text-sm text-steel-600">
+                    Síguenos en{" "}
+                    {nets.map((n, i) => (
+                      <span key={n.label}>
+                        {i > 0 && (i === nets.length - 1 ? " y " : ", ")}
+                        <a href={n.href} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-700 hover:underline">
+                          {n.label}
+                        </a>
+                      </span>
+                    ))}
+                    .
+                  </p>
+                );
+              })()}
             </div>
           </aside>
         </div>

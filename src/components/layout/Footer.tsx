@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { siteConfig } from "@/lib/site";
 import { activeLocations, upcomingLocations } from "@/lib/data/locations";
-import { IconFacebook, IconMail, IconPin, IconWhatsApp } from "@/components/ui/Icon";
+import { IconFacebook, IconInstagram, IconMail, IconPin, IconTikTok, IconWhatsApp } from "@/components/ui/Icon";
 
 const columns = [
   {
@@ -53,6 +53,8 @@ export function Footer() {
   const wa = siteConfig.contact.whatsapp;
   const social = [
     { key: "facebook", label: "Facebook", href: siteConfig.social.facebook, Icon: IconFacebook },
+    { key: "instagram", label: "Instagram", href: siteConfig.social.instagram, Icon: IconInstagram },
+    { key: "tiktok", label: "TikTok", href: siteConfig.social.tiktok, Icon: IconTikTok },
   ].filter((n) => Boolean(n.href));
 
   return (

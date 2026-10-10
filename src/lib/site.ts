@@ -32,7 +32,7 @@ export const siteConfig = {
    * que todavía no existen (ver sección "no inventar confianza").
    */
   social: {
-    instagram: "",
+    instagram: "https://www.instagram.com/maquifly.pe/",
     facebook: "https://www.facebook.com/profile.php?id=61594906361946",
     tiktok: "",
     linkedin: "",
