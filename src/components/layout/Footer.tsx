@@ -1,81 +1,97 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { siteConfig } from "@/lib/site";
-import { categories } from "@/lib/data/categories";
 import { activeLocations, upcomingLocations } from "@/lib/data/locations";
-import { IconMail, IconPin } from "@/components/ui/Icon";
+import { IconFacebook, IconMail, IconPin, IconWhatsApp } from "@/components/ui/Icon";
 
 const columns = [
   {
-    title: "Explorar",
+    title: "Marketplace",
     links: [
       { href: "/maquinaria", label: "Buscar maquinaria" },
       { href: "/categorias", label: "Categorías" },
-      { href: "/publicar", label: "Publicar maquinaria" },
-      { href: "/alquiler-maquinaria-piura", label: "Alquiler de maquinaria en Piura" },
-    ],
-  },
-  {
-    title: "Información",
-    links: [
+      { href: "/alquiler-maquinaria-piura", label: "Alquiler en Piura" },
       { href: "/como-funciona", label: "Cómo funciona" },
-      { href: "/nosotros", label: "Sobre MaquiFly" },
-      { href: "/propietarios", label: "Para propietarios" },
-      { href: "/planes", label: "Planes y precios" },
-      { href: "/empresas", label: "Para empresas" },
       { href: "/blog", label: "Blog" },
-      { href: "/contacto", label: "Contacto" },
     ],
   },
   {
-    title: "Legal",
+    title: "Propietarios",
     links: [
-      { href: "/terminos", label: "Términos y condiciones" },
-      { href: "/privacidad", label: "Política de privacidad" },
+      { href: "/publicar", label: "Publicar maquinaria" },
+      { href: "/planes", label: "Planes y precios" },
+      { href: "/planes#fundadores", label: "Programa Socio Fundador" },
+      { href: "/planes#destacados", label: "Destacados Express" },
+      { href: "/empresas", label: "Para empresas" },
+    ],
+  },
+  {
+    title: "MaquiFly",
+    links: [
+      { href: "/nosotros", label: "Sobre MaquiFly" },
+      { href: "/propietarios", label: "Por qué publicar aquí" },
+      { href: "/como-funciona#preguntas", label: "Preguntas frecuentes" },
+      { href: "/contacto", label: "Contacto" },
     ],
   },
 ];
 
-const socialNetworks = [
-  { key: "instagram", label: "Instagram" },
-  { key: "facebook", label: "Facebook" },
-  { key: "tiktok", label: "TikTok" },
-  { key: "linkedin", label: "LinkedIn" },
-] as const;
+const legalLinks = [
+  { href: "/terminos", label: "Términos y condiciones" },
+  { href: "/privacidad", label: "Política de privacidad" },
+];
+
+/** Formatea 51933407807 → +51 933 407 807 */
+function prettyPhone(raw: string) {
+  const d = raw.replace(/\D/g, "");
+  const local = d.startsWith("51") ? d.slice(2) : d;
+  return `+51 ${local.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}`;
+}
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const topCategories = categories.slice(0, 8);
-  const hasSocial = socialNetworks.some((n) => siteConfig.social[n.key]);
+  const wa = siteConfig.contact.whatsapp;
+  const social = [
+    { key: "facebook", label: "Facebook", href: siteConfig.social.facebook, Icon: IconFacebook },
+  ].filter((n) => Boolean(n.href));
 
   return (
     <footer className="grid-blueprint border-t border-white/10 bg-ink-950 text-ink-200">
-      <div className="container-mf py-10 sm:py-16">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-12 md:gap-10">
-          <div className="col-span-2 md:col-span-4">
+      <div className="container-mf py-10 sm:py-14">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-9 lg:grid-cols-12 lg:gap-10">
+          {/* Marca */}
+          <div className="col-span-2 lg:col-span-3">
             <Logo tone="dark" size="md" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-300">
-              {siteConfig.tagline} Plataforma que conecta propietarios de
-              maquinaria con proyectos que la necesitan.
+              El marketplace de maquinaria para alquiler en el norte del Perú.
+              Conectamos a quien la necesita con quien la tiene.
             </p>
-            <div className="mt-5 flex flex-col gap-2 text-sm">
-              <span className="inline-flex items-center gap-2 text-ink-300">
-                <IconPin size={16} className="text-volt-400" />
-                {siteConfig.contact.city}, Perú
-              </span>
-              <a
-                href={`mailto:${siteConfig.contact.email}`}
-                className="inline-flex w-fit items-center gap-2 text-ink-200 hover:text-white"
-              >
-                <IconMail size={16} className="text-volt-400" />
-                {siteConfig.contact.email}
-              </a>
-            </div>
+            <p className="mt-3 text-sm font-bold text-volt-400">
+              {siteConfig.taglineSecondary}
+            </p>
+            {social.length > 0 && (
+              <ul className="mt-5 flex gap-2.5" aria-label="Redes sociales">
+                {social.map((n) => (
+                  <li key={n.key}>
+                    <a
+                      href={n.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`MaquiFly en ${n.label}`}
+                      className="flex size-10 items-center justify-center rounded-full border border-white/15 text-ink-200 transition-colors hover:border-volt-400 hover:text-volt-400"
+                    >
+                      <n.Icon size={18} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
+          {/* Columnas de enlaces */}
           {columns.map((column) => (
-            <div key={column.title} className="md:col-span-2">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+            <div key={column.title} className="lg:col-span-2">
+              <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white">
                 {column.title}
               </h2>
               <ul className="mt-4 flex flex-col gap-2.5">
@@ -93,75 +109,87 @@ export function Footer() {
             </div>
           ))}
 
-          <div className="hidden md:col-span-2 md:block">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-              Categorías
+          {/* Contacto */}
+          <div className="col-span-2 lg:col-span-3">
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white">
+              ¿Hablamos?
             </h2>
-            <ul className="mt-4 flex flex-col gap-2.5">
-              {topCategories.map((category) => (
-                <li key={category.slug}>
-                  <Link
-                    href={`/maquinaria/${category.slug}`}
-                    className="text-sm text-ink-300 transition-colors hover:text-volt-400"
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
+            <ul className="mt-4 flex flex-col gap-3 text-sm">
+              <li>
+                <a
+                  href={`https://wa.me/${wa}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-ink-200 transition-colors hover:text-volt-400"
+                >
+                  <IconWhatsApp size={16} className="shrink-0 text-volt-400" />
+                  {prettyPhone(wa)}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="inline-flex items-center gap-2 text-ink-200 transition-colors hover:text-volt-400"
+                >
+                  <IconMail size={16} className="shrink-0 text-volt-400" />
+                  {siteConfig.contact.email}
+                </a>
+              </li>
+              <li className="inline-flex items-center gap-2 text-ink-300">
+                <IconPin size={16} className="shrink-0 text-volt-400" />
+                {siteConfig.contact.city}, Perú
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-white/10 pt-6 sm:mt-12 sm:pt-8">
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink-400">
-              Cobertura
+        {/* Franja de operación */}
+        <div className="mt-10 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm sm:grid-cols-3 sm:p-5">
+          <div>
+            <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">
+              Operación inicial
             </p>
-            <p className="text-sm text-ink-300">
-              <span className="text-white">
-                Activo en{" "}
-                {activeLocations.map((l) => l.name).join(", ")}
-              </span>
-              <span className="text-ink-400">
-                {" "}
-                · Próximamente {upcomingLocations.map((l) => l.name).join(", ")}
-              </span>
+            <p className="mt-1 text-white">
+              {activeLocations.map((l) => l.name).join(", ")}, Perú
             </p>
+          </div>
+          <div>
+            <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">
+              Próximamente
+            </p>
+            <p className="mt-1 text-ink-300">
+              {upcomingLocations.map((l) => l.name).join(" · ")}
+            </p>
+          </div>
+          <div>
+            <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">
+              Moneda
+            </p>
+            <p className="mt-1 text-ink-300">Soles (S/) · dólares referenciales</p>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:gap-5 sm:pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-relaxed text-ink-400">
-            © {year} {siteConfig.legalName}. MaquiFly es una plataforma de
-            conexión: no es propietaria de las máquinas publicadas ni participa
-            en el contrato de alquiler entre las partes.
-          </p>
-
-          <div className="text-xs text-ink-400">
-            {hasSocial ? (
-              <ul className="flex gap-4">
-                {socialNetworks
-                  .filter((n) => siteConfig.social[n.key])
-                  .map((n) => (
-                    <li key={n.key}>
-                      <a
-                        href={siteConfig.social[n.key]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-volt-400"
-                      >
-                        {n.label}
-                      </a>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              /* No se enlazan perfiles que todavía no existen. */
-              <p className="max-w-xs">
-                Redes sociales en preparación. Cuando existan, se enlazan aquí.
-              </p>
-            )}
+        {/* Legal */}
+        <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-ink-400 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl space-y-1.5 leading-relaxed">
+            <p>
+              © {year} {siteConfig.legalName}. Todos los derechos reservados.
+            </p>
+            <p>
+              MaquiFly es una plataforma de conexión: no es propietaria de las
+              máquinas publicadas ni participa en el contrato de alquiler entre
+              las partes.
+            </p>
           </div>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="transition-colors hover:text-volt-400">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

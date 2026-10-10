@@ -204,3 +204,7 @@
     top: 1rem;
   }
 }
+
+html {
+  scroll-padding-top: 5rem;
+}

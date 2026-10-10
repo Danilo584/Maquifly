@@ -227,7 +227,7 @@ export default async function PlansPage() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      <Section tone="light">
+      <Section tone="light" id="fundadores">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
             <SectionHeading
@@ -267,7 +267,7 @@ export default async function PlansPage() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      <Section tone="dark">
+      <Section tone="dark" id="destacados">
         <SectionHeading
           tone="dark"
           eyebrow="Destacados Express"
