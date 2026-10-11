@@ -90,7 +90,6 @@ export const plans: Record<PlanId, Plan> = {
       "Botón directo a tu WhatsApp",
       "Prioridad en las búsquedas",
       "Etiqueta «Destacado» en tus fichas",
-      "Sello de propietario verificado",
       "1 post al mes en las redes de MaquiFly",
       "Reporte mensual de visitas y contactos",
       "Atención prioritaria por WhatsApp",
@@ -111,6 +110,8 @@ export const plans: Record<PlanId, Plan> = {
     includesPrevious: "Todo lo de Fly Plus",
     benefits: [
       "Máquinas ilimitadas",
+      "Botón directo a tu WhatsApp",
+      "Sello de propietario verificado: más confianza para tus clientes",
       "Perfil de empresa con logo y RUC",
       "Apareces en la portada de MaquiFly",
       "Fotos y textos de tus anuncios hechos por nuestro equipo",

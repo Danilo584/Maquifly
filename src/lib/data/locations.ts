@@ -1,9 +1,8 @@
 import type { Location } from "@/lib/types";
 
 /**
- * Ciudades. Solo Piura está activa: es donde se valida el modelo.
- * Las demás quedan declaradas para que la expansión sea cambiar un booleano,
- * no reescribir el buscador ni la estructura de URLs.
+ * Ciudades. MaquiFly atiende a todo el Perú; Piura es la base de operaciones
+ * y va primero. Para sumar una ciudad: agregarla aquí y en la tabla locations.
  */
 export const locations: Location[] = [
   {
@@ -35,7 +34,7 @@ export const locations: Location[] = [
     slug: "chiclayo",
     region: "Lambayeque",
     districts: ["Chiclayo", "José Leonardo Ortiz", "La Victoria", "Lambayeque", "Ferreñafe"],
-    active: false,
+    active: true,
     lat: -6.7714,
     lng: -79.8409,
   },
@@ -45,7 +44,7 @@ export const locations: Location[] = [
     slug: "trujillo",
     region: "La Libertad",
     districts: ["Trujillo", "La Esperanza", "El Porvenir", "Víctor Larco", "Moche"],
-    active: false,
+    active: true,
     lat: -8.112,
     lng: -79.0288,
   },
@@ -55,7 +54,7 @@ export const locations: Location[] = [
     slug: "tumbes",
     region: "Tumbes",
     districts: ["Tumbes", "Corrales", "Zarumilla", "Zorritos"],
-    active: false,
+    active: true,
     lat: -3.5669,
     lng: -80.4515,
   },
@@ -65,7 +64,7 @@ export const locations: Location[] = [
     slug: "cajamarca",
     region: "Cajamarca",
     districts: ["Cajamarca", "Baños del Inca", "Jaén", "Celendín"],
-    active: false,
+    active: true,
     lat: -7.1617,
     lng: -78.5127,
   },
@@ -75,7 +74,7 @@ export const locations: Location[] = [
     slug: "lima",
     region: "Lima",
     districts: ["Lima Norte", "Lima Sur", "Lima Este", "Callao", "Lurín", "Ate"],
-    active: false,
+    active: true,
     lat: -12.0464,
     lng: -77.0428,
   },

@@ -122,13 +122,13 @@ export default function AboutPage() {
       <Section tone="light">
         <SectionHeading
           eyebrow="Dónde estamos"
-          title={`Empezamos en ${siteConfig.contact.city}`}
-          description="Una ciudad, hecha bien, antes que diez ciudades a medias. Piura concentra obra urbana, agroindustria e infraestructura: si el modelo funciona aquí, funciona en el resto del norte."
+          title={`Nacimos en ${siteConfig.contact.city}, atendemos todo el Perú`}
+          description="Piura es nuestra base de operaciones: concentra obra urbana, agroindustria e infraestructura. Desde aquí conectamos maquinaria y proyectos en cualquier región del país."
         />
         <div className="mt-8 flex flex-wrap gap-2">
           {activeLocations.map((location) => (
             <Badge key={location.slug} tone="ok">
-              {location.name} · activo
+              {location.name}
             </Badge>
           ))}
           {upcomingLocations.map((location) => (

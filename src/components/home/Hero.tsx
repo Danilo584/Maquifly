@@ -3,7 +3,6 @@ import Link from "next/link";
 import { SearchBar } from "@/components/search/SearchBar";
 import { LinkButton } from "@/components/ui/Button";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
-import { activeLocations } from "@/lib/data/locations";
 import { categories } from "@/lib/data/categories";
 
 const quickLinks = [
@@ -15,7 +14,6 @@ const quickLinks = [
 ];
 
 export function Hero() {
-  const city = activeLocations[0]?.name ?? "Piura";
 
   return (
     <section className="relative overflow-hidden bg-ink-950">
@@ -46,7 +44,7 @@ export function Hero() {
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-volt-300">
             <span className="size-1.5 rounded-full bg-volt-400" aria-hidden="true" />
-            Iniciando en {city}, Perú
+            Alquiler de maquinaria en todo el Perú
           </p>
 
           <h1 className="mt-4 text-[1.9rem] font-extrabold leading-[1.08] sm:mt-5 text-white text-balance-tight sm:text-5xl lg:text-[3.6rem]">

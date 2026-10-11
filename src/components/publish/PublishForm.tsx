@@ -338,7 +338,7 @@ export function PublishForm() {
                 htmlFor={`${id}-city`}
                 required
                 error={errors.locationSlug}
-                hint="MaquiFly está activo en Piura. Puedes publicar en otras ciudades, pero todavía reciben poco tráfico."
+                hint="Publica desde cualquier ciudad del Perú. ¿No ves la tuya? Escríbenos y la agregamos."
               >
                 <Select
                   id={`${id}-city`}
@@ -350,18 +350,9 @@ export function PublishForm() {
                 >
                   {activeLocations.map((l) => (
                     <option key={l.slug} value={l.slug}>
-                      {l.name} (activa)
+                      {l.name}
                     </option>
                   ))}
-                  <optgroup label="Próximamente">
-                    {locations
-                      .filter((l) => !l.active)
-                      .map((l) => (
-                        <option key={l.slug} value={l.slug}>
-                          {l.name}
-                        </option>
-                      ))}
-                  </optgroup>
                 </Select>
               </Field>
 

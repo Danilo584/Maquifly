@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
+import { EmailLink } from "@/components/common/EmailLink";
 import { siteConfig } from "@/lib/site";
-import { activeLocations, upcomingLocations } from "@/lib/data/locations";
 import { IconFacebook, IconInstagram, IconMail, IconPin, IconTikTok, IconWhatsApp } from "@/components/ui/Icon";
 
 const columns = [
@@ -65,7 +65,7 @@ export function Footer() {
           <div className="col-span-2 lg:col-span-3">
             <Logo tone="dark" size="md" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-300">
-              El marketplace de maquinaria para alquiler en el norte del Perú.
+              El marketplace de maquinaria para alquiler en el Perú.
               Conectamos a quien la necesita con quien la tiene.
             </p>
             <p className="mt-3 text-sm font-bold text-volt-400">
@@ -129,17 +129,14 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href={`mailto:${siteConfig.contact.email}`}
-                  className="inline-flex items-center gap-2 text-ink-200 transition-colors hover:text-volt-400"
-                >
+                <EmailLink className="inline-flex items-center gap-2 text-ink-200 transition-colors hover:text-volt-400">
                   <IconMail size={16} className="shrink-0 text-volt-400" />
                   {siteConfig.contact.email}
-                </a>
+                </EmailLink>
               </li>
               <li className="inline-flex items-center gap-2 text-ink-300">
                 <IconPin size={16} className="shrink-0 text-volt-400" />
-                {siteConfig.contact.city}, Perú
+                Base en {siteConfig.contact.city} · todo el Perú
               </li>
             </ul>
           </div>
@@ -149,19 +146,15 @@ export function Footer() {
         <div className="mt-10 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm sm:grid-cols-3 sm:p-5">
           <div>
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">
-              Operación inicial
+              Cobertura
             </p>
-            <p className="mt-1 text-white">
-              {activeLocations.map((l) => l.name).join(", ")}, Perú
-            </p>
+            <p className="mt-1 text-white">Todo el Perú</p>
           </div>
           <div>
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">
-              Próximamente
+              Base de operaciones
             </p>
-            <p className="mt-1 text-ink-300">
-              {upcomingLocations.map((l) => l.name).join(" · ")}
-            </p>
+            <p className="mt-1 text-ink-300">{siteConfig.contact.city}, Perú</p>
           </div>
           <div>
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink-400">

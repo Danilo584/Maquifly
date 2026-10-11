@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { categories } from "@/lib/data/categories";
-import { activeLocations, upcomingLocations } from "@/lib/data/locations";
+import { activeLocations } from "@/lib/data/locations";
 import { searchHref } from "@/lib/search-params";
 import { track } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
@@ -133,13 +133,6 @@ export function SearchBar({
                 {l.name}
               </option>
             ))}
-            <optgroup label="Próximamente">
-              {upcomingLocations.map((l) => (
-                <option key={l.slug} value={l.slug}>
-                  {l.name}
-                </option>
-              ))}
-            </optgroup>
           </select>
         </div>
 
