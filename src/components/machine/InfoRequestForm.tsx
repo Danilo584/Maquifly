@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { Callout } from "@/components/ui/Callout";
 import { IconCheck, IconMail } from "@/components/ui/Icon";
+import { PrivacyConsent } from "@/components/common/PrivacyConsent";
 
 /**
  * Alternativa a WhatsApp para quien prefiere dejar sus datos.
@@ -26,6 +27,7 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
   const [sent, setSent] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [accepted, setAccepted] = useState(false);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -35,6 +37,7 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
       next.contact = "Deja un teléfono o correo donde puedan responderte.";
     if (message.trim().length < 15)
       next.message = "Cuéntale al propietario qué necesitas (mínimo 15 caracteres).";
+    if (!accepted) next.consent = "Marca la casilla para poder enviar la solicitud.";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -139,6 +142,14 @@ export function InfoRequestForm({ machine }: { machine: Machine }) {
         Tus datos se comparten únicamente con el propietario de esta
         publicación para que pueda responderte.
       </Callout>
+
+      <PrivacyConsent
+        id={`${id}-consent`}
+        checked={accepted}
+        onChange={setAccepted}
+        error={errors.consent}
+        purpose="gestionar esta solicitud y compartirlos con el propietario de la máquina"
+      />
 
       {failure && <Callout tone="warn">{failure}</Callout>}
 

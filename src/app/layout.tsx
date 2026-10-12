@@ -6,6 +6,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PublicOnly } from "@/components/layout/PublicOnly";
+import { CookieNotice } from "@/components/common/CookieNotice";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { absoluteUrl, siteConfig } from "@/lib/site";
@@ -61,6 +62,7 @@ export default function RootLayout({
         </main>
         <PublicOnly>
           <Footer />
+          <CookieNotice />
         </PublicOnly>
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />

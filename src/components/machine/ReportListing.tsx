@@ -190,7 +190,7 @@ export function ReportListing({
                 <Field
                   label="Tu contacto"
                   htmlFor={`${id}-contact`}
-                  hint="Opcional. Solo si quieres que te respondamos."
+                  hint="Opcional. Solo lo usamos para responderte sobre este reporte (ver Política de privacidad)."
                 >
                   <Input
                     id={`${id}-contact`}

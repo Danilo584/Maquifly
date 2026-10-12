@@ -68,17 +68,24 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Cookies y analítica">
+      <LegalSection title="5. Cookies y analítica" id="cookies">
         <p>
-          En el estado actual del proyecto no hay herramientas de analítica ni
-          cookies de terceros conectadas. Cuando se integren, se detallará aquí
-          qué se recoge y se habilitará un mecanismo de consentimiento antes de
+          MaquiFly no usa cookies publicitarias ni de seguimiento, ni
+          herramientas de analítica de terceros. Si en el futuro se integran,
+          se detallará aquí qué se recoge y se pedirá tu consentimiento antes de
           activarlas.
         </p>
         <p>
           La plataforma sí utiliza almacenamiento local del navegador para
           funciones propias, como guardar el borrador de una publicación en tu
-          dispositivo. Esa información no sale de tu navegador.
+          dispositivo, o recordar que ya viste el aviso de cookies. Esa
+          información no sale de tu navegador.
+        </p>
+        <p>
+          Para mostrar a cada propietario cuántas personas vieron su máquina,
+          registramos de forma anónima las visitas a cada publicación y los
+          clics en el botón de WhatsApp. Ese registro no incluye tu nombre,
+          teléfono, correo ni dirección IP.
         </p>
       </LegalSection>
 

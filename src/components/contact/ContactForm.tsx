@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { Callout } from "@/components/ui/Callout";
 import { IconCheck } from "@/components/ui/Icon";
+import { PrivacyConsent } from "@/components/common/PrivacyConsent";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Escribe tu nombre."),
@@ -51,16 +52,20 @@ export function ContactForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
+  const [accepted, setAccepted] = useState(false);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     const result = contactSchema.safeParse(values);
+    const found: Record<string, string> = {};
     if (!result.success) {
-      const found: Record<string, string> = {};
       for (const issue of result.error.issues) {
         const key = String(issue.path[0]);
         if (!found[key]) found[key] = issue.message;
       }
+    }
+    if (!accepted) found.consent = "Marca la casilla para poder enviar tu mensaje.";
+    if (!result.success || Object.keys(found).length > 0) {
       setErrors(found);
       return;
     }
@@ -159,6 +164,17 @@ export function ContactForm() {
           maxLength={1500}
         />
       </Field>
+
+      <PrivacyConsent
+        id={`${id}-consent`}
+        checked={accepted}
+        onChange={(v) => {
+          setAccepted(v);
+          if (v) setErrors((e) => ({ ...e, consent: "" }));
+        }}
+        error={errors.consent || undefined}
+        purpose="responder mi mensaje"
+      />
 
       {failure && (
         <Callout tone="warn">
