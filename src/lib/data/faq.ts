@@ -24,7 +24,7 @@ export const faq: FaqItem[] = [
   {
     question: "¿Cómo publico mi maquinaria?",
     answer:
-      "Desde el botón «Publicar maquinaria» completas un formulario con la categoría, marca, modelo, ubicación, condiciones de alquiler y fotografías. Antes de publicar ves una vista previa exacta de cómo quedará tu anuncio.",
+      "Toca «Publicar maquinaria», crea tu cuenta gratis (o inicia sesión), elige tu plan y agrega tu máquina con la categoría, marca, modelo, ubicación, condiciones de alquiler y fotografías. MaquiFly la revisa y la publica; después la editas o pausas desde tu cuenta. Si prefieres, escríbenos por WhatsApp y la publicamos por ti.",
   },
   {
     question: "¿Cuánto cuesta publicar?",

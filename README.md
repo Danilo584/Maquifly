@@ -96,7 +96,8 @@ maquifly/
    │  ├─ maquinaria/             Buscador + páginas de categoría
    │  ├─ maquina/[slug]/         Ficha individual
    │  ├─ propietario/[slug]/     Perfil público de propietario
-   │  ├─ publicar/               Formulario de publicación
+   │  ├─ publicar/               Inicio de la publicación (lleva al registro o a «Agregar máquina»)
+   │  ├─ ingresar/ cuenta/       Inicio de sesión y panel del propietario
    │  ├─ blog/                   Índice y artículos
    │  ├─ admin/                  Esqueleto del panel de moderación
    │  ├─ sitemap.ts robots.ts manifest.ts icon.svg
@@ -112,7 +113,7 @@ maquifly/
    │  ├─ reviews/     Estrellas, listado y formulario de reseñas
    │  ├─ owner/       Tarjeta de propietario y verificación
    │  ├─ category/    Rejilla de categorías
-   │  ├─ publish/     Formulario multipaso
+   │  ├─ account/     Registro, elección de plan, perfil y panel del propietario
    │  ├─ admin/ contact/ legal/ common/ seo/
    └─ lib/
       ├─ types.ts             Modelo de dominio (fuente de verdad)
@@ -197,10 +198,9 @@ Estas reglas están implementadas en código, no son declaraciones de intencione
 - Perfiles públicos de propietario con sus publicaciones.
 - Generación del mensaje de WhatsApp con nombre de máquina, ubicación, código y
   enlace (en publicaciones reales abre el chat; en DEMO muestra el mensaje).
-- Formulario de publicación de seis pasos con validación Zod paso a paso,
-  autoguardado de borrador, selección y previsualización de fotografías con
-  límites reales de tipo y tamaño, y vista previa con el componente real de
-  tarjeta.
+- Publicación con cuenta: «Publicar maquinaria» → crear cuenta → elegir plan
+  → perfil → agregar la máquina con fotos (sección 6.2). Quien prefiera,
+  escribe por WhatsApp y el admin la publica desde el panel.
 - Formularios de reseña, reporte de publicación, solicitud de información y
   contacto: todos validan y guardan.
 - Panel de administración con publicaciones, propietarios, reportes y mensajes.
@@ -214,7 +214,6 @@ Estas reglas están implementadas en código, no son declaraciones de intencione
 | Función | Qué falta | Dónde está preparado |
 | --- | --- | --- |
 | Persistencia real | Ejecutar `supabase/schema.sql` e implementar el repositorio | `supabase/schema.sql`, `supabase-repository.example.ts` |
-| Subida de fotografías | Bucket `machine-photos` en Supabase Storage | Paso 4 de `PublishForm` valida tipo y tamaño |
 | Publicación real de anuncios | `insert` + moderación previa | El formulario ya produce datos validados |
 | Reseñas públicas | Cuenta verificada + tabla `reviews` | Interfaz completa; hoy guarda en local |
 | Envío de formularios por correo | Servicio de correo transaccional | Contacto y solicitud de información |

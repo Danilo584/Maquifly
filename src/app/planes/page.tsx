@@ -205,7 +205,7 @@ export default async function PlansPage() {
                     </LinkButton>
                   ) : (
                     <LinkButton
-                      href={`/pagar/fly-${id}`}
+                      href={`/ingresar?plan=${id}`}
                       variant={dark ? "volt" : "primary"}
                       fullWidth
                     >

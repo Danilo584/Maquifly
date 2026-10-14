@@ -117,10 +117,8 @@ estos dos archivos y vuelve a subir:
 - `src/lib/data/demo-machines.ts`
 - `src/lib/data/demo-owners.ts`
 
-**Publicar aún no guarda nada.** El formulario funciona y valida, pero las
-publicaciones quedan en el navegador de quien las hace, no en una base de
-datos. Para que sea real hay que conectar Supabase: el esquema completo está
-en `supabase/schema.sql` y las instrucciones en el `README.md`, sección 7.
+**Publicar requiere cuenta.** El propietario crea su cuenta, elige su plan y
+agrega su máquina desde «Mi cuenta». Tú la apruebas en `/admin` → Máquinas.
 
 **El plan gratuito de Vercel** está pensado para proyectos personales. Si
 MaquiFly pasa a operar comercialmente, revisa sus condiciones: puede que

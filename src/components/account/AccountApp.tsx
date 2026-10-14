@@ -106,14 +106,23 @@ function Dashboard({
   const [totals, setTotals] = useState<Totals | null>(null);
   const [totalsError, setTotalsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [openNewMachine, setOpenNewMachine] = useState(false);
 
   // La pestaña vive en el #hash: el botón «atrás» y los enlaces funcionan.
+  // #nueva-maquina (desde «Publicar maquinaria») abre directo el formulario.
   useEffect(() => {
-    const fromHash = window.location.hash.replace("#", "") as TabKey;
-    if (tabs.some((t) => t.key === fromHash)) setTab(fromHash);
+    const fromHash = window.location.hash.replace("#", "");
+    if (fromHash === "nueva-maquina") {
+      setTab("maquinas");
+      setOpenNewMachine(true);
+      window.history.replaceState(null, "", "#maquinas");
+      return;
+    }
+    if (tabs.some((t) => t.key === fromHash)) setTab(fromHash as TabKey);
   }, []);
 
   function go(next: TabKey) {
+    setOpenNewMachine(false);
     setTab(next);
     window.history.replaceState(null, "", `#${next}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -257,7 +266,14 @@ function Dashboard({
             />
           )}
           {tab === "maquinas" && (
-            <MyMachines owner={owner} userId={session.user.id} machines={machines} onChanged={reloadAll} goTo={go} />
+            <MyMachines
+              owner={owner}
+              userId={session.user.id}
+              machines={machines}
+              onChanged={reloadAll}
+              goTo={go}
+              openNew={openNewMachine}
+            />
           )}
           {tab === "estadisticas" && (
             <MyStats owner={owner} machines={machines ?? []} totals={totals} totalsError={totalsError} />

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
+import { siteConfig } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { FOUNDER_SLOTS, type PlanId } from "@/lib/plans";
 import type {
   AvailabilityStatus,
@@ -194,4 +196,9 @@ export function useFounderSlotsLeft(): number | null {
     };
   }, []);
   return slots;
+}
+
+/** WhatsApp para quien prefiere que MaquiFly publique por él. */
+export function publishForMeUrl(): string {
+  return whatsappUrl(siteConfig.contact.whatsapp, "Hola MaquiFly, quiero publicar mi maquinaria. ¿Me ayudan a publicarla?");
 }
