@@ -45,6 +45,8 @@ export type Counts = {
   submissions: number;
   payments: number;
   reports: number;
+  /** Máquinas que los propietarios enviaron a revisión desde su cuenta. */
+  machines: number;
 };
 
 const tabs: Array<{
@@ -58,7 +60,7 @@ const tabs: Array<{
   { key: "messages", label: "Mensajes", Icon: AIconInbox, badge: "messages", group: "Bandeja" },
   { key: "submissions", label: "Publicaciones recibidas", Icon: AIconUpload, badge: "submissions", group: "Bandeja" },
   { key: "reports", label: "Reportes", Icon: AIconFlag, badge: "reports", group: "Bandeja" },
-  { key: "machines", label: "Máquinas", Icon: AIconMachine, group: "Catálogo" },
+  { key: "machines", label: "Máquinas", Icon: AIconMachine, badge: "machines", group: "Catálogo" },
   { key: "owners", label: "Propietarios", Icon: AIconUsers, group: "Catálogo" },
   { key: "payments", label: "Pagos y planes", Icon: AIconWallet, badge: "payments", group: "Negocio" },
 ];
@@ -241,7 +243,7 @@ const ALERTS_KEY = "maquifly:admin-alerts";
 
 function Dashboard({ email }: { email: string }) {
   const [tab, setTab] = useState<TabKey>("overview");
-  const [counts, setCounts] = useState<Counts>({ messages: 0, submissions: 0, payments: 0, reports: 0 });
+  const [counts, setCounts] = useState<Counts>({ messages: 0, submissions: 0, payments: 0, reports: 0, machines: 0 });
   const [menuOpen, setMenuOpen] = useState(false);
   const [alertsOn, setAlertsOn] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -257,21 +259,23 @@ function Dashboard({ email }: { email: string }) {
 
   const refreshCounts = useCallback(async () => {
     const c = db();
-    const [m, s, p, r] = await Promise.all([
+    const [m, s, p, r, mr] = await Promise.all([
       c.from("contact_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
       c.from("listing_submissions").select("id", { count: "exact", head: true }).eq("status", "new"),
       c.from("payments").select("id", { count: "exact", head: true }).eq("status", "pending"),
       c.from("reports").select("id", { count: "exact", head: true }).eq("status", "open"),
+      c.from("machines").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
     ]);
     const next = {
       messages: m.count ?? 0,
       submissions: s.count ?? 0,
       payments: p.count ?? 0,
       reports: r.count ?? 0,
+      machines: mr.count ?? 0,
     };
     setCounts(next);
 
-    const total = next.messages + next.submissions + next.payments + next.reports;
+    const total = next.messages + next.submissions + next.payments + next.reports + next.machines;
     if (previousTotal.current !== null && total > previousTotal.current) {
       // No se recarga la sección abierta (podrías estar editando): solo se avisa.
       let alerts = false;
