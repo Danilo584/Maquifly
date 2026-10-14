@@ -49,7 +49,10 @@ export function MachineCard({
           </div>
         )}
 
-        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+        {/* Etiquetas a la izquierda (se envuelven) y disponibilidad a la
+            derecha, en una sola fila: así nunca se montan una sobre otra. */}
+        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-wrap gap-1.5">
           {machine.isDemo && <DemoBadge size="sm" />}
           {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge />}
           {!machine.isDemo && machine.ownerIsFounder && <FounderBadge />}
@@ -66,10 +69,11 @@ export function MachineCard({
           )}
         </div>
 
-        <div className="absolute right-3 top-3">
+        <div className="shrink-0">
           <Badge tone={availabilityTone[machine.availability]} size="sm">
             {availabilityLabel[machine.availability]}
           </Badge>
+        </div>
         </div>
       </div>
 
