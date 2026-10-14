@@ -20,8 +20,8 @@ export const metadata: Metadata = pageMetadata({
 
 const ownerSteps = [
   {
-    title: "Publicas tu máquina",
-    text: "Completas el formulario con categoría, marca, modelo, ubicación, condiciones y fotos. Toma pocos minutos y es gratuito.",
+    title: "Creas tu cuenta y publicas",
+    text: "Creas tu cuenta gratis, eliges tu plan y agregas tu máquina con categoría, marca, modelo, ubicación, condiciones y fotos. Toma pocos minutos.",
   },
   {
     title: "Revisamos la publicación",

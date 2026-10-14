@@ -13,16 +13,19 @@ export function PlanPicker({
   value,
   onChange,
   name = "plan",
+  hideLegend = false,
 }: {
   value: PlanId;
   onChange: (plan: PlanId) => void;
   name?: string;
+  /** Oculta «Elige tu plan» (visible solo para lectores de pantalla) cuando la página ya lo dice. */
+  hideLegend?: boolean;
 }) {
   const slotsLeft = useFounderSlotsLeft();
 
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-1.5 text-sm font-semibold text-ink-900">Elige tu plan</legend>
+      <legend className={hideLegend ? "sr-only" : "mb-1.5 text-sm font-semibold text-ink-900"}>Elige tu plan</legend>
       {planOrder.map((id) => {
         const p = plans[id];
         const inputId = `${name}-${id}`;

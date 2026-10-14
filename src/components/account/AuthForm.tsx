@@ -5,14 +5,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SUPABASE_READY } from "@/lib/site";
 import { getSupabase } from "@/lib/supabase";
-import { authErrorMessage, useSession } from "@/lib/account";
+import { authErrorMessage, publishForMeUrl, useSession } from "@/lib/account";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Field, Input } from "@/components/ui/Field";
 import { PrivacyConsent } from "@/components/common/PrivacyConsent";
-import { PlanPicker } from "@/components/account/PlanPicker";
 import type { PlanId } from "@/lib/plans";
-import { IconCheck, IconMail, IconPlus, IconUser } from "@/components/ui/Icon";
+import { IconCheck, IconMail, IconUser, IconWhatsApp } from "@/components/ui/Icon";
 
 type Mode = "login" | "signup" | "forgot";
 
@@ -42,18 +41,27 @@ function AuthFormInner() {
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<{ email: string; kind: "confirm" | "reset" } | null>(null);
 
-  // Si ya hay sesión, directo al panel.
+  // Si ya hay sesión, directo al panel. Si llegó desde un plan pagado
+  // (/ingresar?plan=plus), se recuerda y se abre «Mi plan» para pagarlo.
   useEffect(() => {
-    if (!loading && session) router.replace("/cuenta");
+    if (loading || !session) return;
+    const wanted = new URLSearchParams(window.location.search).get("plan");
+    if ((wanted === "plus" || wanted === "pro") && session.user.user_metadata?.plan_choice !== wanted) {
+      getSupabase()!
+        .auth.updateUser({ data: { plan_choice: wanted } })
+        .finally(() => router.replace("/cuenta#plan"));
+      return;
+    }
+    router.replace("/cuenta");
   }, [loading, session, router]);
 
-  // /ingresar?plan=plus abre «Crear cuenta» con ese plan ya marcado.
+  // /ingresar?modo=registro o ?plan=… abre directo «Crear cuenta». El plan
+  // elegido en /planes se guarda y se propone en el paso «Elige tu plan».
   useEffect(() => {
-    const wanted = new URLSearchParams(window.location.search).get("plan");
-    if (wanted === "start" || wanted === "plus" || wanted === "pro") {
-      setPlan(wanted);
-      setMode("signup");
-    }
+    const params = new URLSearchParams(window.location.search);
+    const wanted = params.get("plan");
+    if (wanted === "start" || wanted === "plus" || wanted === "pro") setPlan(wanted);
+    if (wanted || params.get("modo") === "registro") setMode("signup");
   }, []);
 
   function switchMode(next: Mode) {
@@ -223,7 +231,6 @@ function AuthFormInner() {
               ¿Olvidaste tu contraseña?
             </button>
           )}
-          {mode === "signup" && <PlanPicker value={plan} onChange={setPlan} name="auth-plan" />}
           {mode === "signup" && (
             <PrivacyConsent id="auth-consent" checked={consent} onChange={setConsent} purpose="crear y gestionar mi cuenta" />
           )}
@@ -265,16 +272,16 @@ function AuthFormInner() {
           ))}
         </ul>
         <p className="mt-5 text-sm leading-relaxed text-ink-300">
-          Crear la cuenta es gratis. Si eliges Fly Plus o Fly Pro, al terminar tu perfil te mostramos cómo pagar.{" "}
+          Crear la cuenta es gratis. Después eliges tu plan: Fly Start (gratis), Fly Plus o Fly Pro.{" "}
           <Link href="/planes" className="font-semibold text-volt-300 underline underline-offset-2">
             Ver planes
           </Link>
         </p>
         <div className="mt-6 border-t border-white/10 pt-5">
-          <p className="text-sm text-ink-300">¿Solo quieres publicar una máquina rápido?</p>
-          <LinkButton href="/publicar" variant="outline" size="sm" className="mt-3">
-            <IconPlus size={16} />
-            Publicar sin cuenta
+          <p className="text-sm text-ink-300">¿Prefieres que publiquemos tu máquina por ti?</p>
+          <LinkButton href={publishForMeUrl()} external variant="outline" size="sm" className="mt-3">
+            <IconWhatsApp size={16} />
+            Escríbenos por WhatsApp
           </LinkButton>
         </div>
       </aside>
@@ -292,11 +299,11 @@ function AccountsUnavailable() {
       <Card>
         <h1 className="text-center text-2xl font-extrabold text-ink-900">Las cuentas todavía no están activas</h1>
         <p className="mt-3 text-center text-[0.95rem] leading-relaxed text-steel-600">
-          Mientras tanto puedes publicar tu maquinaria sin crear una cuenta.
+          Mientras tanto, escríbenos y publicamos tu maquinaria por ti.
         </p>
-        <LinkButton href="/publicar" variant="primary" size="lg" fullWidth className="mt-6">
-          <IconPlus size={19} />
-          Publicar sin cuenta
+        <LinkButton href={publishForMeUrl()} external variant="whatsapp" size="lg" fullWidth className="mt-6">
+          <IconWhatsApp size={19} />
+          Escríbenos por WhatsApp
         </LinkButton>
       </Card>
     </div>

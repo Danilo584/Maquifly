@@ -35,14 +35,17 @@ export function MyMachines({
   machines,
   onChanged,
   goTo,
+  openNew = false,
 }: {
   owner: MyOwner;
   userId: string;
   machines: MyMachine[] | null;
   onChanged: () => Promise<void>;
   goTo: (tab: "plan") => void;
+  /** Abrir «Agregar máquina» al entrar (viene de «Publicar maquinaria»). */
+  openNew?: boolean;
 }) {
-  const [editing, setEditing] = useState<MyMachine | "new" | null>(null);
+  const [editing, setEditing] = useState<MyMachine | "new" | null>(openNew ? "new" : null);
   const [error, setError] = useState<string | null>(null);
   const [showArchived, setShowArchived] = useState(false);
   const plan = plans[effectivePlan(owner)];
