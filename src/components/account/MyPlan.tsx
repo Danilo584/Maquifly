@@ -16,7 +16,7 @@ import {
 import { getSupabase } from "@/lib/supabase";
 import { siteConfig } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
-import { dbErrorMessage, effectivePlan, type MyMachine, type MyOwner, type MyPayment } from "@/lib/account";
+import { dbErrorMessage, effectivePlan, useFounderSlotsLeft, type MyMachine, type MyOwner, type MyPayment } from "@/lib/account";
 import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
@@ -34,6 +34,15 @@ const productPrice: Record<MyPayment["product"], number> = {
   "fly-pro": plans.pro.pricePEN,
   "destacado-7": boostPackages[0]?.pricePEN ?? 0,
 };
+
+/** Precio a pagar: con descuento Socio Fundador si quedan cupos (mismo criterio que /pagar). */
+function priceFor(product: MyPayment["product"], founderOpen: boolean): number {
+  if (founderOpen && product !== "destacado-7") {
+    const p = plans[product === "fly-plus" ? "plus" : "pro"];
+    if (p.founderDiscountMonths > 0) return founderPricePEN(p);
+  }
+  return productPrice[product];
+}
 
 const statusLabel: Record<MyPayment["status"], { text: string; tone: "warn" | "ok" | "danger" }> = {
   pending: { text: "En verificación", tone: "warn" },
@@ -66,6 +75,8 @@ export function MyPlan({
 
   const [payments, setPayments] = useState<MyPayment[] | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const slotsLeft = useFounderSlotsLeft();
+  const founderOpen = (slotsLeft ?? 0) > 0;
 
   const loadPayments = useCallback(async () => {
     const { data } = await getSupabase()!
@@ -110,7 +121,9 @@ export function MyPlan({
         </Callout>
       )}
 
-      {wantsUpgrade && <CompletePayment owner={owner} planId={planChoice} onPaid={loadPayments} />}
+      {wantsUpgrade && slotsLeft !== null && (
+        <CompletePayment owner={owner} planId={planChoice} slotsLeft={slotsLeft} onPaid={loadPayments} />
+      )}
 
       {/* Plan actual --------------------------------------------------- */}
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
@@ -189,6 +202,7 @@ export function MyPlan({
         <PaymentForm
           owner={owner}
           machines={machines}
+          founderOpen={founderOpen}
           onDone={async () => {
             setShowForm(false);
             await loadPayments();
@@ -201,7 +215,7 @@ export function MyPlan({
         <h3 className="text-lg font-extrabold text-ink-900">Planes</h3>
         <ul className="mt-3 grid gap-4 md:grid-cols-3">
           {planOrder.map((id) => (
-            <PlanCard key={id} id={id} current={current} />
+            <PlanCard key={id} id={id} current={current} slotsLeft={slotsLeft} />
           ))}
         </ul>
         <p className="mt-3 text-sm text-steel-500">
@@ -251,8 +265,9 @@ export function MyPlan({
   );
 }
 
-function PlanCard({ id, current }: { id: PlanId; current: PlanId }) {
+function PlanCard({ id, current, slotsLeft }: { id: PlanId; current: PlanId; slotsLeft: number | null }) {
   const p = plans[id];
+  const founder = p.founderDiscountMonths > 0 && (slotsLeft ?? 0) > 0;
   const isCurrent = id === current;
   const rank = planOrder.indexOf(id) - planOrder.indexOf(current);
 
@@ -271,10 +286,25 @@ function PlanCard({ id, current }: { id: PlanId; current: PlanId }) {
         )}
       </div>
       <p className="text-sm text-steel-600">{p.idealFor}</p>
-      <p className="mt-3 text-3xl font-extrabold text-ink-900">
-        {p.pricePEN === 0 ? "Gratis" : formatPEN(p.pricePEN)}
-        {p.pricePEN > 0 && <span className="text-sm font-semibold text-steel-500"> /mes</span>}
-      </p>
+      {founder ? (
+        <>
+          <p className="mt-3 text-sm text-steel-500">
+            Precio normal: <span className="line-through">{formatPEN(p.pricePEN)}</span> /mes
+          </p>
+          <p className="text-3xl font-extrabold text-ink-900">
+            {formatPEN(founderPricePEN(p))}
+            <span className="text-sm font-semibold text-steel-500"> /mes</span>
+          </p>
+          <p className="mt-1 text-xs font-bold text-brand-700">
+            Precio Socio Fundador · {p.founderDiscountMonths === 1 ? "primer mes" : `primeros ${p.founderDiscountMonths} meses`}
+          </p>
+        </>
+      ) : (
+        <p className="mt-3 text-3xl font-extrabold text-ink-900">
+          {p.pricePEN === 0 ? "Gratis" : slotsLeft === null ? "…" : formatPEN(p.pricePEN)}
+          {p.pricePEN > 0 && slotsLeft !== null && <span className="text-sm font-semibold text-steel-500"> /mes</span>}
+        </p>
+      )}
       <ul className="mt-4 flex flex-1 flex-col gap-2">
         {p.includesPrevious && <li className="text-sm font-semibold text-ink-900">{p.includesPrevious}, más:</li>}
         {p.benefits.slice(0, 5).map((b) => (
@@ -307,6 +337,7 @@ function PaymentForm({
   initialProduct,
   initialAmount,
   founderRequested = false,
+  founderOpen = false,
   title = "Registrar mi pago",
   showIntro = true,
 }: {
@@ -316,6 +347,7 @@ function PaymentForm({
   initialProduct?: MyPayment["product"];
   initialAmount?: number;
   founderRequested?: boolean;
+  founderOpen?: boolean;
   title?: string;
   showIntro?: boolean;
 }) {
@@ -324,7 +356,7 @@ function PaymentForm({
   const [product, setProduct] = useState<MyPayment["product"]>(startProduct);
   const [machineId, setMachineId] = useState(live[0]?.id ?? "");
   const [method, setMethod] = useState<"yape" | "transfer">("yape");
-  const [amount, setAmount] = useState(String(initialAmount ?? productPrice[startProduct]));
+  const [amount, setAmount] = useState(String(initialAmount ?? priceFor(startProduct, founderOpen)));
   const [operation, setOperation] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -347,7 +379,7 @@ function PaymentForm({
         amount_pen: value,
         method,
         operation_number: operation.trim().slice(0, 40),
-        founder_requested: founderRequested && product === startProduct,
+        founder_requested: (founderRequested || founderOpen) && product !== "destacado-7" && value < productPrice[product],
       });
     setBusy(false);
     if (err) return setError(dbErrorMessage(err.message));
@@ -373,7 +405,7 @@ function PaymentForm({
             onChange={(e) => {
               const next = e.target.value as MyPayment["product"];
               setProduct(next);
-              setAmount(String(productPrice[next]));
+              setAmount(String(priceFor(next, founderOpen)));
             }}
           >
             {(Object.keys(productLabel) as Array<MyPayment["product"]>).map((k) => (
@@ -427,21 +459,22 @@ function PaymentForm({
  * al registrarse. Muestra el monto, a dónde pagar y el formulario para
  * registrar el número de operación. El plan lo activa el admin al aprobar.
  */
-function CompletePayment({ owner, planId, onPaid }: { owner: MyOwner; planId: PlanId; onPaid: () => Promise<void> }) {
+function CompletePayment({
+  owner,
+  planId,
+  slotsLeft,
+  onPaid,
+}: {
+  owner: MyOwner;
+  planId: PlanId;
+  slotsLeft: number;
+  onPaid: () => Promise<void>;
+}) {
   const target = plans[planId];
-  const [slotsLeft, setSlotsLeft] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
 
-  // Cupos libres del Programa Socio Fundador (mismo cálculo que /pagar).
-  useEffect(() => {
-    getSupabase()!
-      .from("owners_public")
-      .select("id", { count: "exact", head: true })
-      .not("founder_number", "is", null)
-      .then(({ count, error }) => setSlotsLeft(error ? 0 : Math.max(0, FOUNDER_SLOTS - (count ?? 0))));
-  }, []);
-
-  const founder = owner.founder_number === null && target.founderDiscountMonths > 0 && (slotsLeft ?? 0) > 0;
+  // Mismo criterio que /planes y /pagar: con cupos libres, precio Socio Fundador.
+  const founder = target.founderDiscountMonths > 0 && slotsLeft > 0;
   const amount = founder ? founderPricePEN(target) : target.pricePEN;
   const proof = [
     `Hola MaquiFly, acabo de pagar ${target.name} por ${formatPEN(amount)}.`,
@@ -456,8 +489,6 @@ function CompletePayment({ owner, planId, onPaid }: { owner: MyOwner; planId: Pl
     await getSupabase()!.auth.updateUser({ data: { plan_choice: "start" } });
     setBusy(false);
   }
-
-  if (slotsLeft === null) return null;
 
   return (
     <div className="overflow-hidden rounded-2xl border-2 border-brand-500 bg-white">

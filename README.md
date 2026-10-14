@@ -288,7 +288,7 @@ interfaz:
 
 **Activarlo** (una sola vez, en el panel de Supabase):
 
-1. SQL Editor → ejecutar `supabase/03-cuentas.sql`.
+1. SQL Editor → ejecutar `supabase/03-cuentas.sql` (ya incluye las tablas de `02-estadisticas.sql`).
 2. Authentication → Sign In / Providers → Email: dejar activado. Mientras no
    haya un servidor de correo propio (SMTP), desactivar «Confirm email»: el
    correo integrado de Supabase tiene límites muy estrictos y no sirve para
