@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { IconClose, IconMenu, IconPlus, IconUser } from "@/components/ui/Icon";
+import { hasStoredSession } from "@/lib/session-hint";
 
 const navLinks = [
   { href: "/maquinaria", label: "Buscar maquinaria" },
@@ -19,6 +20,15 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // Con sesión iniciada, «Iniciar sesión» pasa a ser «Mi cuenta». Se vuelve a
+  // mirar en cada navegación (al entrar o salir de la cuenta cambia la ruta).
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    setSignedIn(hasStoredSession());
+  }, [pathname]);
+  const account = signedIn
+    ? { href: "/cuenta", label: "Mi cuenta" }
+    : { href: "/ingresar", label: "Iniciar sesión" };
 
   // El menú móvil se cierra al navegar: sin esto, el usuario aterriza en la
   // página nueva con el panel todavía encima.
@@ -74,9 +84,9 @@ export function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-2 lg:flex">
-            <LinkButton href="/ingresar" variant="ghost" size="sm">
+            <LinkButton href={account.href} variant="ghost" size="sm">
               <IconUser size={17} />
-              Iniciar sesión
+              {account.label}
             </LinkButton>
             <LinkButton href="/publicar" variant="primary" size="sm">
               <IconPlus size={17} />
@@ -138,9 +148,9 @@ export function Navbar() {
                 <IconPlus size={18} />
                 Publicar mi maquinaria
               </LinkButton>
-              <LinkButton href="/ingresar" variant="secondary" size="md" fullWidth>
+              <LinkButton href={account.href} variant="secondary" size="md" fullWidth>
                 <IconUser size={18} />
-                Iniciar sesión
+                {account.label}
               </LinkButton>
             </div>
           </div>

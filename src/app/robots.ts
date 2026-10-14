@@ -16,6 +16,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           "/admin",
           "/ingresar",
+          "/cuenta",
           // Los resultados con filtros generan muchas URLs casi idénticas.
           // El tráfico orgánico debe entrar por categorías y landings.
           "/maquinaria?",

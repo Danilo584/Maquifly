@@ -81,6 +81,21 @@ Haz clic en **Deploy** y espera dos o tres minutos.
    `NEXT_PUBLIC_SITE_URL` a `https://maquifly.pe`. Luego, en la pestaña
    **Deployments**, vuelve a desplegar para que tome el cambio.
 
+## Después: activar las cuentas de propietarios
+
+Para que funcionen «Iniciar sesión» y «Mi cuenta», haz esto una sola vez en
+**supabase.com** → tu proyecto:
+
+1. **SQL Editor** → **New query** → pega todo el contenido de
+   `supabase/03-cuentas.sql` → **Run**.
+2. **Authentication** → **Sign In / Providers** → **Email** → apaga
+   **Confirm email** → **Save**. (El correo de confirmación de Supabase
+   sin un servidor de correo propio casi no llega a usuarios reales.)
+3. **Authentication** → **URL Configuration** → en *Site URL* pon
+   `https://maquifly.vercel.app` y en *Redirect URLs* agrega
+   `https://maquifly.vercel.app/**`. Cuando tengas el dominio, cámbialo a
+   `https://maquifly.pe`.
+
 ## Después: aparecer en Google
 
 1. Entra a **Google Search Console** con tu cuenta de Google.

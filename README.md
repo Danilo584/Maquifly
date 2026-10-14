@@ -179,9 +179,8 @@ Estas reglas están implementadas en código, no son declaraciones de intencione
    muestra una ilustración vectorial marcada como referencial.
 8. **Sin perfiles sociales falsos.** El footer reserva el espacio y dice que aún
    no existen, en vez de enlazar cuentas inexistentes.
-9. **Sin login de mentira.** `/ingresar` no muestra un formulario de contraseña
-   que no autentica: sería invitar a escribir contraseñas reales en un campo que
-   no las protege.
+9. **Sin login de mentira.** `/ingresar` autentica de verdad con Supabase Auth;
+   si Supabase no está configurado, no muestra ningún campo de contraseña.
 
 ---
 
@@ -215,7 +214,6 @@ Estas reglas están implementadas en código, no son declaraciones de intencione
 | Función | Qué falta | Dónde está preparado |
 | --- | --- | --- |
 | Persistencia real | Ejecutar `supabase/schema.sql` e implementar el repositorio | `supabase/schema.sql`, `supabase-repository.example.ts` |
-| Cuentas y sesión | Supabase Auth (verificación por teléfono) | `/ingresar`, políticas RLS ya escritas |
 | Subida de fotografías | Bucket `machine-photos` en Supabase Storage | Paso 4 de `PublishForm` valida tipo y tamaño |
 | Publicación real de anuncios | `insert` + moderación previa | El formulario ya produce datos validados |
 | Reseñas públicas | Cuenta verificada + tabla `reviews` | Interfaz completa; hoy guarda en local |
@@ -252,6 +250,58 @@ WhatsApp → el admin registra el pago en `payments` y ejecuta
 
 Pendiente: imagen del QR de Yape (`payment.yapeQr` en `src/lib/plans.ts`).
 Mientras esté vacía, la página de pago muestra solo el número.
+
+---
+
+## 6.2 Cuentas de propietarios (`/ingresar` y `/cuenta`)
+
+Cada propietario crea su cuenta con correo y contraseña (Supabase Auth) y
+tiene su panel en `/cuenta`:
+
+| Pestaña | Qué hace |
+| --- | --- |
+| Resumen | Máquinas publicadas frente al límite del plan, vistas, clics y pendientes |
+| Mis máquinas | Agregar, editar, pausar, reactivar y archivar sus máquinas, con fotos |
+| Estadísticas | Totales de 30 días (todos los planes); detalle por máquina y por semana (Fly Plus/Pro) |
+| Mi plan | Plan vigente, uso, comparación de planes, registro de pagos e historial |
+| Mis datos | Nombre público, WhatsApp, zona, descripción, RUC y contraseña |
+
+Reglas que aplica la base de datos (`supabase/03-cuentas.sql`), no solo la
+interfaz:
+
+- La primera publicación de cada máquina la aprueba el admin (pestaña
+  Máquinas del panel, botón «Publicar» o «No aprobar»). Después, el dueño
+  puede pausarla y reactivarla solo.
+- Nadie puede darse rol de admin, regalarse un plan o un Destacado, ni
+  tocar estrellas, reseñas o contadores.
+- Cada propietario sube fotos solo a `owners/<su id>/`.
+- Las visitas del propio dueño y del admin no suman en las estadísticas.
+- El detalle de estadísticas lo devuelve vacío la propia base de datos en
+  Fly Start.
+
+**Activarlo** (una sola vez, en el panel de Supabase):
+
+1. SQL Editor → ejecutar `supabase/03-cuentas.sql`.
+2. Authentication → Sign In / Providers → Email: dejar activado. Mientras no
+   haya un servidor de correo propio (SMTP), desactivar «Confirm email»: el
+   correo integrado de Supabase tiene límites muy estrictos y no sirve para
+   usuarios reales.
+3. Authentication → URL Configuration: *Site URL* = la dirección de la web
+   (`https://maquifly.vercel.app`, luego `https://maquifly.pe`) y agregar
+   `https://maquifly.vercel.app/**` en *Redirect URLs*.
+
+**Probar los planes:** crea una cuenta de prueba en `/ingresar`; en `/admin`
+→ Propietarios → Editar, cámbiale el plan a Fly Plus o Fly Pro con una fecha
+de vencimiento; vuelve a entrar con esa cuenta a `/cuenta`.
+
+**Vincular un propietario que ya existía** (creado desde el panel, sin
+cuenta): el propietario crea su cuenta y luego, en el SQL Editor:
+
+```sql
+update owner_profiles
+   set user_id = (select id from auth.users where email = 'correo@del-propietario.com')
+ where slug = 'slug-del-propietario';
+```
 
 ---
 

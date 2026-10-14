@@ -9,6 +9,7 @@ import { buildOwnerMessage, whatsappUrl } from "@/lib/whatsapp";
 import { plans } from "@/lib/plans";
 import { siteConfig } from "@/lib/site";
 import { FounderBadge } from "@/components/owner/PlanBadges";
+import { OwnerViewTracker } from "@/components/owner/OwnerViewTracker";
 
 import { MachineCard } from "@/components/machine/MachineCard";
 import { RatingStars } from "@/components/reviews/RatingStars";
@@ -70,6 +71,7 @@ export default async function OwnerPage({ params }: { params: Promise<Params> })
 
   return (
     <>
+      <OwnerViewTracker ownerId={owner.id} isDemo={owner.isDemo} />
       <section className="relative overflow-hidden bg-ink-950">
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-10">

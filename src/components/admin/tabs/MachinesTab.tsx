@@ -194,6 +194,11 @@ export function MachinesTab({ onChange }: TabProps) {
                           </button>
                         </>
                       )}
+                      {m.status === "pending_review" && (
+                        <button type="button" onClick={() => setStatus(m, "rejected")} className="rounded-lg border border-danger-500/40 px-3 py-1.5 font-semibold text-danger-700 hover:bg-danger-50">
+                          No aprobar
+                        </button>
+                      )}
                       {m.status !== "archived" && m.status !== "published" && (
                         <button type="button" onClick={() => setStatus(m, "archived")} className="rounded-lg border border-steel-300 px-3 py-1.5 font-semibold text-steel-600 hover:bg-steel-50">
                           Archivar
