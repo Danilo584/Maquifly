@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState, type ComponentType } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { SUPABASE_READY } from "@/lib/site";
 import { getSupabase } from "@/lib/supabase";
-import { plans } from "@/lib/plans";
+import { planOrder, plans, type PlanId } from "@/lib/plans";
 import { verificationLabel } from "@/lib/format";
 import { effectivePlan, useSession, type MyMachine, type MyOwner } from "@/lib/account";
 import { Badge } from "@/components/ui/Badge";
@@ -19,6 +19,7 @@ import { MyMachines } from "@/components/account/MyMachines";
 import { MyStats, type Totals } from "@/components/account/MyStats";
 import { MyPlan } from "@/components/account/MyPlan";
 import { MyProfile } from "@/components/account/MyProfile";
+import { planChoiceFrom } from "@/components/account/PlanPicker";
 
 type TabKey = "resumen" | "maquinas" | "estadisticas" | "plan" | "datos";
 
@@ -251,6 +252,7 @@ function Dashboard({
               totals={totals}
               email={session.user.email ?? ""}
               personName={(session.user.user_metadata?.name as string | undefined) ?? ""}
+              planChoice={planChoiceFrom(session.user.user_metadata)}
               goTo={go}
             />
           )}
@@ -260,7 +262,9 @@ function Dashboard({
           {tab === "estadisticas" && (
             <MyStats owner={owner} machines={machines ?? []} totals={totals} totalsError={totalsError} />
           )}
-          {tab === "plan" && <MyPlan owner={owner} machines={machines ?? []} />}
+          {tab === "plan" && (
+            <MyPlan owner={owner} machines={machines ?? []} planChoice={planChoiceFrom(session.user.user_metadata)} />
+          )}
           {tab === "datos" && <MyProfile owner={owner} email={session.user.email ?? ""} onSaved={reloadOwner} />}
         </div>
       </div>
@@ -278,6 +282,7 @@ function Overview({
   totals,
   email,
   personName,
+  planChoice,
   goTo,
 }: {
   owner: MyOwner;
@@ -285,6 +290,7 @@ function Overview({
   totals: Totals | null;
   email: string;
   personName: string;
+  planChoice: PlanId;
   goTo: (tab: TabKey) => void;
 }) {
   const plan = plans[effectivePlan(owner)];
@@ -331,6 +337,20 @@ function Overview({
         <h2 className="text-xl font-extrabold text-ink-900 sm:text-2xl">{firstName ? `Hola, ${firstName}` : "Hola"}</h2>
         <p className="mt-1 text-sm text-steel-600">Ingresaste como {email}.</p>
       </div>
+
+      {planChoice !== "start" && planOrder.indexOf(planChoice) > planOrder.indexOf(plan.id) && (
+        <div className="flex flex-col gap-4 rounded-2xl border-2 border-brand-500 bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div>
+            <p className="font-bold text-ink-900">Elegiste {plans[planChoice].name}</p>
+            <p className="mt-1 text-sm text-steel-600">
+              Completa tu pago para activarlo. Si ya pagaste, lo estamos verificando.
+            </p>
+          </div>
+          <Button variant="primary" onClick={() => goTo("plan")}>
+            Completar mi pago
+          </Button>
+        </div>
+      )}
 
       {machines !== null && list.length === 0 && (
         <div className="flex flex-col gap-4 rounded-2xl border border-brand-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">

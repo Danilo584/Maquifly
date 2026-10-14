@@ -11,6 +11,8 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { IconWhatsApp } from "@/components/ui/Icon";
+import { PlanPicker, planChoiceFrom } from "@/components/account/PlanPicker";
+import { plans, type PlanId } from "@/lib/plans";
 
 /**
  * Primer paso después de crear la cuenta: el perfil público de propietario.
@@ -19,6 +21,8 @@ import { IconWhatsApp } from "@/components/ui/Icon";
 export function OwnerOnboarding({ session, onCreated }: { session: Session; onCreated: () => Promise<void> }) {
   const metaName = (session.user.user_metadata?.name as string | undefined) ?? "";
   const [form, setForm] = useState({ business_name: metaName, whatsapp: "", area: "", description: "" });
+  const chosenAtSignup = planChoiceFrom(session.user.user_metadata);
+  const [plan, setPlan] = useState<PlanId>(chosenAtSignup);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const set = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
@@ -43,8 +47,14 @@ export function OwnerOnboarding({ session, onCreated }: { session: Session; onCr
         description: form.description.trim(),
         location_id: "loc-piura",
       });
+    if (err) {
+      setBusy(false);
+      return setError(dbErrorMessage(err.message));
+    }
+    // El plan elegido se recuerda en la cuenta: «Mi plan» muestra cómo pagarlo.
+    if (plan !== chosenAtSignup) await getSupabase()!.auth.updateUser({ data: { plan_choice: plan } });
+    if (plan !== "start") window.history.replaceState(null, "", "#plan");
     setBusy(false);
-    if (err) return setError(dbErrorMessage(err.message));
     await onCreated();
   }
 
@@ -83,13 +93,15 @@ export function OwnerOnboarding({ session, onCreated }: { session: Session; onCr
               <Textarea id="ob-desc" className="min-h-24" value={form.description} onChange={(e) => set("description", e.target.value)} maxLength={600} />
             </Field>
 
+            <PlanPicker value={plan} onChange={setPlan} name="ob-plan" />
+
             {error && (
               <p role="alert" className="rounded-lg border border-danger-500/30 bg-danger-50 px-3 py-2 text-sm text-danger-700">
                 {error}
               </p>
             )}
             <Button type="submit" variant="primary" size="lg" fullWidth disabled={busy}>
-              {busy ? "Creando…" : "Crear mi perfil"}
+              {busy ? "Creando…" : plan === "start" ? "Crear mi perfil" : `Crear mi perfil y pagar ${plans[plan].name}`}
             </Button>
             <button
               type="button"
@@ -101,8 +113,10 @@ export function OwnerOnboarding({ session, onCreated }: { session: Session; onCr
           </form>
 
           <div className="flex flex-col gap-4">
-            <Callout tone="info" title="Empiezas gratis en Fly Start">
-              Puedes publicar hasta 2 máquinas. Cuando quieras más alcance, mejoras tu plan desde tu cuenta.
+            <Callout tone="info" title={plan === "start" ? "Empiezas gratis en Fly Start" : `Elegiste ${plans[plan].name}`}>
+              {plan === "start"
+                ? "Puedes publicar hasta 2 máquinas. Cuando quieras más alcance, mejoras tu plan desde tu cuenta."
+                : "Al crear tu perfil te mostramos cómo pagar por Yape o transferencia. Tu plan se activa apenas verifiquemos el pago; mientras tanto ya puedes subir tus máquinas."}
             </Callout>
             <div className="rounded-2xl border border-steel-200 bg-white p-5">
               <p className="font-bold text-ink-900">¿MaquiFly ya publicó tus máquinas?</p>

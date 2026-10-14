@@ -2,14 +2,26 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { boostPackages, formatPEN, payment, planOrder, plans, type PlanId } from "@/lib/plans";
+import {
+  boostPackages,
+  FOUNDER_SLOTS,
+  formatPEN,
+  founderPricePEN,
+  hasBankAccount,
+  payment,
+  planOrder,
+  plans,
+  type PlanId,
+} from "@/lib/plans";
 import { getSupabase } from "@/lib/supabase";
+import { siteConfig } from "@/lib/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { dbErrorMessage, effectivePlan, type MyMachine, type MyOwner, type MyPayment } from "@/lib/account";
 import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Field, Input, Select } from "@/components/ui/Field";
-import { IconBolt, IconCheck } from "@/components/ui/Icon";
+import { IconBolt, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
 
 const productLabel: Record<MyPayment["product"], string> = {
   "fly-plus": `${plans.plus.name} (1 mes)`,
@@ -37,7 +49,16 @@ const statusLabel: Record<MyPayment["status"], { text: string; tone: "warn" | "o
  * su número de operación y la administración lo aprueba en el panel. Nada se
  * activa solo.
  */
-export function MyPlan({ owner, machines }: { owner: MyOwner; machines: MyMachine[] }) {
+export function MyPlan({
+  owner,
+  machines,
+  planChoice,
+}: {
+  owner: MyOwner;
+  machines: MyMachine[];
+  /** Plan que eligió al crear su cuenta (o después). */
+  planChoice: PlanId;
+}) {
   const current = effectivePlan(owner);
   const plan = plans[current];
   const published = machines.filter((m) => m.status === "published").length;
@@ -61,6 +82,14 @@ export function MyPlan({ owner, machines }: { owner: MyOwner; machines: MyMachin
   }, [loadPayments]);
 
   const pending = (payments ?? []).filter((p) => p.status === "pending");
+
+  // Eligió un plan pagado que aún no tiene y no hay un pago de ese plan en
+  // verificación: se le muestra cómo pagarlo, arriba de todo.
+  const wantsUpgrade =
+    planChoice !== "start" &&
+    planOrder.indexOf(planChoice) > planOrder.indexOf(current) &&
+    payments !== null &&
+    !pending.some((p) => p.product === `fly-${planChoice}`);
   const pct = plan.maxMachines === null ? 100 : Math.min(100, Math.round((published / plan.maxMachines) * 100));
 
   return (
@@ -80,6 +109,8 @@ export function MyPlan({ owner, machines }: { owner: MyOwner; machines: MyMachin
           Apenas confirmemos el abono activamos tu plan y te avisamos por WhatsApp.
         </Callout>
       )}
+
+      {wantsUpgrade && <CompletePayment owner={owner} planId={planChoice} onPaid={loadPayments} />}
 
       {/* Plan actual --------------------------------------------------- */}
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
@@ -269,12 +300,31 @@ function PlanCard({ id, current }: { id: PlanId; current: PlanId }) {
   );
 }
 
-function PaymentForm({ owner, machines, onDone }: { owner: MyOwner; machines: MyMachine[]; onDone: () => Promise<void> }) {
+function PaymentForm({
+  owner,
+  machines,
+  onDone,
+  initialProduct,
+  initialAmount,
+  founderRequested = false,
+  title = "Registrar mi pago",
+  showIntro = true,
+}: {
+  owner: MyOwner;
+  machines: MyMachine[];
+  onDone: () => Promise<void>;
+  initialProduct?: MyPayment["product"];
+  initialAmount?: number;
+  founderRequested?: boolean;
+  title?: string;
+  showIntro?: boolean;
+}) {
   const live = machines.filter((m) => m.status === "published");
-  const [product, setProduct] = useState<MyPayment["product"]>(owner.plan === "pro" ? "fly-pro" : "fly-plus");
+  const startProduct: MyPayment["product"] = initialProduct ?? (owner.plan === "pro" ? "fly-pro" : "fly-plus");
+  const [product, setProduct] = useState<MyPayment["product"]>(startProduct);
   const [machineId, setMachineId] = useState(live[0]?.id ?? "");
   const [method, setMethod] = useState<"yape" | "transfer">("yape");
-  const [amount, setAmount] = useState(String(productPrice[owner.plan === "pro" ? "fly-pro" : "fly-plus"]));
+  const [amount, setAmount] = useState(String(initialAmount ?? productPrice[startProduct]));
   const [operation, setOperation] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -297,6 +347,7 @@ function PaymentForm({ owner, machines, onDone }: { owner: MyOwner; machines: My
         amount_pen: value,
         method,
         operation_number: operation.trim().slice(0, 40),
+        founder_requested: founderRequested && product === startProduct,
       });
     setBusy(false);
     if (err) return setError(dbErrorMessage(err.message));
@@ -306,11 +357,13 @@ function PaymentForm({ owner, machines, onDone }: { owner: MyOwner; machines: My
   return (
     <form onSubmit={save} noValidate className="flex flex-col gap-4 rounded-2xl border border-brand-200 bg-white p-5 sm:p-6">
       <div>
-        <p className="font-bold text-ink-900">Registrar mi pago</p>
-        <p className="mt-1 text-sm text-steel-600">
-          Paga primero por Yape al {payment.yape} o por transferencia (datos en la página de pago). Tu plan se activa cuando
-          verificamos el abono, no al registrar este formulario.
-        </p>
+        <p className="font-bold text-ink-900">{title}</p>
+        {showIntro && (
+          <p className="mt-1 text-sm text-steel-600">
+            Paga primero por Yape al {payment.yape} o por transferencia (datos en la página de pago). Tu plan se activa cuando
+            verificamos el abono, no al registrar este formulario.
+          </p>
+        )}
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="¿Qué pagaste?" htmlFor="pay-product" required>
@@ -366,5 +419,111 @@ function PaymentForm({ owner, machines, onDone }: { owner: MyOwner; machines: My
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * «Completa tu pago»: aparece cuando el propietario eligió Fly Plus o Fly Pro
+ * al registrarse. Muestra el monto, a dónde pagar y el formulario para
+ * registrar el número de operación. El plan lo activa el admin al aprobar.
+ */
+function CompletePayment({ owner, planId, onPaid }: { owner: MyOwner; planId: PlanId; onPaid: () => Promise<void> }) {
+  const target = plans[planId];
+  const [slotsLeft, setSlotsLeft] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  // Cupos libres del Programa Socio Fundador (mismo cálculo que /pagar).
+  useEffect(() => {
+    getSupabase()!
+      .from("owners_public")
+      .select("id", { count: "exact", head: true })
+      .not("founder_number", "is", null)
+      .then(({ count, error }) => setSlotsLeft(error ? 0 : Math.max(0, FOUNDER_SLOTS - (count ?? 0))));
+  }, []);
+
+  const founder = owner.founder_number === null && target.founderDiscountMonths > 0 && (slotsLeft ?? 0) > 0;
+  const amount = founder ? founderPricePEN(target) : target.pricePEN;
+  const proof = [
+    `Hola MaquiFly, acabo de pagar ${target.name} por ${formatPEN(amount)}.`,
+    ...(founder ? ["Quiero entrar al Programa Socio Fundador."] : []),
+    "Adjunto la captura de la constancia.",
+    "",
+    `Mi cuenta: ${owner.business_name}`,
+  ].join("\n");
+
+  async function keepFree() {
+    setBusy(true);
+    await getSupabase()!.auth.updateUser({ data: { plan_choice: "start" } });
+    setBusy(false);
+  }
+
+  if (slotsLeft === null) return null;
+
+  return (
+    <div className="overflow-hidden rounded-2xl border-2 border-brand-500 bg-white">
+      <div className="bg-ink-950 p-6 text-white sm:p-7">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-volt-300">Completa tu pago</p>
+        <p className="mt-2 text-2xl font-extrabold sm:text-3xl">Elegiste {target.name}</p>
+        <p className="mt-3 text-4xl font-extrabold">
+          {formatPEN(amount)}
+          <span className="text-base font-semibold text-ink-300"> /mes</span>
+        </p>
+        {founder ? (
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-volt-200">
+            Precio Socio Fundador (quedan {slotsLeft} de {FOUNDER_SLOTS} cupos) por{" "}
+            {target.founderDiscountMonths === 1 ? "el primer mes" : `los primeros ${target.founderDiscountMonths} meses`}. Luego{" "}
+            {formatPEN(target.pricePEN)}/mes.
+          </p>
+        ) : (
+          <p className="mt-3 text-sm text-ink-300">Luego {formatPEN(target.pricePEN)}/mes.</p>
+        )}
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-200">
+          Mientras verificamos tu pago sigues con Fly Start y ya puedes subir tus máquinas.
+        </p>
+      </div>
+
+      <div className="grid gap-4 p-5 sm:p-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-steel-200 p-4">
+          <p className="text-sm font-bold text-ink-900">1. Yapea {formatPEN(amount)}</p>
+          <p className="mt-2 text-2xl font-extrabold tracking-wide text-ink-900">{payment.yape}</p>
+          {payment.holder && <p className="text-sm text-steel-600">A nombre de {payment.holder}</p>}
+          {hasBankAccount && (
+            <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 border-t border-steel-100 pt-3 text-sm">
+              <dt className="text-steel-500">o transfiere a</dt>
+              <dd className="font-semibold text-ink-900">{payment.bank.name}</dd>
+              <dt className="text-steel-500">Cuenta</dt>
+              <dd className="font-semibold text-ink-900">{payment.bank.account}</dd>
+              {payment.bank.cci && (
+                <>
+                  <dt className="text-steel-500">CCI</dt>
+                  <dd className="font-semibold text-ink-900">{payment.bank.cci}</dd>
+                </>
+              )}
+            </dl>
+          )}
+          <LinkButton href={whatsappUrl(siteConfig.contact.whatsapp, proof)} external variant="whatsapp" size="sm" className="mt-4">
+            <IconWhatsApp size={16} />
+            Enviar captura por WhatsApp
+          </LinkButton>
+        </div>
+        <PaymentForm
+          owner={owner}
+          machines={[]}
+          onDone={onPaid}
+          initialProduct={`fly-${planId}` as MyPayment["product"]}
+          initialAmount={amount}
+          founderRequested={founder}
+          title="2. Registra tu número de operación"
+          showIntro={false}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2 border-t border-steel-100 px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <p className="text-steel-500">Tu plan se activa cuando verificamos el abono. Te avisamos por WhatsApp.</p>
+        <button type="button" onClick={keepFree} disabled={busy} className="font-semibold text-steel-600 hover:text-ink-900">
+          {busy ? "Un momento…" : "Prefiero seguir con Fly Start por ahora"}
+        </button>
+      </div>
+    </div>
   );
 }

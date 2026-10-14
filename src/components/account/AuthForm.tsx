@@ -10,6 +10,8 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Field, Input } from "@/components/ui/Field";
 import { PrivacyConsent } from "@/components/common/PrivacyConsent";
+import { PlanPicker } from "@/components/account/PlanPicker";
+import type { PlanId } from "@/lib/plans";
 import { IconCheck, IconMail, IconPlus, IconUser } from "@/components/ui/Icon";
 
 type Mode = "login" | "signup" | "forgot";
@@ -35,6 +37,7 @@ function AuthFormInner() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [consent, setConsent] = useState(false);
+  const [plan, setPlan] = useState<PlanId>("start");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<{ email: string; kind: "confirm" | "reset" } | null>(null);
@@ -43,6 +46,15 @@ function AuthFormInner() {
   useEffect(() => {
     if (!loading && session) router.replace("/cuenta");
   }, [loading, session, router]);
+
+  // /ingresar?plan=plus abre «Crear cuenta» con ese plan ya marcado.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("plan");
+    if (wanted === "start" || wanted === "plus" || wanted === "pro") {
+      setPlan(wanted);
+      setMode("signup");
+    }
+  }, []);
 
   function switchMode(next: Mode) {
     setMode(next);
@@ -78,7 +90,7 @@ function AuthFormInner() {
         email: cleanEmail,
         password,
         options: {
-          data: { name: name.trim() },
+          data: { name: name.trim(), plan_choice: plan },
           emailRedirectTo: `${window.location.origin}/cuenta`,
         },
       });
@@ -211,6 +223,7 @@ function AuthFormInner() {
               ¿Olvidaste tu contraseña?
             </button>
           )}
+          {mode === "signup" && <PlanPicker value={plan} onChange={setPlan} name="auth-plan" />}
           {mode === "signup" && (
             <PrivacyConsent id="auth-consent" checked={consent} onChange={setConsent} purpose="crear y gestionar mi cuenta" />
           )}
@@ -252,7 +265,7 @@ function AuthFormInner() {
           ))}
         </ul>
         <p className="mt-5 text-sm leading-relaxed text-ink-300">
-          Crear la cuenta es gratis y empiezas en Fly Start. Puedes mejorar tu plan cuando quieras.{" "}
+          Crear la cuenta es gratis. Si eliges Fly Plus o Fly Pro, al terminar tu perfil te mostramos cómo pagar.{" "}
           <Link href="/planes" className="font-semibold text-volt-300 underline underline-offset-2">
             Ver planes
           </Link>

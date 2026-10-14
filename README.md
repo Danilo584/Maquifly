@@ -266,6 +266,13 @@ tiene su panel en `/cuenta`:
 | Mi plan | Plan vigente, uso, comparación de planes, registro de pagos e historial |
 | Mis datos | Nombre público, WhatsApp, zona, descripción, RUC y contraseña |
 
+Al crear la cuenta, la persona **elige su plan** (Fly Start, Plus o Pro). Se
+guarda en su cuenta (`plan_choice`). Si eligió un plan pagado, «Mi plan» le
+muestra arriba el monto (con precio Socio Fundador si quedan cupos), a dónde
+pagar y el formulario para registrar el número de operación. El plan se
+activa cuando el admin aprueba el pago, igual que siempre. `/ingresar?plan=plus`
+abre el registro con ese plan ya marcado.
+
 Reglas que aplica la base de datos (`supabase/03-cuentas.sql`), no solo la
 interfaz:
 
