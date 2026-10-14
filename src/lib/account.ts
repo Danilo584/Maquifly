@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
-import type { PlanId } from "@/lib/plans";
+import { FOUNDER_SLOTS, type PlanId } from "@/lib/plans";
 import type {
   AvailabilityStatus,
   FuelResponsibility,
@@ -167,4 +167,31 @@ export function dbErrorMessage(message: string): string {
     return "Tu cuenta ya tiene un perfil de propietario.";
   if (message.includes("row-level security")) return "No tienes permiso para hacer ese cambio.";
   return `No se pudo guardar: ${message}`;
+}
+
+/**
+ * Cupos libres del Programa Socio Fundador, leídos de la vista pública
+ * (mismo criterio que /planes y /pagar). null mientras carga.
+ */
+export function useFounderSlotsLeft(): number | null {
+  const [slots, setSlots] = useState<number | null>(null);
+  useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase) {
+      setSlots(0);
+      return;
+    }
+    let alive = true;
+    supabase
+      .from("owners_public")
+      .select("id", { count: "exact", head: true })
+      .not("founder_number", "is", null)
+      .then(({ count, error }) => {
+        if (alive) setSlots(error ? 0 : Math.max(0, FOUNDER_SLOTS - (count ?? 0)));
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return slots;
 }
