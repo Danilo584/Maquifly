@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#071018">
+  <title>Propuesta 01 · Industrial — MaquiFly</title>
+  <style>
+    @font-face{font-family:Inter;src:url("assets/inter.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+    @font-face{font-family:Jakarta;src:url("assets/jakarta.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+    :root{--night:#071018;--panel:#0d1923;--line:#2a3943;--muted:#b3c1c9;--white:#f0f3f3;--lime:#c8f83c;--ink:#112005;--display:Jakarta,Inter,sans-serif;--sans:Inter,Arial,sans-serif}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;color-scheme:dark}
+    body{margin:0;background:var(--night);color:var(--white);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    button,a,input,select{-webkit-tap-highlight-color:transparent}
+    button{cursor:pointer}
+    a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--lime);outline-offset:5px}
+    ::selection{background:var(--lime);color:var(--night)}
+    .wrap{width:min(1328px,100% - 96px);margin-inline:auto}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .skip{position:absolute;top:-100px;left:20px;z-index:10;background:var(--lime);color:var(--night);padding:12px 20px;font-weight:700}
+    .skip:focus{top:12px}
+    .proposal{background:#13212a;border-bottom:1px solid var(--line);font-size:12px}
+    .proposal .wrap{min-height:42px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .proposal strong{font-weight:600;letter-spacing:.035em}
+    .proposal a{color:#d5e0e5;text-decoration:underline;text-underline-offset:4px}
+    .nav{height:96px;display:flex;align-items:center;justify-content:space-between;gap:30px;border-bottom:1px solid var(--line)}
+    .brand{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;font:800 23px/1 var(--display);letter-spacing:-1px}
+    .brand svg{width:40px;height:40px;flex-shrink:0}
+    .brand .fly{color:var(--lime)}
+    .nav-links{display:flex;align-items:center;gap:30px;font-size:13px;font-weight:500}
+    .nav-links a{color:#c7d0d5;transition:color .2s}
+    .nav-links a:hover{color:var(--lime)}
+    .nav-links .active{color:white}
+    .nav-action{display:inline-flex;align-items:center;gap:18px;border:1px solid #71808b;padding:12px 17px;font-size:12px;font-weight:600;white-space:nowrap}
+    .nav-action:hover{border-color:var(--lime);color:var(--lime)}
+    .arrow{font-family:Arial,sans-serif;font-size:23px;line-height:1;font-weight:400}
+    .hero{display:grid;grid-template-columns:1.04fr 1fr;min-height:580px;position:relative}
+    .hero-copy{position:relative;padding:54px 36px 48px 0;z-index:1}
+    .eyebrow{display:flex;align-items:center;gap:12px;font:500 10px/1.5 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+    .eyebrow .index{color:var(--lime);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+    .eyebrow::before{content:"";width:25px;height:1px;background:var(--lime)}
+    h1,h2,h3,p,figure{margin:0}
+    h1{font:800 clamp(3.2rem,7.05vw,6.65rem)/1.03 var(--display);letter-spacing:-.065em;margin:25px 0 24px;position:relative;z-index:2}
+    h1 em{font-style:normal;color:var(--lime)}
+    .mobile-search-link{display:none}
+    .hero-description{max-width:360px;color:var(--muted);font-size:14px;line-height:1.85}
+    .hero-bottom{display:flex;align-items:center;gap:17px;margin-top:31px}
+    .cross{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--line);color:var(--lime);font-size:22px;font-weight:300}
+    .hero-bottom p{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#d0d8dc;line-height:1.8}
+    .hero-bottom p span{color:#96a9b4}
+    .hero-visual{position:relative;margin:28px 0 28px;border:1px solid #4b4940;background:#18252b;min-width:0;overflow:hidden}
+    .hero-visual img{display:block;width:100%;height:100%;object-fit:cover;object-position:72% center;position:absolute;inset:0}
+    .hero-visual::before{position:absolute;content:"";inset:0;z-index:1;background:linear-gradient(180deg,rgba(4,14,27,.18) 0%,transparent 50%,rgba(4,14,27,.75) 100%)}
+    .photo-tab{position:absolute;left:0;top:0;padding:11px 15px;background:var(--lime);color:var(--ink);z-index:2;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+    .photo-corner{position:absolute;z-index:2;right:18px;top:19px;width:23px;height:23px;border-top:1px solid #fff;border-right:1px solid #fff}
+    .photo-caption{position:absolute;bottom:23px;left:24px;right:24px;z-index:2;display:flex;justify-content:space-between;align-items:end;gap:15px}
+    .photo-caption strong{font:700 18px/1.2 var(--display);letter-spacing:-.03em;display:block}
+    .photo-caption small{display:block;margin-top:7px;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#d3dcde}
+    .photo-caption .arrow{color:var(--lime);font-size:35px}
+    .find{position:relative;padding:26px 28px 27px;border:1px solid #3c4b53;border-top:2px solid var(--lime);background:var(--panel)}
+    .find-intro{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:19px}
+    .find-intro h2{font:600 16px/1.3 var(--display);letter-spacing:-.02em}
+    .find-intro p{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    .search-form{display:grid;grid-template-columns:1.3fr 1fr .85fr auto;gap:16px;align-items:end}
+    .field{display:flex;flex-direction:column;gap:9px;min-width:0}
+    .field label{font-size:9px;letter-spacing:.12em;font-weight:600;text-transform:uppercase;color:#bac8d0}
+    .field input,.field select{border:1px solid #738591;border-radius:0;width:100%;min-width:0;height:50px;padding:0 13px;background:#14232e;color:white;font-size:12px}
+    .field input::placeholder{color:#a7b6c0;opacity:1}
+    .search-button{display:inline-flex;height:50px;border:1px solid var(--lime);align-items:center;justify-content:center;gap:24px;padding:0 23px;background:var(--lime);color:var(--ink);font-size:12px;font-weight:750;white-space:nowrap;transition:background .2s}
+    .search-button:hover{background:#dcff83}
+    .trust-line{display:grid;grid-template-columns:repeat(3,1fr);padding:30px 0 34px;border-bottom:1px solid var(--line);gap:35px}
+    .trust-item{display:flex;gap:15px;align-items:start}
+    .trust-item svg{color:var(--lime);flex-shrink:0;margin-top:3px;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.5}
+    .trust-item strong{display:block;font-size:11px;font-weight:600}
+    .trust-item p{font-size:11px;margin-top:3px;color:#a9b9c3;line-height:1.7}
+    .categories{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;padding:76px 0 74px}
+    .section-title{font:700 clamp(2rem,3vw,2.8rem)/1.17 var(--display);letter-spacing:-.055em;margin:22px 0 20px}
+    .section-description{max-width:300px;font-size:13px;color:var(--muted);line-height:1.9}
+    .category-note{display:flex;align-items:center;gap:15px;margin-top:32px;color:#b6c4cc;font-size:10px;letter-spacing:.05em}
+    .category-note::before{content:"";width:38px;height:1px;background:#71898a}
+    .category-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+    .category-list li{border-bottom:1px solid var(--line)}
+    .category-link{display:grid;grid-template-columns:31px 1fr 25px;gap:13px;align-items:center;min-height:67px;padding:13px 4px 13px 0;transition:padding .2s,background .2s}
+    .category-link:hover{padding-left:11px;background:#101d27}
+    .category-num{font-size:10px;color:#9fb0bc;font-variant-numeric:tabular-nums}
+    .category-name{font:600 18px/1.3 var(--display);letter-spacing:-.035em}
+    .category-link .arrow{color:var(--lime);font-size:23px}
+    .all-categories{display:inline-flex;align-items:center;gap:22px;margin-top:22px;font-size:11px;font-weight:600;color:var(--lime);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+    .owners{background:var(--lime);color:var(--ink);padding:45px 44px 43px;position:relative;display:grid;grid-template-columns:1.2fr 1fr;align-items:end;gap:50px}
+    .owners .eyebrow{color:#34421e;font-weight:650;font-size:9px}
+    .owners .eyebrow::before{background:#23330c}
+    .owners h2{font:750 clamp(2rem,3.35vw,3.1rem)/1.17 var(--display);letter-spacing:-.055em;margin-top:17px}
+    .owners-copy{max-width:350px;justify-self:end}
+    .owners-copy p{font-size:12px;line-height:1.9;margin-bottom:20px;color:#26370b}
+    .owners-actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+    .owners-primary{display:inline-flex;align-items:center;gap:20px;padding:14px 17px;background:var(--night);color:var(--white);font-size:11px;font-weight:600}
+    .owners-primary .arrow{color:var(--lime);font-size:21px}
+    .owners-primary:hover{background:#1e333f}
+    .owners-primary:focus-visible{outline-color:var(--night)}
+    .plans-link{font-size:11px;font-weight:650;text-decoration:underline;text-underline-offset:5px}
+    .plans-link:focus-visible{outline-color:var(--night)}
+    footer{padding:43px 0 29px}
+    .footer-main{display:flex;align-items:center;justify-content:space-between;gap:25px}
+    .footer-main .brand{font-size:18px}
+    .footer-main .brand svg{width:31px;height:31px}
+    .footer-main p{font-size:11px;color:var(--muted)}
+    .footer-links{display:flex;gap:24px;font-size:10px;color:#c1cdd5}
+    .footer-links a:hover{color:var(--lime)}
+    .footer-bottom{border-top:1px solid var(--line);padding-top:20px;margin-top:27px;display:flex;justify-content:space-between;gap:20px;font-size:9px;letter-spacing:.06em;color:#9eb0bc;text-transform:uppercase}
+    @media(min-width:1550px){.hero{min-height:640px}.hero-copy{padding-top:65px}.hero-visual{margin-top:34px;margin-bottom:34px}}
+    @media(max-width:1100px){.wrap{width:calc(100% - 56px)}.nav-links{gap:21px}.nav-links a:last-child{display:none}.nav-action{gap:10px;padding-inline:13px}.hero{grid-template-columns:1fr .9fr;min-height:540px}.hero-copy{padding-right:22px}h1{font-size:clamp(3.2rem,7.6vw,5.65rem)}.search-form{grid-template-columns:1.2fr 1fr .8fr}.search-button{grid-column:1/-1;height:45px}.categories{gap:38px}.owners{padding:34px;gap:30px}.owners-actions{gap:14px}}
+    @media(max-width:760px){.wrap{width:calc(100% - 40px)}.nav{height:80px;gap:15px}.brand{font-size:21px}.brand svg{width:35px;height:35px}.nav-links{display:none}.nav-action{font-size:10px;padding:10px;gap:9px}.nav-action .arrow{font-size:18px}.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:36px 0 28px}.eyebrow{font-size:9px;letter-spacing:.12em}h1{font-size:clamp(3.2rem,11vw,5.8rem);margin-top:20px;line-height:1.02;letter-spacing:-.065em}.hero-description{max-width:440px;font-size:13px}.hero-bottom{margin-top:22px}.hero-visual{margin:0 0 28px;height:340px}.hero-visual img{object-position:70% 60%}.photo-caption strong{font-size:16px}.find{padding:20px}.find-intro{display:block;margin-bottom:18px}.find-intro h2{font-size:15px}.find-intro p{font-size:9px;margin-top:6px}.search-form{grid-template-columns:1fr 1fr;gap:15px 12px}.field:first-child{grid-column:1/-1}.field input,.field select{font-size:12px;padding-inline:10px}.field label{font-size:8px}.search-button{height:49px}.trust-line{gap:18px;padding-block:27px;grid-template-columns:1fr}.trust-item{gap:13px}.trust-item p{margin-top:0}.trust-item strong{font-size:12px}.trust-item p{font-size:11px}.categories{grid-template-columns:1fr;gap:30px;padding:44px 0}.section-title{font-size:33px;margin-top:17px;margin-bottom:13px}.section-description{max-width:440px}.category-note{margin-top:18px}.category-link{min-height:65px}.category-name{font-size:18px}.owners{grid-template-columns:1fr;padding:27px 24px;gap:22px}.owners h2{font-size:34px}.owners-copy{justify-self:start;max-width:440px}.owners-copy p{font-size:12px;margin-bottom:18px}.owners-actions{gap:18px}.footer-main{align-items:start;flex-wrap:wrap;gap:23px}.footer-main>p{width:100%;order:3}.footer-links{gap:18px;flex-wrap:wrap}.footer-bottom{margin-top:24px;flex-direction:column;gap:7px;font-size:8px}}
+    @media(max-width:760px){.hero-bottom{display:none}.mobile-search-link{display:inline-flex;align-items:center;gap:20px;margin-top:23px;padding:12px 17px;background:var(--lime);color:var(--night);font-size:12px;font-weight:700}}
+    @media(max-width:370px){.proposal .wrap{gap:9px;font-size:10px;min-height:45px}.proposal strong{letter-spacing:0}.proposal a{font-size:10px}.nav{height:75px}.brand{font-size:19px;gap:7px}.brand svg{width:31px;height:31px}.nav-action{gap:6px;font-size:9px;padding-inline:9px}.hero-visual{height:295px}.find{padding:18px 15px}.field select{font-size:11px}.category-link{grid-template-columns:23px 1fr 21px;gap:10px}.category-name{font-size:17px}.owners{padding:25px 21px}.owners h2{font-size:31px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <div class="proposal">
+    <div class="wrap"><strong>Propuesta 01 · Industrial</strong><a href="./index.html"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M20 12H4m6-6-6 6 6 6"/></svg> Volver al comparador</a></div>
+  </div>
+  <header class="wrap nav">
+    <a class="brand" href="https://maquifly.vercel.app/" aria-label="MaquiFly, sitio actual">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#14232e"/><path d="M8 30.5V14L16 22.5L24 14V30.5" stroke="#c8f83c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.5 18.5L33.5 12.5M33.5 12.5H28.6M33.5 12.5V17.4" stroke="#eef3fa" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Maqui<span class="fly">Fly</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Navegación principal">
+      <a class="active" href="https://maquifly.vercel.app/maquinaria">Buscar maquinaria</a>
+      <a href="https://maquifly.vercel.app/categorias">Categorías</a>
+      <a href="https://maquifly.vercel.app/como-funciona">Cómo funciona</a>
+    </nav>
+    <a class="nav-action" href="https://maquifly.vercel.app/publicar">Publicar maquinaria <span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
+  </header>
+
+  <main id="contenido" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="index">01</span> Alquiler de maquinaria · Perú</p>
+        <h1 id="hero-title">Mueve<br>tu próximo<br><em>proyecto.</em></h1>
+        <p class="hero-description">Encuentra la maquinaria que tu proyecto necesita. Revisa sus características y conecta directamente con el propietario.</p>
+        <a class="mobile-search-link" href="#find-title">Buscar maquinaria <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
+        <div class="hero-bottom">
+          <span class="cross" aria-hidden="true">+</span>
+          <p>Encuentra. Alquila. Trabaja.<br><span>Desde Piura, para el Perú.</span></p>
+        </div>
+      </div>
+      <figure class="hero-visual">
+        <img src="assets/hero-maquinaria.jpg" width="2050" height="767" fetchpriority="high" alt="Maquinaria de construcción y tractor en un paisaje al atardecer, imagen de marca de MaquiFly">
+        <span class="photo-tab">Maquinaria para tu siguiente obra</span>
+        <span class="photo-corner" aria-hidden="true"></span>
+        <figcaption class="photo-caption"><div><strong>El trabajo empieza aquí.</strong><small>Piura · Perú / MaquiFly</small></div><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></figcaption>
+      </figure>
+    </section>
+
+    <section class="find" aria-labelledby="find-title">
+      <div class="find-intro"><h2 id="find-title">¿Qué necesitas para avanzar?</h2><p>Busca por equipo, categoría o ciudad</p></div>
+      <form class="search-form" method="get" action="https://maquifly.vercel.app/maquinaria" role="search" aria-label="Buscar maquinaria en MaquiFly">
+        <div class="field"><label for="industrial-query">Maquinaria o equipo</label><input id="industrial-query" name="q" type="search" placeholder="Ej. excavadora, minicargador…"></div>
+        <div class="field"><label for="industrial-category">Categoría</label><select id="industrial-category" name="categoria"><option value="">Todas las categorías</option><option value="minicargadores">Minicargadores</option><option value="excavadoras">Excavadoras</option><option value="retroexcavadoras">Retroexcavadoras</option><option value="cargadores-frontales">Cargadores frontales</option><option value="volquetes">Volquetes</option><option value="rodillos">Rodillos compactadores</option></select></div>
+        <div class="field"><label for="industrial-city">Ubicación</label><select id="industrial-city" name="ciudad"><option value="">Todo el Perú</option><option value="piura">Piura</option><option value="chiclayo">Chiclayo</option><option value="trujillo">Trujillo</option><option value="tumbes">Tumbes</option><option value="cajamarca">Cajamarca</option><option value="lima">Lima</option></select></div>
+        <button class="search-button" type="submit">Buscar maquinaria <span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></button>
+      </form>
+    </section>
+
+    <div class="trust-line" aria-label="Cómo te ayuda MaquiFly">
+      <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M8 9h8M8 12h5"/></svg><div><strong>Conexión directa</strong><p>Habla con el propietario del equipo.</p></div></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v18H7zM10 8h4M10 12h4M10 16h4"/></svg><div><strong>Condiciones a la vista</strong><p>Revisa los detalles antes de consultar.</p></div></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg><div><strong>Base en Piura</strong><p>Conectamos maquinaria con proyectos.</p></div></div>
+    </div>
+
+    <section class="categories" aria-labelledby="categories-title">
+      <div>
+        <p class="eyebrow"><span class="index">02</span> Encuentra tu categoría</p>
+        <h2 class="section-title" id="categories-title">Cada trabajo<br>tiene su máquina.</h2>
+        <p class="section-description">Para obra, campo y movimiento de tierras. Explora los equipos según lo que necesita tu proyecto.</p>
+        <p class="category-note">Elige el equipo. Revisa sus características.</p>
+      </div>
+      <div>
+        <ol class="category-list">
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/minicargadores"><span class="category-num" aria-hidden="true">01</span><span class="category-name">Minicargadores</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/excavadoras"><span class="category-num" aria-hidden="true">02</span><span class="category-name">Excavadoras</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/retroexcavadoras"><span class="category-num" aria-hidden="true">03</span><span class="category-name">Retroexcavadoras</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/cargadores-frontales"><span class="category-num" aria-hidden="true">04</span><span class="category-name">Cargadores frontales</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/volquetes"><span class="category-num" aria-hidden="true">05</span><span class="category-name">Volquetes</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+          <li><a class="category-link" href="https://maquifly.vercel.app/maquinaria/rodillos"><span class="category-num" aria-hidden="true">06</span><span class="category-name">Rodillos compactadores</span><span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></li>
+        </ol>
+        <a class="all-categories" href="https://maquifly.vercel.app/categorias">Ver todas las categorías <span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a>
+      </div>
+    </section>
+
+    <section class="owners" aria-labelledby="owners-title">
+      <div><p class="eyebrow">03 / Para propietarios</p><h2 id="owners-title">Tu máquina merece<br>estar trabajando.</h2></div>
+      <div class="owners-copy"><p>Publica tu maquinaria y llega a quienes la necesitan. Tú defines el precio, la disponibilidad y las condiciones del alquiler.</p><div class="owners-actions"><a class="owners-primary" href="https://maquifly.vercel.app/publicar">Publicar mi maquinaria <span class="arrow" aria-hidden="true"><svg class="ui-arrow" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="plans-link" href="https://maquifly.vercel.app/planes">Conocer los planes</a></div></div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="footer-main">
+      <a class="brand" href="https://maquifly.vercel.app/" aria-label="MaquiFly, sitio actual"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#14232e"/><path d="M8 30.5V14L16 22.5L24 14V30.5" stroke="#c8f83c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.5 18.5L33.5 12.5M33.5 12.5H28.6M33.5 12.5V17.4" stroke="#eef3fa" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Maqui<span class="fly">Fly</span></span></a>
+      <p>Conectamos maquinaria con proyectos.</p>
+      <nav class="footer-links" aria-label="Enlaces del pie de página"><a href="https://maquifly.vercel.app/maquinaria">Maquinaria</a><a href="https://maquifly.vercel.app/publicar">Publicar</a><a href="https://maquifly.vercel.app/planes">Planes</a></nav>
+    </div>
+    <div class="footer-bottom"><span>Piura, Perú · MaquiFly</span><span>Propuesta de diseño · Vista previa para revisión</span></div>
+  </footer>
+</body>
+</html>

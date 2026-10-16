@@ -1,0 +1,17 @@
+PLANTILLAS VISUALES PARA MAQUIFLY
+
+Abre index.html en tu navegador para comparar las tres propuestas.
+También puedes abrir industrial.html, mercado.html o editorial.html.
+Para ver la versión móvil, reduce el ancho de la ventana.
+
+Las páginas funcionan sin instalar paquetes ni conectarse a servicios para
+cargar su diseño. Los formularios de búsqueda y los enlaces navegan a la web
+pública actual de MaquiFly. No crean cuentas ni publicaciones.
+
+Estas son propuestas HTML/CSS para revisar el diseño. No sustituyen la
+aplicación Next.js ni su conexión con Supabase. La propuesta elegida puede
+adaptarse a los componentes actuales conservando rutas y funcionalidades.
+
+La imagen procede del hero actual de MaquiFly. No se incorporan publicaciones,
+precios, testimonios ni cifras de uso inventados. Las fuentes Inter y Plus
+Jakarta Sans están incluidas con sus licencias en assets/.
