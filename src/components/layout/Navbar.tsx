@@ -9,6 +9,7 @@ import { IconClose, IconMenu, IconPlus, IconUser } from "@/components/ui/Icon";
 import { hasStoredSession } from "@/lib/session-hint";
 
 const navLinks = [
+  { href: "/", label: "Inicio" },
   { href: "/maquinaria", label: "Buscar maquinaria" },
   { href: "/categorias", label: "Categorías" },
   { href: "/como-funciona", label: "Cómo funciona" },
@@ -54,26 +55,29 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // «Inicio» solo se marca en la portada; el resto también en sus subpáginas.
   const isActive = (href: string) =>
-    pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-steel-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-50 border-b border-steel-200 bg-white shadow-sm">
       <div className="container-mf">
-        <div className="flex h-16 items-center justify-between gap-4 lg:h-18">
+        <div className="flex h-16 items-center justify-between gap-4 xl:h-18">
           <Logo size="sm" />
 
-          <nav aria-label="Navegación principal" className="hidden lg:block">
-            <ul className="flex items-center gap-1">
+          <nav aria-label="Navegación principal" className="hidden xl:block">
+            <ul className="flex items-center gap-0.5">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     aria-current={isActive(link.href) ? "page" : undefined}
-                    className={`inline-flex h-9 items-center rounded-lg px-3 text-[0.9rem] font-medium transition-colors ${
+                    className={`inline-flex h-9 items-center whitespace-nowrap rounded-lg border px-3 text-[0.9rem] font-medium transition-colors ${
                       isActive(link.href)
-                        ? "bg-brand-50 text-brand-800"
-                        : "text-steel-700 hover:bg-steel-100 hover:text-ink-900"
+                        ? "border-brand-300 bg-brand-50 font-semibold text-brand-800"
+                        : "border-transparent text-steel-700 hover:border-steel-200 hover:bg-steel-100 hover:text-ink-900"
                     }`}
                   >
                     {link.label}
@@ -83,7 +87,7 @@ export function Navbar() {
             </ul>
           </nav>
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-2 whitespace-nowrap xl:flex">
             <LinkButton href={account.href} variant="ghost" size="sm">
               <IconUser size={17} />
               {account.label}
@@ -94,7 +98,7 @@ export function Navbar() {
             </LinkButton>
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 xl:hidden">
             <LinkButton href="/publicar" variant="primary" size="sm">
               Publicar
             </LinkButton>
@@ -114,7 +118,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <div
             className="fixed inset-0 top-16 z-40 bg-ink-950/40"
             onClick={() => setOpen(false)}
@@ -131,10 +135,10 @@ export function Navbar() {
                     <Link
                       href={link.href}
                       aria-current={isActive(link.href) ? "page" : undefined}
-                      className={`flex h-12 items-center rounded-lg px-3 text-base font-semibold ${
+                      className={`flex h-12 items-center rounded-lg border px-3 text-base font-semibold ${
                         isActive(link.href)
-                          ? "bg-brand-50 text-brand-800"
-                          : "text-ink-900 hover:bg-steel-100"
+                          ? "border-brand-300 bg-brand-50 text-brand-800"
+                          : "border-transparent text-ink-900 hover:bg-steel-100"
                       }`}
                     >
                       {link.label}
