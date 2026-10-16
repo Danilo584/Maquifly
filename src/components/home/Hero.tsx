@@ -4,6 +4,7 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { LinkButton } from "@/components/ui/Button";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
 import { categories } from "@/lib/data/categories";
+import { HeroBackground } from "@/components/home/HeroBackground";
 
 const quickLinks = [
   { slug: "minicargadores", label: "Minicargadores" },
@@ -14,10 +15,9 @@ const quickLinks = [
 ];
 
 export function Hero() {
-
   return (
     <section className="relative overflow-hidden bg-ink-950">
-      {/* Foto de fondo: el lado izquierdo es oscuro para que el texto se lea */}
+      {/* Imagen inmediata y alternativa estática si el video no se reproduce. */}
       <Image
         src="/hero-maquinaria.jpg"
         alt=""
@@ -26,6 +26,7 @@ export function Hero() {
         sizes="100vw"
         className="object-cover object-[70%_center] opacity-60 sm:opacity-75 lg:opacity-100"
       />
+      <HeroBackground />
       {/* Degradados para asegurar contraste del texto y del buscador */}
       <div
         className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/80 to-ink-950/10"
@@ -40,7 +41,7 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <div className="container-mf relative pb-10 pt-8 sm:py-20 lg:py-28">
+      <div className="container-mf relative pb-20 pt-8 sm:py-20 lg:py-28">
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-volt-300">
             <span className="size-1.5 rounded-full bg-volt-400" aria-hidden="true" />
