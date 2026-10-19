@@ -5,13 +5,10 @@ import {
   FOUNDER_SLOTS,
   FX_REFERENCE_LABEL,
   boostPackages,
-  formatPEN,
-  formatUSD,
   founderPerks,
   founderSlotsLeft,
   planOrder,
   plans,
-  toUSD,
 } from "@/lib/plans";
 import { platformWhatsappUrl } from "@/lib/whatsapp";
 
@@ -22,7 +19,8 @@ import { Callout } from "@/components/ui/Callout";
 import { Faq } from "@/components/common/Faq";
 import { FeaturedBadge, FounderBadge } from "@/components/owner/PlanBadges";
 import { PlanCard } from "@/components/plans/PlanCard";
-import { IconAward, IconBolt, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
+import { DestacadoExpress } from "@/components/plans/DestacadoExpress";
+import { IconAward, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -176,26 +174,9 @@ export default async function PlansPage() {
           title="¿Solo quieres impulsar una máquina?"
           description="Sin plan mensual: pagas una vez y tu máquina sube a los primeros lugares del buscador con la etiqueta «Destacado»."
         />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {boostPackages.map((boost) => (
-            <div key={boost.id} className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/5 p-6">
-              <span className="flex size-11 items-center justify-center rounded-lg bg-volt-400 text-ink-950">
-                <IconBolt size={22} />
-              </span>
-              <h3 className="text-xl font-extrabold text-white">{boost.days} días destacada</h3>
-              <p className="text-3xl font-extrabold text-white">
-                {formatPEN(boost.pricePEN)}
-                <span className="ml-2 text-base font-semibold text-ink-300">
-                  ≈ {formatUSD(toUSD(boost.pricePEN))}
-                </span>
-              </p>
-              <p className="text-sm text-ink-200">Una máquina, pago único, se activa al verificar el pago.</p>
-              <LinkButton href={`/pagar/${boost.id}`} variant="volt" className="mt-2">
-                Destacar mi máquina
-              </LinkButton>
-            </div>
-          ))}
-        </div>
+        {boostPackages.map((boost) => (
+          <DestacadoExpress key={boost.id} boost={boost} />
+        ))}
       </Section>
 
       {/* ------------------------------------------------------------------ */}
