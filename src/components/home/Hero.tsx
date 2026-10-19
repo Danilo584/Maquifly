@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { HeroVideoFondo } from "@/components/home/HeroVideoFondo";
 import { SearchBar } from "@/components/search/SearchBar";
 import { LinkButton } from "@/components/ui/Button";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
@@ -17,15 +17,8 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-ink-950">
-      {/* Foto de fondo: el lado izquierdo es oscuro para que el texto se lea */}
-      <Image
-        src="/hero-maquinaria.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-[70%_center] opacity-60 sm:opacity-75 lg:opacity-100"
-      />
+      {/* Video de fondo (obra activa en bucle); con movimiento reducido queda la imagen fija */}
+      <HeroVideoFondo />
       {/* Degradados para asegurar contraste del texto y del buscador */}
       <div
         className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/80 to-ink-950/10"
