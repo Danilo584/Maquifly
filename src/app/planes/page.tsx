@@ -8,7 +8,6 @@ import {
   formatPEN,
   formatUSD,
   founderPerks,
-  founderPricePEN,
   founderSlotsLeft,
   planOrder,
   plans,
@@ -22,6 +21,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Faq } from "@/components/common/Faq";
 import { FeaturedBadge, FounderBadge } from "@/components/owner/PlanBadges";
+import { PlanCard } from "@/components/plans/PlanCard";
 import { IconAward, IconBolt, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
@@ -114,108 +114,10 @@ export default async function PlansPage() {
           description={`Precios en soles. Dólares referenciales (${FX_REFERENCE_LABEL}). Sin comisión sobre tus alquileres.`}
         />
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {planOrder.map((id) => {
-            const plan = plans[id];
-            const highlighted = id === "plus";
-            const founderPrice = founderPricePEN(plan);
-            const dark = highlighted;
-            return (
-              <article
-                key={id}
-                className={`flex flex-col overflow-hidden rounded-2xl ${
-                  dark
-                    ? "border-2 border-volt-400 bg-ink-950 text-white shadow-pop"
-                    : "border border-steel-200 bg-white text-ink-900 shadow-card"
-                }`}
-              >
-                <header className={`p-6 ${dark ? "" : id === "pro" ? "bg-brand-600 text-white" : "bg-ink-800 text-white"}`}>
-                  <div className="flex items-center justify-between gap-3">
-                    <h2 className="text-2xl font-extrabold tracking-tight text-white">{plan.name}</h2>
-                    {highlighted && (
-                      <span className="rounded-full bg-volt-400 px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-ink-950">
-                        Recomendado
-                      </span>
-                    )}
-                  </div>
-                  <p className={`mt-1 text-sm ${dark ? "text-ink-200" : "text-white/80"}`}>{plan.idealFor}</p>
-                </header>
-
-                <div className={`px-6 pb-2 ${dark ? "" : "pt-5"}`}>
-                  {plan.pricePEN === 0 ? (
-                    <>
-                      <p className="text-4xl font-extrabold">Gratis</p>
-                      <p className="mt-1 text-sm text-steel-500">Sin tarjeta y sin contrato</p>
-                    </>
-                  ) : founderOpen && plan.founderDiscountMonths > 0 ? (
-                    <>
-                      <p className={`text-sm ${dark ? "text-ink-300" : "text-steel-500"}`}>
-                        Precio normal:{" "}
-                        <span className="line-through">
-                          {formatPEN(plan.pricePEN)} · {formatUSD(toUSD(plan.pricePEN))}
-                        </span>{" "}
-                        /mes
-                      </p>
-                      <p className="mt-1 text-4xl font-extrabold">
-                        {formatPEN(founderPrice)}
-                        <span className={`text-base font-semibold ${dark ? "text-ink-300" : "text-steel-500"}`}> /mes</span>
-                      </p>
-                      <p className={`text-sm font-semibold ${dark ? "text-ink-200" : "text-steel-600"}`}>
-                        {formatUSD(toUSD(founderPrice))} /mes
-                      </p>
-                      <p className={`mt-2 text-sm font-bold ${dark ? "text-volt-300" : "text-brand-700"}`}>
-                        Precio Socio Fundador ·{" "}
-                        {plan.founderDiscountMonths === 1
-                          ? "primer mes"
-                          : `primeros ${plan.founderDiscountMonths} meses`}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-4xl font-extrabold">
-                        {formatPEN(plan.pricePEN)}
-                        <span className={`text-base font-semibold ${dark ? "text-ink-300" : "text-steel-500"}`}> /mes</span>
-                      </p>
-                      <p className={`text-sm font-semibold ${dark ? "text-ink-200" : "text-steel-600"}`}>
-                        {formatUSD(toUSD(plan.pricePEN))} /mes
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                <ul className="flex flex-1 flex-col gap-2.5 px-6 py-5 text-sm">
-                  {plan.includesPrevious && (
-                    <li className={`flex items-start gap-2.5 font-bold ${dark ? "text-volt-300" : "text-brand-700"}`}>
-                      <IconCheck size={17} className="mt-0.5 shrink-0" />
-                      {plan.includesPrevious}
-                    </li>
-                  )}
-                  {plan.benefits.map((benefit) => (
-                    <li key={benefit} className="flex items-start gap-2.5">
-                      <IconCheck size={17} className={`mt-0.5 shrink-0 ${dark ? "text-volt-400" : "text-ok-500"}`} />
-                      <span className={dark ? "text-ink-100" : "text-steel-700"}>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="px-6 pb-6">
-                  {plan.pricePEN === 0 ? (
-                    <LinkButton href="/publicar" variant="secondary" fullWidth>
-                      Publicar gratis
-                    </LinkButton>
-                  ) : (
-                    <LinkButton
-                      href={`/ingresar?plan=${id}`}
-                      variant={dark ? "volt" : "primary"}
-                      fullWidth
-                    >
-                      Elegir {plan.name}
-                    </LinkButton>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+        <div className="mt-8 grid gap-6 lg:mt-12 lg:grid-cols-3 lg:gap-5">
+          {planOrder.map((id) => (
+            <PlanCard key={id} plan={plans[id]} founderOpen={founderOpen} />
+          ))}
         </div>
 
         <ul className="mt-6 grid gap-1.5 text-sm text-steel-600 sm:grid-cols-2">
