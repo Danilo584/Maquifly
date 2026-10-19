@@ -15,6 +15,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Section } from "@/components/ui/Section";
 import { IconArrowRight, IconPlus, IconSearch } from "@/components/ui/Icon";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -82,6 +83,7 @@ export default async function LandingPage({
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={4} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div
           className="pointer-events-none absolute -right-32 -top-32 size-[28rem] rounded-full bg-brand-700/25 blur-3xl"

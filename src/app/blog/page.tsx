@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { sortedPosts } from "@/lib/data/blog";
 import { categoriesBySlug } from "@/lib/data/categories";
@@ -23,17 +24,29 @@ export default function BlogIndexPage() {
     <>
       <section className="relative overflow-hidden bg-ink-950">
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
-        <div className="container-mf relative py-8 sm:py-12">
-          <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">
-            <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Blog" }]} />
+        <div className="container-mf relative grid items-center gap-8 py-8 sm:py-12 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
+          <div>
+            <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">
+              <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Blog" }]} />
+            </div>
+            <h1 className="mt-5 max-w-3xl text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+              Guías para alquilar maquinaria sin sorpresas
+            </h1>
+            <p className="mt-4 max-w-2xl text-[1.02rem] leading-relaxed text-ink-200">
+              Respondemos las preguntas que la gente hace de verdad antes de
+              alquilar un equipo. Sin cifras inventadas y sin relleno.
+            </p>
           </div>
-          <h1 className="mt-5 max-w-3xl text-3xl font-extrabold leading-tight text-white sm:text-4xl">
-            Guías para alquilar maquinaria sin sorpresas
-          </h1>
-          <p className="mt-4 max-w-2xl text-[1.02rem] leading-relaxed text-ink-200">
-            Respondemos las preguntas que la gente hace de verdad antes de
-            alquilar un equipo. Sin cifras inventadas y sin relleno.
-          </p>
+          {/* Ilustración: de máquina parada a máquina trabajando gracias a MaquiFly */}
+          <Image
+            src="/blog/de-parada-a-trabajando.webp"
+            alt="Una máquina parada que nadie ve pasa, con MaquiFly, a recibir mensajes de clientes y volver a trabajar"
+            width={1600}
+            height={720}
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="w-full rounded-2xl border border-volt-400/30 shadow-[0_30px_70px_-24px_rgb(200_248_60/0.35)]"
+          />
         </div>
       </section>
 

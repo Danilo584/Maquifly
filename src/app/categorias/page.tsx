@@ -8,6 +8,7 @@ import { Section } from "@/components/ui/Section";
 import { LinkButton } from "@/components/ui/Button";
 import { IconPlus } from "@/components/ui/Icon";
 import type { MachineFamily } from "@/lib/types";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -38,6 +39,7 @@ export default async function CategoriesPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={4} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-12">
           <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">

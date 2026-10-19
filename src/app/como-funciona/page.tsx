@@ -10,6 +10,7 @@ import { Callout } from "@/components/ui/Callout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { VerificationBadge } from "@/components/owner/VerificationBadge";
 import { IconPlus, IconSearch } from "@/components/ui/Icon";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Cómo funciona MaquiFly",
@@ -41,6 +42,7 @@ export default function HowItWorksPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={1} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-12">
           <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">

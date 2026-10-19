@@ -21,6 +21,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { IconCamera, IconPin, IconPlus, IconWhatsApp } from "@/components/ui/Icon";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -73,6 +74,7 @@ export default async function OwnerPage({ params }: { params: Promise<Params> })
     <>
       <OwnerViewTracker ownerId={owner.id} isDemo={owner.isDemo} />
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={1} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-10">
           <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">
