@@ -143,6 +143,8 @@ export function OwnerEditor({
   });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [confirmName, setConfirmName] = useState("");
   const set = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
   async function save() {
@@ -174,6 +176,24 @@ export function OwnerEditor({
     setBusy(false);
     if (result.error) return setError(result.error.message);
     onSaved(result.data.id);
+  }
+
+  /**
+   * Borrado definitivo, solo para casos extremos (incumple las reglas,
+   * perfil duplicado o de prueba). La base de datos borra en cascada sus
+   * máquinas, pagos y reseñas. Se pide escribir el nombre para confirmar.
+   */
+  async function remove() {
+    if (!owner) return;
+    if (confirmName.trim().toLowerCase() !== owner.business_name.trim().toLowerCase()) {
+      return setError("Escribe el nombre exacto del propietario para confirmar.");
+    }
+    setBusy(true);
+    setError(null);
+    const { error: err } = await db().from("owner_profiles").delete().eq("id", owner.id);
+    setBusy(false);
+    if (err) return setError(err.message);
+    onSaved(owner.id);
   }
 
   return (
@@ -236,6 +256,48 @@ export function OwnerEditor({
             <p className="mt-3 text-sm font-semibold text-ink-900">Socio Fundador #{owner.founder_number} (permanente)</p>
           )}
         </fieldset>
+
+        {owner && (
+          <div className="rounded-xl border border-danger-500/40 bg-danger-50 p-4">
+            {!confirmingDelete ? (
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-bold text-danger-700">Eliminar propietario</p>
+                  <p className="text-xs text-steel-600">Solo para casos extremos: incumple las reglas, está duplicado o es de prueba.</p>
+                </div>
+                <Button variant="danger" size="sm" onClick={() => setConfirmingDelete(true)}>
+                  Eliminar…
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm font-bold text-danger-700">¿Eliminar «{owner.business_name}» para siempre?</p>
+                <ul className="list-disc pl-5 text-xs leading-relaxed text-steel-700">
+                  <li>Se borran también sus máquinas ({owner.machine_count} publicadas), sus pagos y sus reseñas.</li>
+                  <li>Su número de Socio Fundador, si tiene, se pierde.</li>
+                  <li>Si tenía cuenta, podrá seguir entrando, pero ya sin perfil de propietario.</li>
+                  <li>No se puede deshacer.</li>
+                </ul>
+                <Field label={`Escribe «${owner.business_name}» para confirmar`} htmlFor="o-del">
+                  <Input id="o-del" value={confirmName} onChange={(e) => setConfirmName(e.target.value)} autoComplete="off" />
+                </Field>
+                <div className="flex justify-end gap-2">
+                  <Button variant="secondary" size="sm" onClick={() => { setConfirmingDelete(false); setConfirmName(""); setError(null); }}>
+                    No, volver
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={remove}
+                    disabled={busy || confirmName.trim().toLowerCase() !== owner.business_name.trim().toLowerCase()}
+                  >
+                    {busy ? "Eliminando…" : "Sí, eliminar para siempre"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <ErrorNote message={error} />
         <div className="flex justify-end gap-2">
