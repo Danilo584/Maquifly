@@ -179,6 +179,82 @@
   background-size: 56px 56px;
 }
 
+/* Malla técnica para superficies claras (tarjeta Fly Start) */
+@utility grid-blueprint-light {
+  background-image:
+    linear-gradient(to right, rgb(7 22 40 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(7 22 40 / 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Borde degradado lima → azul de la tarjeta Fly Plus; gira solo si se permite movimiento */
+@utility halo-conico {
+  background-image: conic-gradient(
+    from 0deg,
+    var(--color-volt-400),
+    transparent 28%,
+    var(--color-brand-500) 50%,
+    transparent 72%,
+    var(--color-volt-400)
+  );
+}
+
+/* Cinta de obra lima y negro (tarjeta Fly Plus) */
+@utility cinta-obra {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-volt-400) 0 12px,
+    var(--color-ink-950) 12px 24px
+  );
+}
+
+/* Separador con marcas de regla de obra (usa el color del texto) */
+@utility regla-obra {
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 50px);
+  background-size: 100% 1px, 100% 4px, 100% 8px;
+  background-position: top, top, top;
+  background-repeat: no-repeat;
+}
+/* Marco dorado de la tarjeta Fly Pro */
+@utility halo-dorado {
+  background-image: conic-gradient(
+    from 0deg,
+    #fff1c1,
+    #b8860b 22%,
+    #3a2a08 45%,
+    #e6b94f 70%,
+    #fff1c1
+  );
+}
+
+/* Brillo que cruza la cabecera de Fly Pro (solo si se permite movimiento) */
+@utility brillo-pasa {
+  animation: brillo 5s ease-in-out infinite;
+}
+
+@keyframes brillo {
+  0%,
+  55% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(320%) skewX(-20deg);
+  }
+}
+
+@utility halo-giratorio {
+  animation: girar 9s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
 @utility text-balance-tight {
   text-wrap: balance;
   letter-spacing: -0.025em;
