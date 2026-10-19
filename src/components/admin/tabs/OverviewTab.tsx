@@ -11,6 +11,7 @@ import {
   AIconEye,
   AIconFlag,
   AIconInbox,
+  AIconSearch,
   AIconMachine,
   AIconUpload,
   AIconUsers,
@@ -153,6 +154,7 @@ export function OverviewTab({ counts, goTo }: TabProps & { counts: Counts }) {
 
   const pending: Array<{ label: string; value: number; tab: TabKey; hint: string; Icon: ComponentType<{ size?: number }> }> = [
     { label: "Mensajes nuevos", value: counts.messages, tab: "messages", hint: "Contacto y solicitudes", Icon: AIconInbox },
+    { label: "Pedidos de clientes", value: counts.requests, tab: "requests", hint: "Buscan una máquina", Icon: AIconSearch },
     { label: "Publicaciones por revisar", value: counts.submissions, tab: "submissions", hint: "Enviadas desde «Publicar»", Icon: AIconUpload },
     { label: "Pagos por verificar", value: counts.payments, tab: "payments", hint: "Revisa el abono y aprueba", Icon: AIconWallet },
     { label: "Reportes abiertos", value: counts.reports, tab: "reports", hint: "Problemas en publicaciones", Icon: AIconFlag },
@@ -189,7 +191,7 @@ export function OverviewTab({ counts, goTo }: TabProps & { counts: Counts }) {
       </section>
 
       {/* Pendientes */}
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {pending.map((item) => (
           <button
             key={item.label}

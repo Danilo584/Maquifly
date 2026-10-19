@@ -19,12 +19,14 @@ import {
   AIconMachine,
   AIconMenu,
   AIconRefresh,
+  AIconSearch,
   AIconUpload,
   AIconUsers,
   AIconWallet,
 } from "@/components/admin/admin-icons";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
 import { MessagesTab } from "@/components/admin/tabs/MessagesTab";
+import { RequestsTab } from "@/components/admin/tabs/RequestsTab";
 import { SubmissionsTab } from "@/components/admin/tabs/SubmissionsTab";
 import { MachinesTab } from "@/components/admin/tabs/MachinesTab";
 import { OwnersTab } from "@/components/admin/tabs/OwnersTab";
@@ -34,6 +36,7 @@ import { ReportsTab } from "@/components/admin/tabs/ReportsTab";
 export type TabKey =
   | "overview"
   | "messages"
+  | "requests"
   | "submissions"
   | "machines"
   | "owners"
@@ -42,6 +45,8 @@ export type TabKey =
 
 export type Counts = {
   messages: number;
+  /** Pedidos «Te la conseguimos» sin atender. */
+  requests: number;
   submissions: number;
   payments: number;
   reports: number;
@@ -58,6 +63,7 @@ const tabs: Array<{
 }> = [
   { key: "overview", label: "Resumen", Icon: AIconHome, group: "General" },
   { key: "messages", label: "Mensajes", Icon: AIconInbox, badge: "messages", group: "Bandeja" },
+  { key: "requests", label: "Pedidos de clientes", Icon: AIconSearch, badge: "requests", group: "Bandeja" },
   { key: "submissions", label: "Publicaciones recibidas", Icon: AIconUpload, badge: "submissions", group: "Bandeja" },
   { key: "reports", label: "Reportes", Icon: AIconFlag, badge: "reports", group: "Bandeja" },
   { key: "machines", label: "Máquinas", Icon: AIconMachine, badge: "machines", group: "Catálogo" },
@@ -243,7 +249,7 @@ const ALERTS_KEY = "maquifly:admin-alerts";
 
 function Dashboard({ email }: { email: string }) {
   const [tab, setTab] = useState<TabKey>("overview");
-  const [counts, setCounts] = useState<Counts>({ messages: 0, submissions: 0, payments: 0, reports: 0, machines: 0 });
+  const [counts, setCounts] = useState<Counts>({ messages: 0, requests: 0, submissions: 0, payments: 0, reports: 0, machines: 0 });
   const [menuOpen, setMenuOpen] = useState(false);
   const [alertsOn, setAlertsOn] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -259,8 +265,9 @@ function Dashboard({ email }: { email: string }) {
 
   const refreshCounts = useCallback(async () => {
     const c = db();
-    const [m, s, p, r, mr] = await Promise.all([
+    const [m, q, s, p, r, mr] = await Promise.all([
       c.from("contact_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
+      c.from("machine_requests").select("id", { count: "exact", head: true }).eq("status", "new"),
       c.from("listing_submissions").select("id", { count: "exact", head: true }).eq("status", "new"),
       c.from("payments").select("id", { count: "exact", head: true }).eq("status", "pending"),
       c.from("reports").select("id", { count: "exact", head: true }).eq("status", "open"),
@@ -268,6 +275,7 @@ function Dashboard({ email }: { email: string }) {
     ]);
     const next = {
       messages: m.count ?? 0,
+      requests: q.count ?? 0,
       submissions: s.count ?? 0,
       payments: p.count ?? 0,
       reports: r.count ?? 0,
@@ -275,7 +283,7 @@ function Dashboard({ email }: { email: string }) {
     };
     setCounts(next);
 
-    const total = next.messages + next.submissions + next.payments + next.reports + next.machines;
+    const total = next.messages + next.requests + next.submissions + next.payments + next.reports + next.machines;
     if (previousTotal.current !== null && total > previousTotal.current) {
       // No se recarga la sección abierta (podrías estar editando): solo se avisa.
       let alerts = false;
@@ -287,7 +295,7 @@ function Dashboard({ email }: { email: string }) {
       if (alerts) {
         beep();
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification("MaquiFly", { body: "Tienes novedades en el panel: mensajes, publicaciones o pagos." });
+          new Notification("MaquiFly", { body: "Tienes novedades en el panel: mensajes, pedidos, publicaciones o pagos." });
         }
       }
     }
@@ -469,6 +477,7 @@ function Dashboard({ email }: { email: string }) {
         <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8" key={refreshKey}>
           {tab === "overview" && <OverviewTab counts={counts} {...props} />}
           {tab === "messages" && <MessagesTab {...props} />}
+          {tab === "requests" && <RequestsTab {...props} />}
           {tab === "submissions" && <SubmissionsTab {...props} />}
           {tab === "machines" && <MachinesTab {...props} />}
           {tab === "owners" && <OwnersTab {...props} />}
