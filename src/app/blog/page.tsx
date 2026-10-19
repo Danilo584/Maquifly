@@ -37,10 +37,10 @@ export default function BlogIndexPage() {
               alquilar un equipo. Sin cifras inventadas y sin relleno.
             </p>
           </div>
-          {/* Ilustración: de máquina parada a máquina trabajando gracias a MaquiFly */}
+          {/* Visión de MaquiFly: hoy en Piura, después más ciudades del Perú */}
           <Image
-            src="/blog/de-parada-a-trabajando.webp"
-            alt="Una máquina parada que nadie ve pasa, con MaquiFly, a recibir mensajes de clientes y volver a trabajar"
+            src="/blog/de-piura-a-todo-el-peru.webp"
+            alt="Mapa del Perú: MaquiFly activo hoy en Piura y próximas ciudades Tumbes, Chiclayo, Cajamarca, Trujillo y Lima"
             width={1600}
             height={720}
             priority
@@ -73,14 +73,16 @@ export default function BlogIndexPage() {
               </span>
             </div>
             <div className="hidden lg:block">
-              <div className="grid-blueprint flex aspect-[4/3] items-end rounded-xl bg-ink-900 p-6">
-                <p className="font-display text-2xl font-extrabold leading-tight text-white">
-                  Encuentra.
-                  <br />
-                  Alquila.
-                  <br />
-                  <span className="text-volt-400">Trabaja.</span>
-                </p>
+              {/* De máquina parada a máquina trabajando gracias a MaquiFly */}
+              <div className="grid-blueprint relative flex aspect-[4/3] items-center overflow-hidden rounded-xl bg-ink-950">
+                <Image
+                  src="/blog/de-parada-a-trabajando.webp"
+                  alt="Una máquina parada que nadie ve pasa, con MaquiFly, a recibir mensajes de clientes y volver a trabajar"
+                  width={1600}
+                  height={720}
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="w-full"
+                />
               </div>
             </div>
           </Link>
