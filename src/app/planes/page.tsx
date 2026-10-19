@@ -21,6 +21,7 @@ import { FeaturedBadge, FounderBadge } from "@/components/owner/PlanBadges";
 import { PlanCard } from "@/components/plans/PlanCard";
 import { DestacadoExpress } from "@/components/plans/DestacadoExpress";
 import { IconAward, IconCheck, IconWhatsApp } from "@/components/ui/Icon";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -68,6 +69,7 @@ export default async function PlansPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={7} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-14">
           <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">

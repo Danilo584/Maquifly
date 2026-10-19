@@ -9,6 +9,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
 import { Faq } from "@/components/common/Faq";
 import { IconCheck, IconPlus, IconSearch, IconStar, IconTag } from "@/components/ui/Icon";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 /** Se regenera cada minuto: lo que publicas en el panel aparece solo. */
 export const revalidate = 60;
@@ -59,6 +60,7 @@ export default async function OwnersPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={4} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div
           className="pointer-events-none absolute -right-32 -top-40 size-[30rem] rounded-full bg-volt-500/10 blur-3xl"

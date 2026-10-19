@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PublishStart } from "@/components/account/PublishStart";
 import { pageMetadata } from "@/lib/seo";
+import { CabeceraVideo } from "@/components/layout/CabeceraVideo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Publicar mi maquinaria en alquiler — gratis",
@@ -24,6 +25,7 @@ export default function PublishPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-ink-950">
+        <CabeceraVideo inicio={1} />
         <div className="grid-blueprint absolute inset-0" aria-hidden="true" />
         <div className="container-mf relative py-8 sm:py-12">
           <div className="[&_a]:text-ink-300 [&_a:hover]:text-volt-400 [&_span]:text-ink-100 [&_ol]:text-ink-400">
