@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 
 import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
+import { FichasEjemplo } from "@/components/home/FichasEjemplo";
 import { CategoryGrid } from "@/components/category/CategoryGrid";
 import { MachineCard } from "@/components/machine/MachineCard";
 import { Faq } from "@/components/common/Faq";
@@ -242,9 +243,10 @@ export default async function HomePage() {
                   Ver planes y Programa Fundador
                 </LinkButton>
               </div>
+              <FichasEjemplo />
             </div>
 
-            <ul className="grid gap-3 sm:grid-cols-2">
+            <ul className="grid gap-3 self-center sm:grid-cols-2">
               {ownerBenefits.map((benefit) => (
                 <li
                   key={benefit.title}
