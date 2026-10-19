@@ -81,3 +81,29 @@ export async function sendListingSubmission(input: {
   });
   return error ? { ok: false, reason: "error", message: error.message } : { ok: true };
 }
+
+/** Pedido «Te conseguimos la máquina»: el cliente no encontró lo que busca. */
+export async function sendMachineRequest(input: {
+  categorySlug: string | null;
+  machineLabel: string;
+  zone: string;
+  startDate: string | null;
+  duration: string;
+  operator: "con" | "sin" | "indiferente";
+  name: string;
+  whatsapp: string;
+}): Promise<SendResult> {
+  const supabase = getSupabase();
+  if (!supabase) return { ok: false, reason: "not_configured" };
+  const { error } = await supabase.from("machine_requests").insert({
+    category_slug: input.categorySlug,
+    machine_label: input.machineLabel.slice(0, 80),
+    zone: input.zone.slice(0, 120),
+    start_date: input.startDate,
+    duration: input.duration.slice(0, 40),
+    operator: input.operator,
+    name: input.name.slice(0, 120),
+    whatsapp: input.whatsapp.slice(0, 40),
+  });
+  return error ? { ok: false, reason: "error", message: error.message } : { ok: true };
+}

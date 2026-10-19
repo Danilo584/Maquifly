@@ -17,6 +17,7 @@ export type AnalyticsEvent =
   | { name: "machine_view"; machineId: string; reference: string }
   | { name: "whatsapp_click"; machineId: string; reference: string; ownerId: string; brokered: boolean }
   | { name: "contact_form_submit"; context: string }
+  | { name: "machine_request_submit"; category: string; context: string }
   | { name: "listing_draft_saved"; categorySlug: string }
   | { name: "listing_preview"; categorySlug: string }
   | { name: "report_submit"; machineId: string; reason: string }

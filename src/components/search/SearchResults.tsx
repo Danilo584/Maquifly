@@ -215,7 +215,13 @@ export function SearchResults() {
                   </Button>
                 }
                 secondaryAction={
-                  <LinkButton href="/contacto" variant="secondary">
+                  <LinkButton
+                    href={`/te-la-conseguimos?${new URLSearchParams({
+                      ...(filters.category ? { categoria: filters.category } : {}),
+                      ...(filters.location ? { ciudad: filters.location } : {}),
+                    }).toString()}`}
+                    variant="secondary"
+                  >
                     Pedir ayuda para encontrarlo
                   </LinkButton>
                 }

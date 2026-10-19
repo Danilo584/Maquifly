@@ -165,7 +165,10 @@ export default async function LandingPage({
                 </LinkButton>
               }
               secondaryAction={
-                <LinkButton href="/contacto" variant="secondary">
+                <LinkButton
+                  href={`/te-la-conseguimos?${landing.categorySlug ? `categoria=${landing.categorySlug}&` : ""}ciudad=${landing.locationSlug}`}
+                  variant="secondary"
+                >
                   Pedir ayuda para encontrarlo
                 </LinkButton>
               }

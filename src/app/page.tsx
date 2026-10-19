@@ -6,6 +6,7 @@ import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { FichasEjemplo } from "@/components/home/FichasEjemplo";
 import { CategoryGrid } from "@/components/category/CategoryGrid";
+import { MachineRequestSection } from "@/components/request/MachineRequestSection";
 import { MachineCard } from "@/components/machine/MachineCard";
 import { Faq } from "@/components/common/Faq";
 import { DemoNotice } from "@/components/common/Demo";
@@ -111,6 +112,9 @@ export default async function HomePage() {
           <CategoryGrid items={featured} counts={counts} />
         </div>
       </Section>
+
+      {/* ------------------------------------------------------------------ */}
+      <MachineRequestSection />
 
       {/* ------------------------------------------------------------------ */}
       <Section tone="muted">

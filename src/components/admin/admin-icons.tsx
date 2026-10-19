@@ -115,3 +115,9 @@ export const AIconChat = (p: P) => (
     <path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.3L3 20.5l1.7-5.2A8.4 8.4 0 1 1 21 11.5Z" />
   </I>
 );
+export const AIconSearch = (p: P) => (
+  <I {...p}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </I>
+);
