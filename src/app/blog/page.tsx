@@ -37,10 +37,10 @@ export default function BlogIndexPage() {
               alquilar un equipo. Sin cifras inventadas y sin relleno.
             </p>
           </div>
-          {/* Visión de MaquiFly: hoy en Piura, después más ciudades del Perú */}
+          {/* Visión de MaquiFly: toda la maquinaria del Perú conectada en una sola red */}
           <Image
-            src="/blog/de-piura-a-todo-el-peru.webp"
-            alt="Mapa del Perú: MaquiFly activo hoy en Piura y próximas ciudades Tumbes, Chiclayo, Cajamarca, Trujillo y Lima"
+            src="/blog/maquinaria-del-peru-conectada.webp"
+            alt="Mapa del Perú como una red de puntos con MaquiFly al centro, conectado a retroexcavadoras, minicargadores, miniexcavadoras, cargadores frontales y motoniveladoras"
             width={1600}
             height={720}
             priority
