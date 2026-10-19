@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 import { Hero } from "@/components/home/Hero";
@@ -208,7 +209,21 @@ export default async function HomePage() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      <section className="grid-blueprint relative overflow-hidden bg-ink-900 py-10 sm:py-20">
+      <section className="relative overflow-hidden bg-ink-900 py-10 sm:py-20">
+        {/* Foto de fondo: obra vista desde arriba con excavadora, volquete y rodillo trabajando (Pexels, sin marcas), oscurecida */}
+        <div className="absolute inset-0" aria-hidden="true">
+          <Image
+            src="/propietarios/obra-aerea.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="-scale-x-100 object-cover object-[50%_40%]"
+          />
+          {/* Arriba (título) bien oscuro; abajo, bajo los botones, asoman las máquinas */}
+          <div className="absolute inset-0 bg-ink-950/70 lg:bg-transparent lg:bg-linear-to-b lg:from-ink-950/95 lg:from-25% lg:via-ink-950/65 lg:to-ink-950/25" />
+          <div className="absolute inset-0 hidden bg-linear-to-l from-ink-950/70 to-transparent to-50% lg:block" />
+          <div className="grid-blueprint absolute inset-0" />
+        </div>
         <div className="container-mf relative">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
@@ -233,7 +248,7 @@ export default async function HomePage() {
               {ownerBenefits.map((benefit) => (
                 <li
                   key={benefit.title}
-                  className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4 sm:block"
+                  className="flex gap-3 rounded-xl border border-white/10 bg-ink-950/45 p-4 backdrop-blur-sm sm:block"
                 >
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-volt-400 text-ink-950">
                     <benefit.Icon size={20} />
