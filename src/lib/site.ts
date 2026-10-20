@@ -39,6 +39,8 @@ export const siteConfig = {
   },
   /** Ciudad activa hoy. La arquitectura soporta varias (ver data/locations). */
   launchCity: "piura",
+  /** Nombre con el que el panel de control saluda al administrador. */
+  adminName: "Adrian",
 } as const;
 
 /**

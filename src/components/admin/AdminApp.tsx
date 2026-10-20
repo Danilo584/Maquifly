@@ -344,7 +344,7 @@ function Dashboard({ email }: { email: string }) {
           <p className="font-display text-lg font-extrabold tracking-tight text-white">
             Maqui<span className="text-brand-400">Fly</span>
           </p>
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-volt-300">Panel de control</p>
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#e6b94f]">Panel de control</p>
         </div>
       </div>
 
@@ -365,7 +365,7 @@ function Dashboard({ email }: { email: string }) {
                         onClick={() => go(item.key)}
                         aria-current={active ? "page" : undefined}
                         className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-colors ${
-                          active ? "bg-volt-400 text-ink-950" : "text-ink-100 hover:bg-white/10"
+                          active ? "bg-[#c49a2a]/15 text-white shadow-[inset_3px_0_0_#e6b94f]" : "text-ink-200 hover:bg-white/5 hover:text-white"
                         }`}
                       >
                         <item.Icon size={19} />
@@ -373,7 +373,7 @@ function Dashboard({ email }: { email: string }) {
                         {badge > 0 && (
                           <span
                             className={`min-w-6 rounded-full px-1.5 py-0.5 text-center text-xs font-extrabold ${
-                              active ? "bg-ink-950 text-volt-300" : "bg-volt-400 text-ink-950"
+                              "bg-volt-400 text-ink-950"
                             }`}
                           >
                             {badge}
@@ -398,12 +398,12 @@ function Dashboard({ email }: { email: string }) {
           <AIconExternal size={16} /> Ver la web
         </a>
         <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-sm font-extrabold text-white">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#fff1c1] via-[#e6b94f] to-[#b8860b] text-sm font-extrabold text-[#3b2a05]">
             {email.slice(0, 1).toUpperCase()}
           </span>
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold text-white">{email}</p>
-            <p className="text-[0.65rem] text-ink-300">Administrador</p>
+            <p className="text-[0.65rem] text-[#e6b94f]">★ Administrador</p>
           </div>
           <button
             type="button"
@@ -420,7 +420,7 @@ function Dashboard({ email }: { email: string }) {
   );
 
   return (
-    <div className="min-h-dvh bg-steel-50">
+    <div className="min-h-dvh bg-[#fbfaf6]">
       {/* Barra lateral (escritorio) */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-68 bg-ink-950 lg:block">{sidebar}</aside>
 
@@ -433,7 +433,7 @@ function Dashboard({ email }: { email: string }) {
       )}
 
       <div className="lg:pl-68">
-        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-steel-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-[#e8e4da] bg-[#fbfaf6]/90 px-4 py-3 backdrop-blur sm:px-6">
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
