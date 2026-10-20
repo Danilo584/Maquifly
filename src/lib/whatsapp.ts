@@ -20,19 +20,24 @@ export function sanitizePhone(raw: string): string {
 
 /**
  * Mensaje directo al propietario (Fly Plus / Fly Pro): corto y natural, como
- * lo escribiría una persona. Sin enlace ni código: con el tipo de máquina y
- * la zona el propietario ya sabe de qué equipo le hablan.
- *   «Hola Arenera Piura 👋 Vi tu minicargador de Castilla en MaquiFly.
- *    ¿Está disponible? ¿Me pasas el precio?»
+ * lo escribiría una persona. Sin enlace ni código: con el tipo de máquina,
+ * la marca y modelo, y la zona, el propietario sabe de qué equipo le hablan.
+ *   «Hola Arenera Piura 👋 Vi tu minicargador Bobcat S650 de Castilla en
+ *    MaquiFly. ¿Está disponible? ¿Me pasas el precio?»
  */
 export function buildMachineMessage(
-  machine: Pick<Machine, "categoryId" | "area">,
+  machine: Pick<Machine, "categoryId" | "area" | "brand" | "model">,
   owner?: Pick<OwnerProfile, "businessName"> | null,
 ): string {
   const kind = getCategoryById(machine.categoryId)?.singular.toLowerCase() ?? "maquinaria";
+  // «Por confirmar» es el relleno del panel cuando no se sabe la marca o el modelo.
+  const clean = (v: string | null | undefined) =>
+    v && !/^por confirmar$/i.test(v.trim()) ? v.trim() : "";
+  const brandModel = [clean(machine.brand), clean(machine.model)].filter(Boolean).join(" ");
   const greeting = owner?.businessName ? `Hola ${owner.businessName} 👋` : "Hola 👋";
+  const what = brandModel ? `${kind} ${brandModel}` : kind;
   const where = machine.area ? ` de ${machine.area}` : "";
-  return `${greeting} Vi tu ${kind}${where} en MaquiFly. ¿Está disponible? ¿Me pasas el precio?`;
+  return `${greeting} Vi tu ${what}${where} en MaquiFly. ¿Está disponible? ¿Me pasas el precio?`;
 }
 
 /**
