@@ -1,5 +1,6 @@
 import type { Machine, OwnerProfile } from "@/lib/types";
 import { locationName } from "@/lib/data/locations";
+import { getCategoryById } from "@/lib/data/categories";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 /**
@@ -17,18 +18,21 @@ export function sanitizePhone(raw: string): string {
   return digits;
 }
 
+/**
+ * Mensaje directo al propietario (Fly Plus / Fly Pro): corto y natural, como
+ * lo escribiría una persona. Sin enlace ni código: con el tipo de máquina y
+ * la zona el propietario ya sabe de qué equipo le hablan.
+ *   «Hola Arenera Piura 👋 Vi tu minicargador de Castilla en MaquiFly.
+ *    ¿Está disponible? ¿Me pasas el precio?»
+ */
 export function buildMachineMessage(
-  machine: Pick<Machine, "name" | "area" | "locationId" | "reference" | "slug">,
+  machine: Pick<Machine, "categoryId" | "area">,
+  owner?: Pick<OwnerProfile, "businessName"> | null,
 ): string {
-  const city = locationName(machine.locationId);
-  return [
-    `Hola, vi tu maquinaria en MaquiFly y estoy interesado en alquilar el ${machine.name}.`,
-    `Ubicación de la publicación: ${machine.area}, ${city}.`,
-    `Código: ${machine.reference}.`,
-    `¿Podrías brindarme disponibilidad y precio?`,
-    ``,
-    absoluteUrl(`/maquina/${machine.slug}`),
-  ].join("\n");
+  const kind = getCategoryById(machine.categoryId)?.singular.toLowerCase() ?? "maquinaria";
+  const greeting = owner?.businessName ? `Hola ${owner.businessName} 👋` : "Hola 👋";
+  const where = machine.area ? ` de ${machine.area}` : "";
+  return `${greeting} Vi tu ${kind}${where} en MaquiFly. ¿Está disponible? ¿Me pasas el precio?`;
 }
 
 /**

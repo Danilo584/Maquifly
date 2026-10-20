@@ -14,9 +14,9 @@ import { Callout } from "@/components/ui/Callout";
 /**
  * WhatsApp es el principal punto de conversión del MVP.
  *
- * El mensaje se arma con el nombre de la máquina, su ubicación, el código de
- * publicación y el enlace, para que el propietario no tenga que preguntar de
- * qué equipo se trata.
+ * Con Fly Plus/Pro el mensaje al propietario es corto y natural (su nombre,
+ * el tipo de máquina y la zona). Con Fly Start va a MaquiFly con el código de
+ * publicación y el enlace, para saber de qué equipo se trata.
  *
  * En publicaciones DEMO el botón NO abre WhatsApp: los números de los
  * propietarios de demostración no existen y abrir un chat hacia un número
@@ -38,7 +38,7 @@ export function WhatsAppCta({
   // Regla comercial: solo Fly Plus/Pro muestran el WhatsApp del propietario.
   // En Fly Start el cliente escribe a MaquiFly, que intermedia el contacto.
   const direct = Boolean(owner && plans[owner.plan].directWhatsapp && owner.whatsapp);
-  const message = direct ? buildMachineMessage(machine) : buildBrokeredMessage(machine);
+  const message = direct ? buildMachineMessage(machine, owner) : buildBrokeredMessage(machine);
   const phone = direct ? owner!.whatsapp : siteConfig.contact.whatsapp;
   const href = whatsappUrl(phone, message);
 
