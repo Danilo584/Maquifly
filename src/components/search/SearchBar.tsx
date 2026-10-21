@@ -51,7 +51,9 @@ export function SearchBar({
   }
 
   const selectClass =
-    "h-12 w-full appearance-none rounded-lg border border-steel-200 bg-white px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none";
+    // En celular las dos columnas son angostas: letra y relleno algo menores
+    // para que «Todas las categorías» quepa entero.
+    "h-12 w-full appearance-none rounded-lg border border-steel-200 bg-white px-2.5 text-sm text-ink-900 max-[379px]:px-2 max-[379px]:text-[0.8rem] sm:px-3.5 sm:text-[0.95rem] focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none";
 
   return (
     <form

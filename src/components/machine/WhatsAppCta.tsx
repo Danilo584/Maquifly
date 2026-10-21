@@ -28,11 +28,14 @@ export function WhatsAppCta({
   owner,
   size = "lg",
   fullWidth = true,
+  hint = true,
 }: {
   machine: Machine;
   owner: OwnerProfile | null;
   size?: "md" | "lg";
   fullWidth?: boolean;
+  /** Texto de ayuda bajo el botón. Se omite en la barra fija del celular. */
+  hint?: boolean;
 }) {
   const [showPreview, setShowPreview] = useState(false);
   // Regla comercial: solo Fly Plus/Pro muestran el WhatsApp del propietario.
@@ -65,9 +68,11 @@ export function WhatsAppCta({
           <IconWhatsApp size={20} />
           Ver el mensaje de WhatsApp
         </Button>
-        <p className="mt-2 text-center text-xs text-steel-500">
-          Publicación DEMO: no se abre ningún chat real.
-        </p>
+        {hint && (
+          <p className="mt-2 text-center text-xs text-steel-500">
+            Publicación DEMO: no se abre ningún chat real.
+          </p>
+        )}
 
         {showPreview && (
           <div className="fixed inset-0 z-60 flex items-end justify-center p-0 sm:items-center sm:p-4">
@@ -140,11 +145,13 @@ export function WhatsAppCta({
         <IconWhatsApp size={20} />
         {direct ? "Contactar por WhatsApp" : "Consultar por WhatsApp"}
       </LinkButton>
-      <p className="mt-2 text-center text-xs text-steel-500">
-        {direct
-          ? `Se abre el chat con el propietario, con el mensaje ya escrito y el código ${machine.reference}.`
-          : `Te atiende MaquiFly y te pone en contacto con el propietario. Indica el código ${machine.reference}.`}
-      </p>
+      {hint && (
+        <p className="mt-2 text-center text-xs text-steel-500">
+          {direct
+            ? `Se abre el chat con el propietario, con el mensaje ya escrito y el código ${machine.reference}.`
+            : `Te atiende MaquiFly y te pone en contacto con el propietario. Indica el código ${machine.reference}.`}
+        </p>
+      )}
     </>
   );
 }

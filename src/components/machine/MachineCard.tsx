@@ -49,27 +49,31 @@ export function MachineCard({
           </div>
         )}
 
-        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
-          {machine.isDemo && <DemoBadge size="sm" />}
-          {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge />}
-          {!machine.isDemo && machine.ownerIsFounder && <FounderBadge />}
-          {/* En una publicación DEMO la etiqueta DEMO ya lo dice todo:
-              no se apilan dos avisos sobre la misma imagen. */}
-          {!machine.isDemo && cover?.isPlaceholder && (
-            <Badge
-              tone="dark"
-              size="sm"
-              title="Ilustración referencial: el propietario aún no ha subido fotografías reales."
-            >
-              Sin fotos reales
-            </Badge>
-          )}
-        </div>
+        {/* Insignias a la izquierda y disponibilidad a la derecha en una misma
+            fila: si no caben, las de la izquierda bajan en vez de encimarse. */}
+        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap gap-1.5">
+            {machine.isDemo && <DemoBadge size="sm" />}
+            {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge />}
+            {!machine.isDemo && machine.ownerIsFounder && <FounderBadge />}
+            {/* En una publicación DEMO la etiqueta DEMO ya lo dice todo:
+                no se apilan dos avisos sobre la misma imagen. */}
+            {!machine.isDemo && cover?.isPlaceholder && (
+              <Badge
+                tone="dark"
+                size="sm"
+                title="Ilustración referencial: el propietario aún no ha subido fotografías reales."
+              >
+                Sin fotos reales
+              </Badge>
+            )}
+          </div>
 
-        <div className="absolute right-3 top-3">
-          <Badge tone={availabilityTone[machine.availability]} size="sm">
-            {availabilityLabel[machine.availability]}
-          </Badge>
+          <div className="shrink-0">
+            <Badge tone={availabilityTone[machine.availability]} size="sm">
+              {availabilityLabel[machine.availability]}
+            </Badge>
+          </div>
         </div>
       </div>
 

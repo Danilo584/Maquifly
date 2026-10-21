@@ -369,6 +369,38 @@ export default async function MachinePage({
         )}
       </div>
 
+      {/* Barra fija solo en celular: en pantallas chicas la columna de precio
+          queda al final de la ficha, así que precio y WhatsApp siempre a mano.
+          El espaciador evita que tape el final de la página. */}
+      <div aria-hidden="true" className="h-24 lg:hidden" />
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-steel-200 bg-white/95 px-4 py-3 shadow-pop backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center justify-between gap-3">
+          <div className="shrink-0">
+            {price.amount ? (
+              <>
+                <p className="whitespace-nowrap text-xl font-extrabold leading-none text-ink-900">
+                  {price.amount}
+                  <span className="ml-0.5 text-sm font-semibold text-steel-500">
+                    {price.unit}
+                  </span>
+                </p>
+                <p className="mt-1 text-xs text-steel-500">
+                  Precio {pricingUnitLabel[machine.pricingUnit]}
+                  {machine.isDemo ? " (DEMO)" : ""}
+                </p>
+              </>
+            ) : (
+              <p className="text-base font-bold leading-tight text-ink-900">
+                Consultar precio
+              </p>
+            )}
+          </div>
+          <div className="min-w-0 max-[379px]:[&_a]:px-3.5 max-[379px]:[&_a]:text-sm max-[379px]:[&_button]:px-3.5 max-[379px]:[&_button]:text-sm">
+            <WhatsAppCta machine={machine} owner={owner} size="md" fullWidth={false} hint={false} />
+          </div>
+        </div>
+      </div>
+
       <JsonLd data={machineJsonLd(machine, owner)} />
     </>
   );
