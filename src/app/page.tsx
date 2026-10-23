@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { FichasEjemplo } from "@/components/home/FichasEjemplo";
-import { CategoryGrid } from "@/components/category/CategoryGrid";
 import { MachineRequestSection } from "@/components/request/MachineRequestSection";
 import { MachineCard } from "@/components/machine/MachineCard";
 import { Faq } from "@/components/common/Faq";
@@ -25,7 +24,6 @@ import {
 } from "@/components/ui/Icon";
 
 import { repository } from "@/lib/repository";
-import { categories, featuredCategorySlugs } from "@/lib/data/categories";
 import { homeFaq } from "@/lib/data/faq";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
@@ -75,8 +73,7 @@ const ownerBenefits = [
 ];
 
 export default async function HomePage() {
-  const [counts, recent, stats, owners] = await Promise.all([
-    repository.countMachinesByCategory(),
+  const [recent, stats, owners] = await Promise.all([
     repository.searchMachines({ sort: "recent", page: 1 }),
     repository.getStats(),
     repository.listOwners(),
@@ -85,36 +82,11 @@ export default async function HomePage() {
   // Vitrina de portada: solo empresas reales con Fly Pro activo.
   const showcase = owners.filter((o) => !o.isDemo && plans[o.plan].homepageShowcase);
 
-  const featured = featuredCategorySlugs
-    .map((slug) => categories.find((c) => c.slug === slug))
-    .filter((c): c is NonNullable<typeof c> => Boolean(c));
-
   const latest = recent.machines.slice(0, 8);
 
   return (
     <>
       <Hero />
-
-      {/* ------------------------------------------------------------------ */}
-      <Section tone="light">
-        <SectionHeading
-          eyebrow="Categorías"
-          title="¿Qué equipo necesitas?"
-          description="Cada categoría tiene su propia página con los equipos disponibles y lo que conviene saber antes de alquilar."
-          action={
-            <LinkButton href="/categorias" variant="secondary" size="sm">
-              Ver todas las categorías
-              <IconArrowRight size={16} />
-            </LinkButton>
-          }
-        />
-        <div className="mt-8">
-          <CategoryGrid items={featured} counts={counts} />
-        </div>
-      </Section>
-
-      {/* ------------------------------------------------------------------ */}
-      <MachineRequestSection />
 
       {/* ------------------------------------------------------------------ */}
       <Section tone="muted">
@@ -159,6 +131,9 @@ export default async function HomePage() {
           )}
         </div>
       </Section>
+
+      {/* ------------------------------------------------------------------ */}
+      <MachineRequestSection />
 
       {showcase.length > 0 && (
         <Section tone="light">
