@@ -50,9 +50,10 @@ export function MachineCard({
         )}
 
         {/* Insignias a la izquierda y disponibilidad a la derecha en una misma
-            fila: si no caben, las de la izquierda bajan en vez de encimarse. */}
-        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-wrap gap-1.5">
+            fila. Si la tarjeta es angosta, la disponibilidad baja a la fila
+            siguiente (a la derecha) en vez de encimarse sobre las insignias. */}
+        <div className="absolute inset-x-3 top-3 flex flex-wrap items-start gap-1.5">
+          <div className="flex flex-wrap gap-1.5">
             {machine.isDemo && <DemoBadge size="sm" />}
             {!machine.isDemo && machineIsFeatured(machine) && <FeaturedBadge />}
             {!machine.isDemo && machine.ownerIsFounder && <FounderBadge />}
@@ -69,7 +70,7 @@ export function MachineCard({
             )}
           </div>
 
-          <div className="shrink-0">
+          <div className="ml-auto shrink-0">
             <Badge tone={availabilityTone[machine.availability]} size="sm">
               {availabilityLabel[machine.availability]}
             </Badge>
