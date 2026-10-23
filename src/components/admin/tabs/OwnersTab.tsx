@@ -46,6 +46,15 @@ export function planIsActive(o: Pick<OwnerRow, "plan" | "plan_expires_at">): boo
   return o.plan !== "start" && !!o.plan_expires_at && new Date(o.plan_expires_at) > new Date();
 }
 
+/**
+ * Fecha (AAAA-MM-DD) en hora de Lima. El vencimiento se guarda a las 23:59 de
+ * Lima, que en UTC ya es el día siguiente: cortar el ISO sumaba un día cada
+ * vez que se abría y guardaba el propietario.
+ */
+function limaDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-CA", { timeZone: "America/Lima" });
+}
+
 export function OwnersTab({ onChange }: TabProps) {
   const [items, setItems] = useState<OwnerRow[] | null>(null);
   const [editing, setEditing] = useState<OwnerRow | "new" | null>(null);
@@ -139,7 +148,7 @@ export function OwnerEditor({
     description: owner?.description ?? "",
     verification_status: owner?.verification_status ?? ("registered" as VerificationStatus),
     plan: owner?.plan ?? ("start" as PlanId),
-    plan_expires_at: owner?.plan_expires_at ? owner.plan_expires_at.slice(0, 10) : "",
+    plan_expires_at: owner?.plan_expires_at ? limaDate(owner.plan_expires_at) : "",
   });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
