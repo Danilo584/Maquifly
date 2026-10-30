@@ -11,11 +11,11 @@ import { hasStoredSession } from "@/lib/session-hint";
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/maquinaria", label: "Buscar maquinaria" },
-  { href: "/categorias", label: "Categorías" },
   { href: "/como-funciona", label: "Cómo funciona" },
   { href: "/propietarios", label: "Para propietarios" },
   { href: "/planes", label: "Planes" },
   { href: "/blog", label: "Blog" },
+  { href: "/nosotros", label: "Nosotros" },
 ];
 
 export function Navbar() {
