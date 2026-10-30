@@ -173,7 +173,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Lo que impulsamos */}
+      {/* Nuestro impacto */}
       <section className="relative overflow-hidden bg-ink-950">
         {/* Las montañas de la misma foto de la cabecera, apagadas */}
         <Image
