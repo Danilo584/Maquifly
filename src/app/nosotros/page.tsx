@@ -243,10 +243,11 @@ export default function AboutPage() {
           />
           <div className="absolute inset-0 lg:[clip-path:polygon(22%_0,100%_0,100%_100%,6%_100%)]">
             <Image
-              src="/nosotros/trabajador-maquifly.jpg"
+              src="/nosotros/trabajador-maquifly-hd.jpg"
               alt="Trabajador con casco y chaleco de MaquiFly mira una excavadora en obra al atardecer"
               fill
               sizes="(min-width: 1024px) 44vw, 100vw"
+              quality={90}
               className="object-cover object-[75%_50%] lg:object-[70%_50%]"
             />
           </div>
