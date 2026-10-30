@@ -191,6 +191,44 @@ export const IconBuilding = (p: IconProps) => (
   </Svg>
 );
 
+export const IconTarget = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <circle cx="12" cy="12" r="4.5" />
+    <circle cx="12" cy="12" r="0.8" fill="currentColor" />
+  </Svg>
+);
+
+export const IconEye = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+    <circle cx="12" cy="12" r="3" />
+  </Svg>
+);
+
+export const IconGem = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M6.5 4h11l3.5 5-9 11-9-11Z" />
+    <path d="M3 9h18M9.5 4 8 9l4 11 4-11-1.5-5" />
+  </Svg>
+);
+
+export const IconUsers = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="9" cy="8.5" r="3.3" />
+    <path d="M2.8 19.5c.7-3.3 3.2-5.2 6.2-5.2s5.5 1.9 6.2 5.2" />
+    <path d="M15.5 5.4a3.3 3.3 0 0 1 0 6.2M17.5 14.6c1.9.6 3.3 2.3 3.7 4.9" />
+  </Svg>
+);
+
+export const IconChart = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 4v16h16" />
+    <path d="M8 16v-3M12 16V9M16 16v-5" />
+    <path d="m7.5 9.5 4-3.5 3 2.5 4.5-4" />
+  </Svg>
+);
+
 export const IconWhatsApp = ({ size = 20, ...rest }: IconProps) => (
   <svg
     width={size}
